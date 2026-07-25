@@ -118,9 +118,20 @@ export function ConsentNotice({
         </p>
       </div>
 
+      {/* Divulgacion requerida desde que el backend usa DeepSeek (LLM_PROVIDER)
+          para redactar la conversacion — misma linea que /politica-de-datos. */}
       <p className="text-sm text-text-muted">
-        Como titular puedes <strong className="font-medium text-text">conocer, actualizar,
-        rectificar y suprimir</strong> tus datos, y revocar esta autorización en cualquier momento.{' '}
+        Tus respuestas de texto libre pueden ser procesadas por un proveedor externo de
+        inteligencia artificial fuera de Colombia, solo para entender y redactar la conversación:
+        la decisión sobre tu perfil siempre es de nuestro sistema, nunca del proveedor.
+      </p>
+
+      <p className="text-sm text-text-muted">
+        Como titular puedes <strong className="font-medium text-text">conocer, actualizar y
+        rectificar</strong> tus datos, <strong className="font-medium text-text">revocar</strong>{' '}
+        esta autorización en cualquier momento, y{' '}
+        <strong className="font-medium text-text">solicitar su supresión</strong> — hoy esa
+        solicitud se atiende de forma manual, no con un botón de autogestión inmediata.{' '}
         <a
           href={RUTA_POLITICA}
           target="_blank"
