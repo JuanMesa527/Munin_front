@@ -8,7 +8,8 @@
 /**
  * Arbol de rutas, organizado POR ROL.
  *
- *   /                      usuario final, SIN login
+ *   /                      usuario final, SIN login (F1 → F2.1 / F2.2)
+ *   /politica-de-datos     aviso de tratamiento de datos (Ley 1581)
  *   /closer/login          puerta del comercial
  *   /closer                F3 · cola de leads viables      ┐ detras de CloserGuard
  *   /closer/leads/:leadId  F4 · ficha de la llamada        ┘
@@ -26,6 +27,7 @@ import { createBrowserRouter } from 'react-router';
 import { CloserGuard } from '@shared/auth/closer-guard';
 import { Spinner } from '@shared/ui';
 import { ClientFlowPage } from './client-flow.page';
+import { PrivacyPolicyPage } from './privacy-policy.page';
 import { NotFoundPage } from './not-found.page';
 
 const CloserDashboardPage = lazy(async () => {
@@ -59,6 +61,7 @@ function conSuspense(nodo: ReactNode): ReactElement {
 
 export const router = createBrowserRouter([
   { path: '/', element: <ClientFlowPage /> },
+  { path: '/politica-de-datos', element: <PrivacyPolicyPage /> },
   { path: '/closer/login', element: conSuspense(<CloserLoginPage />) },
   {
     element: <CloserGuard />,

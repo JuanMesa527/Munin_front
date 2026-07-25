@@ -17,5 +17,9 @@ Thumbs.db
 .vscode/*
 !.vscode/extensions.json
 
+# Tooling local — no entra al repo.
+.atl/
+.claude/
+.codegraph/
 # Brainstorm visual companion
 .superpowers/

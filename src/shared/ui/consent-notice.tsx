@@ -21,10 +21,17 @@ import { Button } from './button';
 /**
  * Version del texto que el titular acepta. Debe quedar guardada junto al
  * consentimiento para poder demostrar QUE se acepto.
+ *
+ * Debe coincidir EXACTO con `PRIVACY_POLICY_VERSION` de `Munin_back/.env`
+ * (ver `.env.example`): `SubmitConsentUseCase` compara este valor contra
+ * `env.privacyPolicyVersion` y rechaza el consentimiento si no matchean
+ * (confirmado en vivo: con el valor viejo, ningun usuario real pasaba de
+ * esta pantalla — CONSENT_REQUIRED en el 100% de los intentos).
  * PROPUESTA AL EQUIPO: cuando el backend exponga la version vigente de la
- * politica, pasarla por prop y borrar este default.
+ * politica en la respuesta de `/start`, pasarla por prop y borrar este
+ * default hardcodeado — dos strings duplicados en dos repos es fragil.
  */
-export const POLITICA_VERSION_DEFECTO = 'v1.0-2026-07';
+export const POLITICA_VERSION_DEFECTO = '2026-07-24.v1';
 
 export const RUTA_POLITICA = '/politica-de-datos';
 
@@ -118,9 +125,20 @@ export function ConsentNotice({
         </p>
       </div>
 
+      {/* Divulgacion requerida desde que el backend usa DeepSeek (LLM_PROVIDER)
+          para redactar la conversacion — misma linea que /politica-de-datos. */}
       <p className="text-sm text-text-muted">
-        Como titular puedes <strong className="font-medium text-text">conocer, actualizar,
-        rectificar y suprimir</strong> tus datos, y revocar esta autorización en cualquier momento.{' '}
+        Tus respuestas de texto libre pueden ser procesadas por un proveedor externo de
+        inteligencia artificial fuera de Colombia, solo para entender y redactar la conversación:
+        la decisión sobre tu perfil siempre es de nuestro sistema, nunca del proveedor.
+      </p>
+
+      <p className="text-sm text-text-muted">
+        Como titular puedes <strong className="font-medium text-text">conocer, actualizar y
+        rectificar</strong> tus datos, <strong className="font-medium text-text">revocar</strong>{' '}
+        esta autorización en cualquier momento, y{' '}
+        <strong className="font-medium text-text">solicitar su supresión</strong> — hoy esa
+        solicitud se atiende de forma manual, no con un botón de autogestión inmediata.{' '}
         <a
           href={RUTA_POLITICA}
           target="_blank"

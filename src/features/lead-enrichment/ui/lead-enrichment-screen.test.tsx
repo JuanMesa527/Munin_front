@@ -78,6 +78,10 @@ function tarjeta(id: string, estimado = true): ProjectMatchCard {
       proyectoId: id,
       similitud: 0.87,
       razon: 'Te lo mostramos porque cabe en tu techo estimado y queda en Bogota.',
+      nombre: `Proyecto ${id}`,
+      etapa: 'Etapa 1',
+      precioDesde: 180_000_000,
+      tipologia: 'VIS · 3 hab',
     },
     factores: [
       {
@@ -85,6 +89,7 @@ function tarjeta(id: string, estimado = true): ProjectMatchCard {
         peso: 0.4,
         valor: 'cabe en tu techo estimado',
         contribucion: 40,
+        intensidad: 100,
       },
     ],
     cabeEnCapacidad: true,
