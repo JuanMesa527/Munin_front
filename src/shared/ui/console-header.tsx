@@ -24,21 +24,16 @@ function initials(nombre: string): string {
     .toUpperCase();
 }
 
-/**
- * Marca del producto: cuatro cuadros en damero amarillo/azul. Es decorativa,
- * asi que va con `aria-hidden` para que el lector de pantalla no lea ruido.
- */
+const COLSUBSIDIO_LOGO =
+  'https://www.colsubsidio.com/campusvirtual/login-custom/img/colsubsidio1.png';
+
 function BrandMark(): ReactElement {
   return (
-    <span
-      aria-hidden="true"
-      className="grid grid-cols-[13px_13px] grid-rows-[13px_13px] gap-[2px]"
-    >
-      <span className="rounded-[2px] bg-console-signal" />
-      <span className="rounded-[2px] bg-console-blue" />
-      <span className="rounded-[2px] bg-console-blue" />
-      <span className="rounded-[2px] bg-console-signal" />
-    </span>
+    <img
+      src={COLSUBSIDIO_LOGO}
+      alt="Colsubsidio"
+      className="h-6 w-auto"
+    />
   );
 }
 

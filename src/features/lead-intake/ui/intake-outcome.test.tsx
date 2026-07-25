@@ -20,6 +20,7 @@ function perfilBase(overrides: Partial<ConversationTurn['profile']> = {}): Conve
       otorgadoEn: AHORA,
       canal: 'web-chat',
     },
+    identidad: null,
     nombre: 'María Demo',
     email: 'maria.demo@example.com',
     telefono: '3001234567',

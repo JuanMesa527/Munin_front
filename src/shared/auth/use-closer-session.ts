@@ -20,7 +20,7 @@ export interface CloserSessionState {
   isLoading: boolean;
   isError: boolean;
   /** Fuerza una revalidacion, p. ej. despues del login. */
-  refetch: () => void;
+  refetch: () => Promise<boolean>;
 }
 
 /**
@@ -75,8 +75,9 @@ export function useCloserSession(): CloserSessionState {
     session: query.data ?? null,
     isLoading: query.isPending,
     isError: query.isError,
-    refetch: () => {
-      void query.refetch();
+    refetch: async () => {
+      const result = await query.refetch();
+      return result.isSuccess && result.data !== null;
     },
   };
 }

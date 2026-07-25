@@ -34,6 +34,7 @@ const MENSAJES: ChatMessage[] = [
 const PERFIL_VACIO: LeadProfile = {
   id: 'lead-test',
   consentimiento: null,
+  identidad: null,
   nombre: null,
   email: null,
   telefono: null,

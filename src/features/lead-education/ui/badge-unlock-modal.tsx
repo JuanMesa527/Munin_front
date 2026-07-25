@@ -6,7 +6,7 @@
  */
 
 import { motion, useReducedMotion } from 'motion/react';
-import type { ReactElement } from 'react';
+import { createElement, type ReactElement } from 'react';
 import type { Badge as BadgeType } from '@contracts';
 import { Button, Modal } from '@shared/ui';
 import { EASE_OUT_SOFT } from '../model/motion';
@@ -17,22 +17,15 @@ export interface BadgeUnlockModalProps {
   onClose: () => void;
 }
 
-/**
- * Funcion (no un componente con nombre en PascalCase) a proposito: asignar
- * `iconoDeBadge(...)` a una variable capitalizada dentro del render dispara
- * `react-hooks/static-components` (React no puede probar que el componente es
- * estable entre renders). Envolver la creacion del elemento en una funcion
- * minuscula evita el falso positivo sin perder el lookup dinamico.
- */
-function iconoBadgeDesbloqueado(icono: string): ReactElement {
-  const Icono = iconoDeBadge(icono);
-  return <Icono className="animate-pop size-12" />;
-}
-
 export function BadgeUnlockModal({ badge, onClose }: BadgeUnlockModalProps): ReactElement | null {
   const reducir = useReducedMotion() ?? false;
 
   if (badge === null) return null;
+
+  // `createElement` y no `<Icono />`: los iconos salen de un mapa de modulo, asi
+  // que su identidad es estable, pero asignarlos a una capitalizada dentro del
+  // render dispara `react-hooks/static-components` igual.
+  const icono = iconoDeBadge(badge.icono);
 
   return (
     <Modal
@@ -49,7 +42,7 @@ export function BadgeUnlockModal({ badge, onClose }: BadgeUnlockModalProps): Rea
           animate={{ opacity: 1, scale: 1 }}
           transition={{ type: 'spring', stiffness: 380, damping: 18 }}
         >
-          {iconoBadgeDesbloqueado(badge.icono)}
+          {createElement(icono, { className: 'animate-pop size-12' })}
         </motion.span>
         <motion.p
           className="text-lg font-semibold text-text"

@@ -10,8 +10,11 @@
  * es el UNICO lugar que decide cuando ofrecer este arreglo, y solo lo hace
  * tras un error de conectividad.
  *
- * Guion offline (fallback de red): identidad + perfilamiento financiero +
- * cierre viable. Datos ficticios (example.com / 300…).
+ * Guion offline (fallback de red): identidad de contacto (nombre/email/
+ * telefono/edad/estadoCivil) + perfilamiento financiero (afiliacion, rango
+ * salarial, segmento familiar, ciudad, ahorro, capacidad mensual) + cierre
+ * `completado-viable`. Datos ficticios (example.com / 300…). `identidad`
+ * tokenizada queda en `null` (el telefono real no viaja en el DTO).
  */
 
 import type { ConversationTurn, LeadProfile } from '@contracts';
@@ -25,6 +28,7 @@ function mensajeBot(id: string, texto: string): ConversationTurn['mensajes'][num
 const PERFIL_BASE: LeadProfile = {
   id: 'fixture-lead-001',
   consentimiento: null,
+  identidad: null,
   nombre: null,
   email: null,
   telefono: null,

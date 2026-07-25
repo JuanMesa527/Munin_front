@@ -23,3 +23,6 @@ Thumbs.db
 .codegraph/
 # Brainstorm visual companion
 .superpowers/
+
+# Estado local de herramientas de agente. Nunca se versiona.
+.omc/
