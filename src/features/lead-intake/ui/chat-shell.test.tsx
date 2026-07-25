@@ -40,6 +40,7 @@ const PERFIL_VACIO: LeadProfile = {
   telefono: null,
   edad: null,
   estadoCivil: null,
+  ocupacion: null,
   esAfiliado: null,
   rangoSalarial: null,
   segmento: null,
@@ -97,7 +98,7 @@ describe('ChatShell', () => {
 
     const barra = screen.getByRole('progressbar');
     expect(barra).toHaveAttribute('aria-valuenow', '50');
-    expect(screen.getByText(/Paso 6 de 11 · Afiliación/i)).toBeInTheDocument();
+    expect(screen.getByText(/Paso 7 de 12 · Afiliación/i)).toBeInTheDocument();
   });
 
   it('muestra el indicador de escritura mientras se envia una respuesta', () => {

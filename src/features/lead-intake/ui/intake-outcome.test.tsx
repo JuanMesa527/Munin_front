@@ -26,6 +26,7 @@ function perfilBase(overrides: Partial<ConversationTurn['profile']> = {}): Conve
     telefono: '3001234567',
     edad: 27,
     estadoCivil: 'Soltero/a',
+    ocupacion: 'Independiente',
     esAfiliado: true,
     rangoSalarial: '4-6 SMMLV',
     segmento: null,

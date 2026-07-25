@@ -28,6 +28,7 @@ const TURNO_FICTICIO: ConversationTurn = {
     telefono: null,
     edad: null,
     estadoCivil: null,
+    ocupacion: null,
     esAfiliado: null,
     rangoSalarial: null,
     segmento: null,
