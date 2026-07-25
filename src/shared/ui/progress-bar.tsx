@@ -71,7 +71,7 @@ export function ProgressBar({
         aria-valuenow={porcentaje}
         aria-valuemin={0}
         aria-valuemax={100}
-        aria-valuetext={`${porcentaje}%`}
+        aria-valuetext={`${String(porcentaje)}%`}
         aria-labelledby={label !== undefined ? labelId : undefined}
         aria-label={label === undefined ? (ariaLabel ?? 'Progreso') : undefined}
         className={cn(
@@ -83,7 +83,7 @@ export function ProgressBar({
             del design system la neutraliza sin logica extra en JS. */}
         <div
           className={cn('h-full rounded-pill transition-[width] duration-500 ease-out', TONOS[tone])}
-          style={{ width: `${porcentaje}%` }}
+          style={{ width: `${String(porcentaje)}%` }}
         />
       </div>
     </div>
