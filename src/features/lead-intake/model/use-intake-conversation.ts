@@ -179,7 +179,13 @@ export interface UseIntakeConversationResult {
   acceptConsent: (input: SubmitConsentInput) => void;
   declineConsent: () => void;
   retryConsent: () => void;
-  sendTurn: (input: { texto: string | null; quickReplyValue: string | null }) => void;
+  sendTurn: (input: {
+    texto: string | null;
+    quickReplyValue: string | null;
+    /** Texto a mostrar en la burbuja del usuario. Para un chip, su `label`
+     * (p. ej. "Sí"), no el `value` crudo ("true"). No se envia al backend. */
+    displayText?: string;
+  }) => void;
   useFixture: () => void;
 }
 
@@ -264,8 +270,10 @@ export function useIntakeConversation(): UseIntakeConversationResult {
   }, []);
 
   const sendTurn = useCallback(
-    (input: { texto: string | null; quickReplyValue: string | null }) => {
-      const etiqueta = input.texto ?? input.quickReplyValue ?? '';
+    (input: { texto: string | null; quickReplyValue: string | null; displayText?: string }) => {
+      // `displayText` solo alimenta la burbuja; NUNCA viaja al backend.
+      const { displayText, ...payload } = input;
+      const etiqueta = displayText ?? payload.texto ?? payload.quickReplyValue ?? '';
       const mensajeUsuario = etiqueta.length > 0 ? crearMensajeUsuario(etiqueta) : undefined;
 
       if (state.usingFixture) {
@@ -274,7 +282,7 @@ export function useIntakeConversation(): UseIntakeConversationResult {
       }
       if (state.turn === null) return;
       if (mensajeUsuario !== undefined) dispatch({ type: 'turn/userMessage', message: mensajeUsuario });
-      turnMutation.mutate({ leadId: state.turn.profile.id, ...input });
+      turnMutation.mutate({ leadId: state.turn.profile.id, ...payload });
     },
     [state.turn, state.usingFixture, turnMutation],
   );

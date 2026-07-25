@@ -1,0 +1,57 @@
+schema: spec-driven
+
+context: |
+  Munin_front — Hackathon Colsubsidio x 30X, Reto Vivienda (frontend).
+  Node >=22, TypeScript strict, React 19, Vite 8, Tailwind v4 (CSS-first @theme).
+  Feature-Sliced: features/{feature}/{ui,model,api}/index.ts + shared/ + app/routes.
+  contracts.ts is synced FROM ../Munin_back — never edit locally, propose changes upstream.
+  ESLint enforces feature isolation (no-restricted-imports) and contracts.ts purity.
+  Glass-box rule: scoring/routing decisions are backend-only; frontend never decides carril/score.
+
+strict_tdd: true
+
+testing:
+  test_command: "npm run test"
+  test_watch_command: "npm run test:watch"
+  framework: vitest
+  environment: happy-dom
+  typecheck_command: "npm run typecheck"
+  lint_command: "npm run lint"
+  build_command: "npm run build"
+  verify_command: "npm run verify"
+  coverage_threshold: 0
+
+rules:
+  proposal:
+    - State which feature slice(s) (F1 lead-intake, F2.1 lead-enrichment, F2.2 lead-education, F3 closer-dashboard, F4 closer-briefing, or shared/app) the change touches
+    - Include rollback plan for risky changes
+    - Flag explicitly if the change requires editing shared/contracts.ts, shared/ui, or app/ — these are cross-cutting and must be announced to the team
+  specs:
+    - Use Given/When/Then for scenarios
+    - Use RFC 2119 keywords (MUST, SHALL, SHOULD, MAY)
+    - Never invent contract fields not present in shared/contracts.ts; if a field is missing, the spec must propose the change in Munin_back instead
+  design:
+    - Respect Clean Architecture dependency rule: app/ -> features/ -> shared/, never reverse
+    - ui/ must not call fetch directly; I/O goes through api/ via model/
+    - Document any new shared/ui primitive proposal explicitly (PROPUESTA AL EQUIPO)
+  tasks:
+    - Group by phase, use hierarchical numbering
+    - Keep tasks completable in one session
+    - Respect the 400-line review budget guard; flag chained-PR risk when forecast is high
+  apply:
+    guidelines:
+      - Follow existing code patterns (Feature-Sliced layout, cn() for classnames, formatCOP/formatCOPCompact for money)
+      - Never edit src/shared/contracts.ts locally — it is synced from Munin_back
+      - Never use `any`, `@ts-ignore`, `dangerouslySetInnerHTML` with backend/user content, or localStorage/sessionStorage for lead/session data
+      - UI copy about money/subsidy/capacity must say "estimado", never "aprobado"
+      - Do not show estrato as a decision factor
+      - All screens fetching data need loading/empty/error states (Skeleton, EmptyState, Alert from shared/ui)
+    tdd: true
+    test_command: "npm run test"
+  verify:
+    test_command: "npm run test"
+    build_command: "npm run build"
+    coverage_threshold: 0
+  archive:
+    - Warn before merging destructive deltas
+    - Warn if the change touched shared/contracts.ts, shared/ui, or app/ routing — announce to team before archiving

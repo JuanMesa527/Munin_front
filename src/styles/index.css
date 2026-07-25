@@ -13,6 +13,17 @@
 
 @import 'tailwindcss';
 
+/* --------------------------------------------------------------------------
+ *  Tema claro forzado (decision de producto, boceto Design.pdf).
+ *  Por defecto la variante `dark:` de Tailwind v4 sigue `prefers-color-scheme`.
+ *  Aqui la re-atamos a un opt-in explicito (`[data-theme='dark']`), que NADIE
+ *  activa hoy, asi que toda la app queda en claro sin importar el tema del SO.
+ *  El bloque de tokens oscuros de mas abajo tambien pasa a ese mismo selector,
+ *  de modo que el diseno dark queda preservado para un futuro toggle, pero
+ *  inerte por ahora. Cambio pedido por producto: "fondo blanco".
+ * ------------------------------------------------------------------------ */
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
 @theme {
   /* ---- D12 · tokens de marca del hackathon (Colsubsidio x 30X) ----------
    * Fuente: `Munin_front/Design System Colsubsidio.html`, confirmado por
@@ -161,14 +172,14 @@
   --color-overlay: oklch(0.159 0 89.9 / 0.55);
 
   /* ---- Chat estilo WhatsApp (F1 y F2.1) ---------------------------------
-   * Antes usaba el verde de marca de WhatsApp (prohibido por D12: "nada de
-   * verde"). Ahora usa la paleta neutra/dorada del sistema: burbuja saliente
-   * en tinte amarillo (`--color-tint-yellow`), nunca verde.
+   * Valores segun el boceto Design.pdf (chat claro): header blanco, lienzo
+   * crema muy claro, burbuja del bot beige (gray-100) y burbuja del usuario
+   * en amarillo de marca solido. Nunca verde (D12).
    */
-  --color-whatsapp-header: #3a382f; /* = --color-gray-800 */
-  --color-whatsapp-bg: #eeebe0; /* = --color-gray-100 */
-  --color-whatsapp-in: oklch(1 0 0); /* = --color-surface */
-  --color-whatsapp-out: #fcf3c7; /* = --color-tint-yellow */
+  --color-whatsapp-header: #ffffff; /* header claro (boceto) */
+  --color-whatsapp-bg: #fbf9f2; /* = --color-cream: lienzo del hilo */
+  --color-whatsapp-in: #eeebe0; /* = --color-gray-100: burbuja del bot */
+  --color-whatsapp-out: #f2ce1b; /* = --color-brand-primary: burbuja del usuario */
   --color-whatsapp-text: #0d0d0d; /* = --color-ink */
   --color-whatsapp-meta: #8a867a; /* = --color-gray-500 */
 
@@ -204,16 +215,17 @@
  *  reasignar los mismos tokens sin pelear especificidad.
  * ------------------------------------------------------------------------ */
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* La variante `dark:` de Tailwind v4 usa esta misma media query, asi que
-     * tokens y utilidades cambian juntos. Los valores de D12 no traen
-     * variante oscura explicita (el brief es de un solo tema); estos son
-     * derivados nuestros sobre la misma paleta ink/gray/cream — nunca
-     * reintroducen verde. */
+:root[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+/* Tokens de tema oscuro: reasignados bajo `[data-theme='dark']` (opt-in), no
+ * bajo `prefers-color-scheme`, para que el tema claro sea el unico activo hoy
+ * (boceto Design.pdf). Se conservan intactos para un futuro toggle. */
+:root[data-theme='dark'] {
     --color-surface: oklch(0.22 0.004 90);
     --color-surface-2: oklch(0.16 0.004 90);
     --color-surface-3: oklch(0.28 0.006 90);
@@ -255,7 +267,6 @@
     --shadow-card: 0 1px 2px oklch(0 0 0 / 0.4), 0 8px 24px oklch(0 0 0 / 0.28);
     --shadow-bubble: 0 1px 1px oklch(0 0 0 / 0.35);
     --shadow-pop: 0 10px 30px oklch(0 0 0 / 0.45);
-  }
 }
 
 /* --------------------------------------------------------------------------

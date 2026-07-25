@@ -26,6 +26,8 @@ export interface ChatBubbleProps {
   enviadoEn?: IsoDateTime | undefined;
   /** Solo aplica a mensajes salientes; el bot no muestra checks. */
   estado?: EstadoEnvio | undefined;
+  /** Avatar del bot, a la izquierda de la burbuja (boceto). Ignorado para el usuario. */
+  avatar?: ReactNode;
   children?: ReactNode;
   className?: string | undefined;
 }
@@ -47,13 +49,25 @@ export function ChatBubble({
   texto,
   enviadoEn,
   estado,
+  avatar,
   children,
   className,
 }: ChatBubbleProps): ReactElement {
   const esUsuario = emisor === 'usuario';
 
   return (
-    <li className={cn('flex w-full', esUsuario ? 'justify-end' : 'justify-start', className)}>
+    <li
+      className={cn(
+        'flex w-full items-end gap-2',
+        esUsuario ? 'justify-end' : 'justify-start',
+        className,
+      )}
+    >
+      {!esUsuario && avatar !== undefined && (
+        <span aria-hidden="true" className="mb-0.5 shrink-0">
+          {avatar}
+        </span>
+      )}
       <div
         className={cn(
           'relative max-w-[85%] rounded-bubble px-3 py-2 shadow-bubble sm:max-w-[75%]',
@@ -83,9 +97,16 @@ export function ChatBubble({
           {texto}
           {children}
           {/* Espaciador inline: reserva el hueco de la hora en la ultima linea,
-              igual que WhatsApp, para que el texto no quede debajo. */}
+              igual que WhatsApp, para que el texto no quede debajo. Los
+              mensajes del usuario reservan un poco mas por los checks. */}
           {enviadoEn !== undefined && (
-            <span aria-hidden="true" className="inline-block w-[4.25rem] select-none" />
+            <span
+              aria-hidden="true"
+              className={cn(
+                'inline-block select-none',
+                esUsuario && estado !== undefined ? 'w-[5.5rem]' : 'w-[4.25rem]',
+              )}
+            />
           )}
         </div>
 

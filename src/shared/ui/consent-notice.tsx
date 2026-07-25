@@ -21,10 +21,17 @@ import { Button } from './button';
 /**
  * Version del texto que el titular acepta. Debe quedar guardada junto al
  * consentimiento para poder demostrar QUE se acepto.
+ *
+ * Debe coincidir EXACTO con `PRIVACY_POLICY_VERSION` de `Munin_back/.env`
+ * (ver `.env.example`): `SubmitConsentUseCase` compara este valor contra
+ * `env.privacyPolicyVersion` y rechaza el consentimiento si no matchean
+ * (confirmado en vivo: con el valor viejo, ningun usuario real pasaba de
+ * esta pantalla — CONSENT_REQUIRED en el 100% de los intentos).
  * PROPUESTA AL EQUIPO: cuando el backend exponga la version vigente de la
- * politica, pasarla por prop y borrar este default.
+ * politica en la respuesta de `/start`, pasarla por prop y borrar este
+ * default hardcodeado — dos strings duplicados en dos repos es fragil.
  */
-export const POLITICA_VERSION_DEFECTO = 'v1.0-2026-07';
+export const POLITICA_VERSION_DEFECTO = '2026-07-24.v1';
 
 export const RUTA_POLITICA = '/politica-de-datos';
 
