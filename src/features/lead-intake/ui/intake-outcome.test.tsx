@@ -20,6 +20,7 @@ function perfilBase(overrides: Partial<ConversationTurn['profile']> = {}): Conve
       otorgadoEn: AHORA,
       canal: 'web-chat',
     },
+    identidad: null,
     esAfiliado: true,
     rangoSalarial: '4-6 SMMLV',
     segmento: null,

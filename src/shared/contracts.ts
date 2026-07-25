@@ -159,9 +159,7 @@ export type Banda = 'alta' | 'media' | 'baja';
  * acotadas: no se puede pedir consentimiento "para todo".
  */
 export type FinalidadTratamiento =
-  | 'perfilamiento_vivienda'
-  | 'contacto_comercial'
-  | 'educacion_financiera';
+  'perfilamiento_vivienda' | 'contacto_comercial' | 'educacion_financiera';
 
 /**
  * Evidencia de consentimiento previo, expreso e informado (Ley 1581 de 2012,
@@ -274,6 +272,8 @@ export interface LeadProfile {
 
   /** Gate legal. Se captura ANTES de cualquier pregunta de perfilamiento. */
   consentimiento: ConsentRecord | null;
+  /** Identidad tokenizada capturada por F1; el telefono real queda en el vault. */
+  identidad: ContactIdentity | null;
 
   /** --- Se llena en la conversacion (F1) --- */
   esAfiliado: boolean | null;
@@ -374,34 +374,44 @@ export interface RoutingDecision {
  *  6. F2.1 · lead-enrichment
  * ========================================================================== */
 
-export interface ContactPreference {
-  canalPreferido: string;
-  mejorHorario: string;
+export type SwipeAction = 'pass' | 'like' | 'favorito';
+
+export interface ProjectMatchCard {
+  ficha: ProjectCard;
+  match: ProjectMatch;
+  factores: Factor[];
+  cabeEnCapacidad: boolean;
 }
 
-/* --------------------------------------------------------------------------
- *  Telemetria de atencion (adenda A10)
- *
- *  Tipos canonicos de `ViewEvent`/`EnrichmentSessionSummary`. La telemetria de
- *  F2.1 (`telemetry.port.ts`, stores, use case) ya los importaba de `@contracts`
- *  pero el contrato no los declaraba: se agregan aqui con la MISMA forma de
- *  `ViewEventSchema`/`SessionSummarySchema` (lead-enrichment.dto.ts). Senal de
- *  comportamiento agregada, NUNCA PII.
- * ------------------------------------------------------------------------ */
+export interface EnrichmentDeck {
+  leadId: string;
+  tarjetas: ProjectMatchCard[];
+  catalogoVersion: string;
+  generadoEn: IsoDateTime;
+}
 
-/** Intervalo de atencion: cuanto miro el usuario una seccion. */
+export interface SwipeEvent {
+  leadId: string;
+  proyectoId: string;
+  accion: SwipeAction;
+  decididoEn: IsoDateTime;
+  dwellMs: number | null;
+  abrioDetalle: boolean;
+  detalleMs: number | null;
+}
+
 export interface ViewEvent {
-  /** `null` cuando la seccion no es de un proyecto puntual (deck, resumen). */
+  leadId: string;
   proyectoId: string | null;
-  seccion: 'deck' | 'card' | 'detalle' | 'factores' | 'resumen';
+  seccion: string;
   dwellMs: number;
   ocurridoEn: IsoDateTime;
 }
 
-/** Resumen agregado de una sesion de enriquecimiento: conteos, intencion, tiempo. */
 export interface EnrichmentSessionSummary {
-  startedEn: IsoDateTime;
-  endedEn: IsoDateTime;
+  leadId: string;
+  startedAt: IsoDateTime;
+  endedAt: IsoDateTime;
   totalTarjetas: number;
   decididas: number;
   likes: number;
@@ -409,20 +419,22 @@ export interface EnrichmentSessionSummary {
   passes: number;
   intentScore: number;
   tiempoTotalMs: number;
-  /** Senal gruesa de dispositivo, no PII. */
-  viewport: string | null;
-  dispositivo: string | null;
 }
 
-/**
- * Lote de telemetria que el front manda al cerrar/pausar la sesion (via
- * `sendBeacon`). Misma forma que `TelemetryBodySchema` del backend. Best-effort:
- * su fallo nunca rompe el flujo del usuario.
- */
 export interface EnrichmentTelemetry {
-  leadId: string;
-  vistas: ViewEvent[];
-  sesion: EnrichmentSessionSummary | null;
+  views: ViewEvent[];
+  session: EnrichmentSessionSummary;
+}
+
+export interface EnrichmentSummary {
+  lead: EnrichedLead;
+  guardados: ProjectCard[];
+  swipes: SwipeEvent[];
+}
+
+export interface ContactPreference {
+  canalPreferido: string;
+  mejorHorario: string;
 }
 
 /** Dia de la semana con que tan contactable ha sido el lead ahi. Adenda A8. */
@@ -433,12 +445,7 @@ export interface ContactabilidadDia {
 }
 
 /** Hito del recorrido del lead, para que el closer sepa de donde viene. */
-export type TipoHito =
-  | 'ingreso'
-  | 'consentimiento'
-  | 'perfilamiento'
-  | 'nutricion'
-  | 'viable';
+export type TipoHito = 'ingreso' | 'consentimiento' | 'perfilamiento' | 'nutricion' | 'viable';
 
 /** Evento del recorrido del lead. Adenda A8. */
 export interface LeadTimelineEvent {
@@ -449,8 +456,6 @@ export interface LeadTimelineEvent {
 }
 
 export interface EnrichedLead extends LeadProfile {
-  /** Identidad minima para que el closer pueda llamar (ver adenda A2). */
-  identidad: ContactIdentity | null;
   intereses: string[];
   zonaPreferida: string | null;
   timingCompra: string | null;
@@ -597,11 +602,7 @@ export interface LeadListFilters {
   busqueda: string | null;
 }
 
-export type LeadListSort =
-  | 'score_desc'
-  | 'capacidad_desc'
-  | 'intent_desc'
-  | 'recencia_desc';
+export type LeadListSort = 'score_desc' | 'capacidad_desc' | 'intent_desc' | 'recencia_desc';
 
 export interface LeadListPage {
   items: ViableLeadListItem[];
@@ -762,58 +763,6 @@ export interface ProjectCard {
   /** Render extraido del brochure, servido por el frontend desde `public/`. */
   imagen: string;
   precio: PriceBand;
-}
-
-/* --------------------------------------------------------------------------
- *  Swipes y baraja de F2.1 (adendas A9/A10)
- *
- *  Tipos que el codigo de F2.1 (matching, swipes, use cases, stores) ya
- *  importaba de `@contracts` sin que el contrato los declarara. Se agregan con
- *  la MISMA forma que ese codigo construye/consume; sin ellos el backend no
- *  compila. Glass-box: `intentScore` y `factores` son deterministas, el LLM no
- *  participa.
- * ------------------------------------------------------------------------ */
-
-/** Gesto del usuario sobre una tarjeta de proyecto. */
-export type SwipeAction = 'pass' | 'like' | 'favorito';
-
-/**
- * Una decision de swipe. La telemetria de atencion (`dwellMs`, `abrioDetalle`,
- * `detalleMs`) es opcional: solo el driver de Supabase la persiste (adenda A10).
- */
-export interface SwipeEvent {
-  proyectoId: string;
-  accion: SwipeAction;
-  decididoEn: IsoDateTime;
-  dwellMs?: number;
-  abrioDetalle?: boolean;
-  detalleMs?: number;
-}
-
-/**
- * Una tarjeta de la baraja: la ficha, su match explicable y si cabe en la
- * capacidad del lead. `factores` es la evidencia glass-box del `match`.
- */
-export interface ProjectMatchCard {
-  ficha: ProjectCard;
-  match: ProjectMatch;
-  factores: Factor[];
-  cabeEnCapacidad: boolean;
-}
-
-/** Baraja de proyectos afines a un lead viable (F2.1). */
-export interface EnrichmentDeck {
-  leadId: string;
-  tarjetas: ProjectMatchCard[];
-  catalogoVersion: string;
-  generadoEn: IsoDateTime;
-}
-
-/** Cierre de F2.1: el lead enriquecido persistido + las fichas que eligio. */
-export interface EnrichmentSummary {
-  lead: EnrichedLead;
-  guardados: ProjectCard[];
-  swipes: SwipeEvent[];
 }
 
 /* ==========================================================================

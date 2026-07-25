@@ -8,7 +8,7 @@
  * resumen agregado de la sesion que se envia al cerrar o al abandonar.
  *
  * La telemetria es SENAL GRUESA y sin PII (Ley 1581): tiempos y conteos, mas un
- * `viewport`/`dispositivo` de dispositivo. Nunca el user-agent crudo ni la IP.
+ * identificadores tecnicos del lead y proyecto. Nunca el user-agent crudo ni la IP.
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -47,15 +47,6 @@ export interface DeckState {
 /** Reloj monotonico para medir duraciones; cae a `Date.now` si no hay `performance`. */
 function ahora(): number {
   return typeof performance !== 'undefined' ? performance.now() : Date.now();
-}
-
-/** Clase gruesa de dispositivo a partir del ancho. Senal, no fingerprint. */
-function claseDispositivo(): string {
-  if (typeof window === 'undefined') return 'desconocido';
-  const w = window.innerWidth;
-  if (w >= 1024) return 'desktop';
-  if (w >= 640) return 'tablet';
-  return 'mobile';
 }
 
 function esDesktop(): boolean {
@@ -161,9 +152,15 @@ export function useProjectDeck(leadId: string): DeckState {
       }
 
       // Vistas granulares: la tarjeta y (si aplica) su detalle.
-      vistas.current.push({ proyectoId, seccion: 'card', dwellMs, ocurridoEn: iso });
+      vistas.current.push({ leadId, proyectoId, seccion: 'card', dwellMs, ocurridoEn: iso });
       if (abrioDetalle) {
-        vistas.current.push({ proyectoId, seccion: 'detalle', dwellMs: detalleMs, ocurridoEn: iso });
+        vistas.current.push({
+          leadId,
+          proyectoId,
+          seccion: 'detalle',
+          dwellMs: detalleMs,
+          ocurridoEn: iso,
+        });
       }
 
       if (accion === 'like') conteos.current.likes += 1;
@@ -182,7 +179,7 @@ export function useProjectDeck(leadId: string): DeckState {
       detalleUsado.current = false;
       detalleDesde.current = null;
     },
-    [cerrarDetalleAbierto, indice, swipe, tarjetas],
+    [cerrarDetalleAbierto, indice, leadId, swipe, tarjetas],
   );
 
   /**
@@ -198,8 +195,9 @@ export function useProjectDeck(leadId: string): DeckState {
 
       const { likes, favoritos, passes } = conteos.current;
       const sesion: EnrichmentSessionSummary = {
-        startedEn: sesionInicioIso.current ?? new Date().toISOString(),
-        endedEn: new Date().toISOString(),
+        leadId,
+        startedAt: sesionInicioIso.current ?? new Date().toISOString(),
+        endedAt: new Date().toISOString(),
         totalTarjetas: tarjetas.length,
         decididas: likes + favoritos + passes,
         likes,
@@ -207,14 +205,9 @@ export function useProjectDeck(leadId: string): DeckState {
         passes,
         intentScore,
         tiempoTotalMs: Math.max(0, Math.round(ahora() - sesionInicioPerf.current)),
-        viewport:
-          typeof window !== 'undefined'
-            ? `${String(window.innerWidth)}x${String(window.innerHeight)}`
-            : null,
-        dispositivo: claseDispositivo(),
       };
 
-      flushTelemetry({ leadId, vistas: vistas.current, sesion });
+      flushTelemetry({ views: vistas.current, session: sesion });
     } catch {
       // best-effort: la telemetria no puede tumbar el flujo del usuario.
     }

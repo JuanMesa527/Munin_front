@@ -54,7 +54,11 @@ export function CloserLoginPage(): ReactElement {
       return;
     }
 
-    refetch();
+    const sessionUpdated = await refetch();
+    if (!sessionUpdated) {
+      setError(ERROR_GENERICO);
+      return;
+    }
     void navigate('/closer', { replace: true });
   }
 
@@ -78,8 +82,8 @@ export function CloserLoginPage(): ReactElement {
           Consola closer
         </h1>
         <p className="mb-8 text-[15px] text-console-body">
-          Acceso restringido al equipo comercial. Los leads que verás contienen datos personales
-          de titulares que autorizaron su tratamiento.
+          Acceso restringido al equipo comercial. Los leads que verás contienen datos personales de
+          titulares que autorizaron su tratamiento.
         </p>
 
         <form

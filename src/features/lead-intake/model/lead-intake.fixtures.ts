@@ -12,9 +12,8 @@
  *
  * Guion: 6 preguntas confirmadas con producto, en este orden — afiliacion,
  * rango salarial, segmento familiar, ciudad, ahorro, capacidad de ahorro
- * mensual — y un cierre `completado-viable`. Cero PII real: `LeadProfile` no
- * lleva nombre ni telefono (esos solo existen en `EnrichedLead`, fuera de
- * F1), y los textos son puramente de guion.
+ * mensual — y un cierre `completado-viable`. Cero PII real: la identidad
+ * tokenizada queda en `null` y los textos son puramente de guion.
  */
 
 import type { ConversationTurn, LeadProfile } from '@contracts';
@@ -28,6 +27,7 @@ function mensajeBot(id: string, texto: string): ConversationTurn['mensajes'][num
 const PERFIL_BASE: LeadProfile = {
   id: 'fixture-lead-001',
   consentimiento: null,
+  identidad: null,
   esAfiliado: null,
   rangoSalarial: null,
   segmento: null,

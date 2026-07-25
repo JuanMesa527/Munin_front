@@ -22,6 +22,7 @@ const TURNO_FICTICIO: ConversationTurn = {
   profile: {
     id: 'lead-test-1',
     consentimiento: null,
+    identidad: null,
     esAfiliado: null,
     rangoSalarial: null,
     segmento: null,
