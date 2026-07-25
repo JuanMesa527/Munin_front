@@ -17,6 +17,7 @@ import type {
   EnrichmentDeck,
   EnrichmentSessionSummary,
   EnrichmentSummary,
+  PreferenciaContacto,
   SwipeAction,
   ViewEvent,
 } from '@contracts';
@@ -40,6 +41,13 @@ export interface DeckState {
   notificarDetalle: (abierto: boolean) => void;
   /** Cierra F2.1 y persiste el lead enriquecido. */
   cerrar: () => void;
+  /**
+   * Reenvia el cierre con la franja que el titular eligio en el resumen. Va
+   * aparte de `cerrar` porque el cierre se dispara solo al agotar la baraja,
+   * antes de que exista respuesta a "¿cuándo te llamamos?".
+   */
+  guardarPreferenciaContacto: (preferencia: PreferenciaContacto) => void;
+  preferenciaGuardada: boolean;
   cerrando: boolean;
   /** `true` si el POST del resumen fallo: habilita reintentar el cierre. */
   cierreFallo: boolean;
@@ -99,7 +107,8 @@ export function useProjectDeck(leadId: string): DeckState {
   });
 
   const cierre = useMutation({
-    mutationFn: () => postSummary(leadId),
+    mutationFn: (preferenciaContacto?: PreferenciaContacto) =>
+      postSummary(leadId, preferenciaContacto),
   });
 
   const tarjetas = useMemo(() => consulta.data?.tarjetas ?? [], [consulta.data]);
@@ -251,6 +260,10 @@ export function useProjectDeck(leadId: string): DeckState {
     decidir,
     notificarDetalle,
     cerrar,
+    guardarPreferenciaContacto: (preferencia: PreferenciaContacto) => {
+      cierre.mutate(preferencia);
+    },
+    preferenciaGuardada: cierre.data?.lead.contacto !== null && cierre.data !== undefined,
     cerrando: cierre.isPending,
     cierreFallo: cierre.isError,
     resumen: cierre.data,

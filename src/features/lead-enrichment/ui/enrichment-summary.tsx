@@ -12,17 +12,47 @@
  * es un dato que el titular no puede corregir porque ni sabe que existe.
  */
 
-import type { ReactElement } from 'react';
-import type { EnrichmentSummary as Resumen } from '@contracts';
-import { EmptyState } from '@shared/ui';
+import { useState, type ReactElement } from 'react';
+import type {
+  DiaContacto,
+  EnrichmentSummary as Resumen,
+  FranjaContacto,
+  PreferenciaContacto,
+} from '@contracts';
+import { DIAS_CONTACTO, FRANJAS_CONTACTO } from '@contracts';
+import { Button, EmptyState } from '@shared/ui';
 import { formatCOPCompact } from '@shared/lib/format-money';
+
+const NOMBRE_DIA: Readonly<Record<DiaContacto, string>> = {
+  L: 'Lun',
+  M: 'Mar',
+  X: 'Mié',
+  J: 'Jue',
+  V: 'Vie',
+  S: 'Sáb',
+};
+
+function alternar<T>(lista: readonly T[], valor: T): T[] {
+  return lista.includes(valor) ? lista.filter((x) => x !== valor) : [...lista, valor];
+}
 
 export interface EnrichmentSummaryProps {
   resumen: Resumen;
+  /** Manda la franja elegida. Ausente = la pantalla se muestra en solo lectura. */
+  onGuardarHorario?: ((preferencia: PreferenciaContacto) => void) | undefined;
+  guardando?: boolean | undefined;
 }
 
-export function EnrichmentSummaryView({ resumen }: EnrichmentSummaryProps): ReactElement {
+export function EnrichmentSummaryView({
+  resumen,
+  onGuardarHorario,
+  guardando = false,
+}: EnrichmentSummaryProps): ReactElement {
   const { lead, guardados } = resumen;
+  const [dias, setDias] = useState<DiaContacto[]>([]);
+  const [franjas, setFranjas] = useState<FranjaContacto[]>([]);
+  const yaRespondio = lead.contacto !== null;
+  const puedeEnviar = dias.length > 0 && franjas.length > 0 && !guardando;
 
   return (
     <div className="flex flex-col gap-12">
@@ -130,6 +160,81 @@ export function EnrichmentSummaryView({ resumen }: EnrichmentSummaryProps): Reac
           que no tienes que repetir nada. Si algo cambió o no te representa, díselo y lo
           corregimos.
         </p>
+
+        {/* "Pronto" a secas deja al closer adivinando la hora. Preguntarlo aqui
+            —donde el usuario ya sabe que le van a llamar— convierte la franja en
+            un dato DECLARADO. Sin esta respuesta la ficha dice "Sin franja
+            preferida": preferimos el vacio honesto a un horario supuesto. */}
+        {yaRespondio ? (
+          <p className="mt-4 text-sm font-bold">
+            Listo: te llamamos en la franja de {lead.contacto?.mejorHorario}.
+          </p>
+        ) : (
+          <fieldset className="mt-4 flex flex-col gap-4 border-0 p-0">
+            <legend className="text-base font-bold">¿Cuándo te queda mejor que te llamemos?</legend>
+
+            <div className="flex flex-col gap-2">
+              <span className="label-mono text-text-subtle">Días</span>
+              <div className="flex flex-wrap gap-2" role="group" aria-label="Días preferidos">
+                {DIAS_CONTACTO.map((dia) => (
+                  <button
+                    key={dia}
+                    type="button"
+                    aria-pressed={dias.includes(dia)}
+                    onClick={() => {
+                      setDias((previos) => alternar(previos, dia));
+                    }}
+                    className={`border px-3 py-1.5 text-sm font-bold ${
+                      dias.includes(dia)
+                        ? 'border-accent bg-accent text-white'
+                        : 'border-border-strong'
+                    }`}
+                  >
+                    {NOMBRE_DIA[dia]}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <span className="label-mono text-text-subtle">Franja</span>
+              <div className="flex flex-wrap gap-2" role="group" aria-label="Franjas preferidas">
+                {FRANJAS_CONTACTO.map((franja) => (
+                  <button
+                    key={franja}
+                    type="button"
+                    aria-pressed={franjas.includes(franja)}
+                    onClick={() => {
+                      setFranjas((previas) => alternar(previas, franja));
+                    }}
+                    className={`border px-3 py-1.5 text-sm font-bold capitalize ${
+                      franjas.includes(franja)
+                        ? 'border-accent bg-accent text-white'
+                        : 'border-border-strong'
+                    }`}
+                  >
+                    {franja}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <Button
+                type="button"
+                disabled={!puedeEnviar}
+                onClick={() => {
+                  onGuardarHorario?.({ dias, franjas });
+                }}
+              >
+                {guardando ? 'Guardando…' : 'Guardar mi horario'}
+              </Button>
+              <span className="text-xs text-text-subtle">
+                Es opcional: si prefieres, te llamamos cuando podamos.
+              </span>
+            </div>
+          </fieldset>
+        )}
       </aside>
     </div>
   );
