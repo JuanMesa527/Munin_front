@@ -14,7 +14,7 @@
  * las features del cliente se desarrollen en paralelo sin conocerse.
  */
 
-import { useState, type ReactElement } from 'react';
+import { useEffect, useState, type ReactElement } from 'react';
 import { LeadIntakeScreen } from '@features/lead-intake';
 import { LeadEnrichmentScreen } from '@features/lead-enrichment';
 import {
@@ -24,15 +24,39 @@ import {
   OnboardingWelcomeModal,
   PerfilScreen,
   ProgresoScreen,
+  useEducationJourney,
   VistaTransition,
 } from '@features/lead-education';
 import type { ClientVista } from '../shell/client-vista';
 import { AppShell } from '../shell/app-shell';
 
-function CaminoNutricion({ leadId }: { leadId: string }): ReactElement {
+interface CaminoNutricionProps {
+  leadId: string;
+  /**
+   * F2.2 -> F2.1: cuando el lead cierra su brecha de ahorro (y afiliación, si
+   * aplica), el journey se reclasifica a `viable` en el propio backend. Sin
+   * este handoff, el usuario se queda en las pantallas de F2.2 mientras el
+   * backend ya rechaza ese `leadId` (regla de dominio: F2.2 es solo para
+   * `carril: 'no_viable'`) — cada fetch posterior falla, y esos fallos en
+   * cascada fueron los que agotaban el rate limit ("demasiadas solicitudes").
+   */
+  onGraduar: (leadId: string) => void;
+}
+
+function CaminoNutricion({ leadId, onGraduar }: CaminoNutricionProps): ReactElement {
   const [vista, setVista] = useState<ClientVista>('inicio');
   // Una sola vez al entrar al carril de nutrición (no al cambiar de pestaña).
   const [mostrarOnboarding, setMostrarOnboarding] = useState(true);
+  // Mismo queryKey que ya usa cada pantalla hija (React Query lo comparte —
+  // esto NO agrega un fetch extra): solo lo leemos acá para detectar la
+  // graduación sin importar en qué pestaña esté el usuario.
+  const { data } = useEducationJourney(leadId);
+
+  useEffect(() => {
+    if (data?.journey.reclasificadoAViable === true) {
+      onGraduar(leadId);
+    }
+  }, [data?.journey.reclasificadoAViable, leadId, onGraduar]);
 
   const pantalla =
     vista === 'inicio' ? (
@@ -92,7 +116,7 @@ export function ClientFlowPage(): ReactElement {
   }
 
   if (leadNoViableId !== null) {
-    return <CaminoNutricion leadId={leadNoViableId} />;
+    return <CaminoNutricion leadId={leadNoViableId} onGraduar={setLeadViableId} />;
   }
 
   return <LeadIntakeScreen onViable={setLeadViableId} onNoViable={setLeadNoViableId} />;

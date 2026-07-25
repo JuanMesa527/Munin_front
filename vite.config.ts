@@ -32,5 +32,18 @@ export default defineConfig({
     globals: true,
     include: ['src/**/*.{test,spec}.{ts,tsx}'],
     setupFiles: ['./src/shared/test/setup.ts'],
+    // Sin esto, happy-dom intenta cargar de verdad el `src` de cualquier
+    // <iframe> montado en un test (p. ej. `LessonVideoPlayer`), disparando
+    // una peticion de red real contra un tercero — lento, flaky y sin
+    // sentido en un test unitario.
+    environmentOptions: {
+      happyDOM: {
+        settings: {
+          navigation: {
+            disableChildFrameNavigation: true,
+          },
+        },
+      },
+    },
   },
 });

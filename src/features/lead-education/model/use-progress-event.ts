@@ -16,6 +16,8 @@ export interface RegistrarProgresoInput {
   metaId: string;
   tipo: ProgressEvent['tipo'];
   valor: number;
+  /** Fecha límite de la meta de ahorro (adenda A10). Ortogonal a `tipo`/`valor`. */
+  fechaObjetivo?: string;
 }
 
 export function useProgressEvent(leadId: string): {
@@ -31,6 +33,7 @@ export function useProgressEvent(leadId: string): {
       const respuesta = await recordProgress({
         leadId,
         event: { tipo: input.tipo, metaId: input.metaId, valor: input.valor },
+        ...(input.fechaObjetivo !== undefined ? { fechaObjetivo: input.fechaObjetivo } : {}),
       });
       if (!respuesta.ok) throw new ApiRequestError(respuesta.error);
       if (cached === undefined) {
@@ -44,10 +47,25 @@ export function useProgressEvent(leadId: string): {
         journey: respuesta.data,
         contenidos: cached.contenidos,
         lead: cached.lead,
+        // `ritmoAhorro` es derivado por el backend a partir de `aportes`/
+        // `fechaObjetivo`: la respuesta del POST solo trae `journey`, asi que
+        // se conserva el ultimo valor conocido hasta que el `invalidateQueries`
+        // de abajo traiga el recalculo fresco del GET.
+        ...(cached.ritmoAhorro !== undefined ? { ritmoAhorro: cached.ritmoAhorro } : {}),
       } satisfies JourneyView;
     },
     onSuccess: (view) => {
       queryClient.setQueryData(queryKey, view);
+      // Si este evento reclasifico al lead a `viable`, `app/client-flow.page`
+      // esta a punto de desmontar esta pantalla (regla de dominio: F2.2 solo
+      // sirve leads `no_viable`). Un refetch en ese momento pega contra un
+      // backend que ahora rechaza el leadId — no vale la pena, y era la causa
+      // de los fallos en cascada que agotaban el rate limit al completar el
+      // ahorro. El numero fresco de `ritmoAhorro` ya no importa: el usuario se
+      // va a F2.1.
+      if (!view.journey.reclasificadoAViable) {
+        void queryClient.invalidateQueries({ queryKey });
+      }
     },
   });
 

@@ -249,12 +249,25 @@ export function LeadEducationScreen({ leadId, onIrAProgreso }: LeadEducationScre
                   key={meta.id}
                   meta={meta}
                   isPending={isPending}
+                  ritmoAhorro={meta.tipo === 'ahorro' ? data?.ritmoAhorro : undefined}
                   onRegistrarAhorro={(valor) => {
                     registrar({ metaId: meta.id, tipo: 'ahorro_registrado', valor });
                   }}
                   onCompletar={() => {
                     registrar({ metaId: meta.id, tipo: eventoCompletarPara(meta), valor: 1 });
                   }}
+                  onConfigurarFechaObjetivo={
+                    meta.tipo === 'ahorro'
+                      ? (fechaObjetivoIso) => {
+                          registrar({
+                            metaId: meta.id,
+                            tipo: 'ahorro_registrado',
+                            valor: 0,
+                            fechaObjetivo: fechaObjetivoIso,
+                          });
+                        }
+                      : undefined
+                  }
                 />
               ))}
             </div>

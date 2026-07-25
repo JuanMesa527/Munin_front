@@ -165,8 +165,7 @@ export function ChatShell({
               mensaje.emisor === 'bot' &&
               messages[0]?.emisor === 'bot' &&
               messages.slice(0, indice).every((m) => m.emisor === 'bot');
-            const mostrarAvatar =
-              mensaje.emisor === 'bot' && anterior?.emisor !== 'bot';
+            const mostrarAvatar = mensaje.emisor === 'bot' && anterior?.emisor !== 'bot';
             const tamanoAvatar = enPrimerGrupoBot ? 'lg' : 'md';
 
             return (

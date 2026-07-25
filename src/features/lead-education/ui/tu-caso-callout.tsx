@@ -57,6 +57,7 @@ function ContenidoGapYMeses({ plan }: { plan: NurturePlan }): ReactElement {
 
 const RENDERIZADOR_POR_CONTENIDO: Record<string, Renderizador> = {
   'cont-financiar-que-es-sfv': (plan) => <ContenidoSfv plan={plan} />,
+  'cont-financiar-modalidad-vivienda-nueva': (plan) => <ContenidoSfv plan={plan} />,
   'cont-financiar-plan': (plan) => <ContenidoPlan plan={plan} />,
   'cont-financiar-cuota-vs-ingreso': (plan) => <ContenidoGapYMeses plan={plan} />,
   'cont-capacidad-simulacion': (plan) => <ContenidoGapYMeses plan={plan} />,

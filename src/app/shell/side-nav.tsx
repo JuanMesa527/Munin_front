@@ -25,7 +25,13 @@ export function SideNav({ vista, onCambiarVista }: SideNavProps): ReactElement {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.28 }}
       >
-        <img src="/assets/logo-colsubsidio.png" alt="Colsubsidio" className="h-6 w-auto" />
+        <img
+          src="/colsubsidio-logo.png"
+          alt="Colsubsidio"
+          className="h-8 w-auto max-w-full object-contain object-left"
+          width={168}
+          height={32}
+        />
       </motion.div>
 
       <nav aria-label="Navegación principal" className="flex flex-1 flex-col gap-1">

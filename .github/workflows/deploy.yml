@@ -1,0 +1,67 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-munin-front
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Production env
+        run: |
+          printf 'VITE_API_BASE_URL=\nVITE_DEMO_MODE=false\n' > .env.local
+
+      - name: Install & build
+        run: |
+          npm ci
+          npm run build
+          test -f dist/index.html
+
+      - name: Prepare SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
+
+      - name: Add EC2 host key
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H "${{ secrets.EC2_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Upload dist to staging
+        run: |
+          STAGE="${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:~/apps/munin/.deploy/front"
+          ssh "${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}" 'mkdir -p ~/apps/munin/.deploy/front && rm -rf ~/apps/munin/.deploy/front/*'
+          rsync -az --delete ./dist/ "${STAGE}/"
+
+      - name: Run remote deploy
+        run: |
+          ssh "${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}" '~/apps/munin/deploy-front.sh'
+
+      - name: Smoke check
+        run: |
+          for i in 1 2 3 4 5; do
+            code=$(curl -sS -o /dev/null -w '%{http_code}' https://munin.alxbryann.cloud/)
+            if [ "$code" = "200" ]; then
+              echo "front OK ($code)"
+              exit 0
+            fi
+            sleep 3
+          done
+          echo "Smoke check failed" >&2
+          exit 1
