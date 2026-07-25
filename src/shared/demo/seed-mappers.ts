@@ -133,6 +133,13 @@ export function toEnrichedLead(seed: SeedLead): EnrichedLead {
     segmentoFamiliar: seed.segmentoFamiliar,
     ahorroDeclarado: seed.ahorro,
     capacidadAhorroMensual: seed.capacidadAhorroMensual,
+    // Senales que el socio agrego en F1 (vivienda propia, vinculacion
+    // laboral, horizonte de compra). El dataset de demo es anterior y no las
+    // modela: van en `null`, que es lo que significa "no preguntado", en vez
+    // de un valor inventado que el gate del subsidio leeria como un hecho.
+    tieneVivienda: null,
+    vinculacionLaboral: null,
+    horizonteCompra: null,
     slotsLlenos: [...SLOTS],
 
     capacidad: toCapacityBand(seed),

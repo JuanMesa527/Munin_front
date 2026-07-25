@@ -37,6 +37,12 @@ const ETIQUETA_SLOT: Record<Slot, string> = {
   segmentoFamiliar: 'Familia',
   ahorro: 'Ahorro',
   capacidadAhorroMensual: 'Ahorro mensual',
+  // Señales que F1 empezó a capturar en el backend. `viviendaPropia` alimenta
+  // el gate del subsidio de primera vivienda, así que la etiqueta dice lo que
+  // se pregunta, no el concepto legal.
+  viviendaPropia: 'Vivienda propia',
+  vinculacionLaboral: 'Vinculación laboral',
+  horizonteCompra: 'Cuándo compraría',
 };
 
 export function etiquetaSlot(slot: Slot): string {
