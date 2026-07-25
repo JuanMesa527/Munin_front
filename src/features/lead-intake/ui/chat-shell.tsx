@@ -67,7 +67,7 @@ export function ChatShell({
 
   return (
     <div className={cn('flex h-full flex-col overflow-hidden bg-surface', className)}>
-      <header className="flex items-center gap-3 border-b border-border bg-whatsapp-header px-4 py-3">
+      <header className="flex items-center gap-3 border-b border-border bg-surface px-4 py-3">
         {/*
           Logo oficial de Colsubsidio: uso autorizado explicitamente por el
           dueno de producto para esta demo, aun cuando CLAUDE.md §8 normalmente
