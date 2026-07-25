@@ -40,7 +40,7 @@ export function BriefingHeader({ lead, timer }: BriefingHeaderProps): ReactEleme
 
             <div>
               <p className="mb-2 font-mono text-[11px] font-bold tracking-[0.16em] text-console-signal uppercase">
-                ▸ F4 · Ficha para la llamada
+                Ficha para la llamada
               </p>
               <h1 className="mb-2.5 text-[clamp(1.75rem,4.5vw,40px)] leading-none font-bold tracking-[-0.03em]">
                 {lead.identidad?.nombre ?? 'Lead sin nombre'}

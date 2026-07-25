@@ -12,10 +12,11 @@ import prettier from 'eslint-config-prettier';
  *                               solo se importa por su `index.ts` publico.
  */
 export default tseslint.config(
-  // Los `.mjs` de configuracion no estan en el `tsconfig`, asi que el servicio
-  // de tipos no los puede analizar y las reglas type-checked revientan al
-  // cargarse. Sin este ignore, `npm run lint` no corre en absoluto.
-  { ignores: ['dist/**', 'coverage/**', 'node_modules/**', '**/*.mjs'] },
+  // `eslint.config.mjs` se excluye del linting TIPADO: los `configs.*TypeChecked`
+  // se aplican a TODO archivo por defecto (no traen `files`), y este `.mjs` no
+  // esta cubierto por `tsconfig.node.json`/`projectService` como los `.ts`. Sin
+  // esto, `npm run lint` explota al intentar tipar su propio config.
+  { ignores: ['dist/**', 'coverage/**', 'node_modules/**', 'eslint.config.mjs'] },
 
   ...tseslint.configs.strictTypeChecked,
   ...tseslint.configs.stylisticTypeChecked,

@@ -13,7 +13,7 @@ export interface AppEnv {
    * cookie httpOnly de sesion del closer viaja sin CORS de por medio.
    */
   readonly apiBaseUrl: string;
-  /** Muestra el banner de demo y habilita los datos semilla del jurado. */
+  /** Si no hay backend, habilita datos semilla locales (sin copy visible de demo). */
   readonly demoMode: boolean;
 }
 

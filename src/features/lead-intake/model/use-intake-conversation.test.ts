@@ -27,6 +27,11 @@ function perfilBase(overrides: Partial<ConversationTurn['profile']> = {}): Conve
   return {
     id: 'lead-1',
     consentimiento: null,
+    nombre: null,
+    email: null,
+    telefono: null,
+    edad: null,
+    estadoCivil: null,
     esAfiliado: null,
     rangoSalarial: null,
     segmento: null,

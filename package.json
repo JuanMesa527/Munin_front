@@ -2,7 +2,7 @@
   "name": "perfilador-vivienda-frontend",
   "version": "0.1.0",
   "private": true,
-  "description": "Experiencia de cliente (chat) y de closer (dashboard + ficha tecnica) — Hackathon Colsubsidio x 30X, Reto Vivienda",
+  "description": "Perfilador de vivienda Colsubsidio: chat de cliente y consola del closer",
   "type": "module",
   "engines": {
     "node": ">=22"

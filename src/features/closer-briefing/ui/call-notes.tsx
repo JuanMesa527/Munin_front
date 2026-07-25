@@ -17,8 +17,8 @@ import { BriefingCard, CardEyebrow } from './briefing-card';
 type Resultado = 'agendado' | 'sin_contacto';
 
 const MENSAJE: Record<Resultado, string> = {
-  agendado: 'Seguimiento agendado y nota adjunta a la ficha. (Demo: no se envía a un CRM.)',
-  sin_contacto: 'Marcado como sin contacto. Volverá a la cola con menor prioridad. (Demo.)',
+  agendado: 'Seguimiento agendado y nota adjunta a la ficha.',
+  sin_contacto: 'Marcado como sin contacto. Volverá a la cola con menor prioridad.',
 };
 
 export function CallNotes(): ReactElement {

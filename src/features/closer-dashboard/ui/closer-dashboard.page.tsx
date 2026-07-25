@@ -59,11 +59,11 @@ export function CloserDashboardPage({
 
   return (
     <div className="min-h-screen bg-console-paper font-display text-console-ink antialiased">
-      <ConsoleHeader closerName={session?.nombre ?? 'Closer'} showDemoBadge={cola.isDemo} />
+      <ConsoleHeader closerName={session?.nombre ?? 'Closer'} />
 
       <main className="mx-auto max-w-[1280px] px-4 pt-9 pb-20 sm:px-8">
         <p className="mb-2.5 font-mono text-[12px] font-bold tracking-[0.16em] text-console-signal-text uppercase">
-          ▸ F3 · Repositorio de leads viables
+          Repositorio de leads viables
         </p>
 
         <div className="mb-7 flex flex-wrap items-end justify-between gap-6">
@@ -83,7 +83,7 @@ export function CloserDashboardPage({
               className="size-2 animate-console-pulse rounded-full bg-console-green"
             />
             <span className="font-mono text-[12px] font-bold text-console-green-deep">
-              RUIDO FILTRADO: {SEED_LEADS_CRUDOS} LEADS CRUDOS → {cola.stats.total} VIABLES
+              {cola.stats.total} viables de {SEED_LEADS_CRUDOS} entradas
             </span>
           </div>
         </div>

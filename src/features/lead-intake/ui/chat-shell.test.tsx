@@ -5,7 +5,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
-import type { ChatMessage, ConversationStep } from '@contracts';
+import type { ChatMessage, ConversationStep, LeadProfile } from '@contracts';
 import { ChatShell } from './chat-shell';
 
 const AHORA = '2026-07-25T14:00:00.000Z';
@@ -22,8 +22,49 @@ const PASO: ConversationStep = {
 };
 
 const MENSAJES: ChatMessage[] = [
-  { id: 'm1', texto: '¿Estás afiliado a Colsubsidio?', quickReplies: PASO.quickReplies, emisor: 'bot', enviadoEn: AHORA },
+  {
+    id: 'm1',
+    texto: '¿Estás afiliado a Colsubsidio?',
+    quickReplies: PASO.quickReplies,
+    emisor: 'bot',
+    enviadoEn: AHORA,
+  },
 ];
+
+const PERFIL_VACIO: LeadProfile = {
+  id: 'lead-test',
+  consentimiento: null,
+  nombre: null,
+  email: null,
+  telefono: null,
+  edad: null,
+  estadoCivil: null,
+  esAfiliado: null,
+  rangoSalarial: null,
+  segmento: null,
+  personasACargo: null,
+  ciudad: null,
+  segmentoFamiliar: null,
+  ahorroDeclarado: null,
+  capacidadAhorroMensual: null,
+  slotsLlenos: [],
+  capacidad: null,
+  score: null,
+  proyectos: [],
+  carril: null,
+  createdAt: AHORA,
+  updatedAt: AHORA,
+};
+
+const propsBase = {
+  messages: MENSAJES,
+  step: PASO,
+  progreso: 0.12,
+  profile: PERFIL_VACIO,
+  isSending: false,
+  onQuickReply: vi.fn(),
+  onFreeText: vi.fn(),
+} as const;
 
 describe('ChatShell', () => {
   it('renderiza chips y texto libre interactivos a la vez, y envia lo que se elige', async () => {
@@ -33,10 +74,7 @@ describe('ChatShell', () => {
 
     render(
       <ChatShell
-        messages={MENSAJES}
-        step={PASO}
-        progreso={0.12}
-        isSending={false}
+        {...propsBase}
         onQuickReply={onQuickReply}
         onFreeText={onFreeText}
       />,
@@ -53,32 +91,17 @@ describe('ChatShell', () => {
     expect(onFreeText).toHaveBeenCalledWith('Sí');
   });
 
-  it('la barra de progreso refleja `progreso`', () => {
-    render(
-      <ChatShell
-        messages={MENSAJES}
-        step={PASO}
-        progreso={0.5}
-        isSending={false}
-        onQuickReply={vi.fn()}
-        onFreeText={vi.fn()}
-      />,
-    );
+  it('la barra de progreso refleja `progreso` y etiqueta el paso', () => {
+    render(<ChatShell {...propsBase} progreso={0.5} onQuickReply={vi.fn()} onFreeText={vi.fn()} />);
 
     const barra = screen.getByRole('progressbar');
     expect(barra).toHaveAttribute('aria-valuenow', '50');
+    expect(screen.getByText(/Paso 6 de 11 · Afiliación/i)).toBeInTheDocument();
   });
 
   it('muestra el indicador de escritura mientras se envia una respuesta', () => {
     render(
-      <ChatShell
-        messages={MENSAJES}
-        step={PASO}
-        progreso={0.12}
-        isSending
-        onQuickReply={vi.fn()}
-        onFreeText={vi.fn()}
-      />,
+      <ChatShell {...propsBase} isSending onQuickReply={vi.fn()} onFreeText={vi.fn()} />,
     );
 
     expect(screen.getByRole('status', { name: /escribiendo/i })).toBeInTheDocument();
@@ -87,10 +110,9 @@ describe('ChatShell', () => {
   it('sin `step` (turno terminal) no muestra chips ni campo de texto libre', () => {
     render(
       <ChatShell
-        messages={MENSAJES}
+        {...propsBase}
         step={null}
         progreso={1}
-        isSending={false}
         onQuickReply={vi.fn()}
         onFreeText={vi.fn()}
       />,
@@ -98,5 +120,32 @@ describe('ChatShell', () => {
 
     expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
     expect(screen.queryByRole('group')).not.toBeInTheDocument();
+  });
+
+  it('muestra resumen vivo cuando el perfil ya tiene slots llenos', () => {
+    render(
+      <ChatShell
+        {...propsBase}
+        profile={{
+          ...PERFIL_VACIO,
+          esAfiliado: true,
+          ciudad: 'Bogotá',
+          slotsLlenos: ['afiliacion', 'ciudad'],
+        }}
+        onQuickReply={vi.fn()}
+        onFreeText={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByLabelText('Resumen del perfil')).toBeInTheDocument();
+    expect(screen.getByText('Afiliado')).toBeInTheDocument();
+    expect(screen.getByText('Bogotá')).toBeInTheDocument();
+  });
+
+  it('muestra la linea de contexto de arranque', () => {
+    render(<ChatShell {...propsBase} onQuickReply={vi.fn()} onFreeText={vi.fn()} />);
+    expect(
+      screen.getByText(/contarme varios datos de una vez/i),
+    ).toBeInTheDocument();
   });
 });

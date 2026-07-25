@@ -9,6 +9,8 @@
 import type { ReactElement, ReactNode } from 'react';
 import { cn } from '../lib/cn';
 
+export type PageHeaderSize = 'default' | 'lg';
+
 export interface PageHeaderProps {
   title: string;
   /** Linea corta encima del titulo: contexto o nombre del modulo. */
@@ -16,14 +18,22 @@ export interface PageHeaderProps {
   description?: string | undefined;
   /** Acciones alineadas a la derecha (botones, filtros). */
   actions?: ReactNode;
+  /** `lg` para una pantalla "hero" (una sola por feature, como F2.2). */
+  size?: PageHeaderSize;
   className?: string | undefined;
 }
+
+const TITULO_POR_TAMANO: Record<PageHeaderSize, string> = {
+  default: 'text-xl sm:text-2xl',
+  lg: 'text-3xl sm:text-4xl',
+};
 
 export function PageHeader({
   title,
   eyebrow,
   description,
   actions,
+  size = 'default',
   className,
 }: PageHeaderProps): ReactElement {
   return (
@@ -35,11 +45,11 @@ export function PageHeader({
     >
       <div className="min-w-0">
         {eyebrow !== undefined && (
-          <p className="text-xs font-semibold tracking-wide text-brand-700 uppercase dark:text-brand-300">
+          <p className="text-xs font-semibold tracking-wide text-brand-700 uppercase">
             {eyebrow}
           </p>
         )}
-        <h1 className="mt-0.5 text-xl font-semibold text-text sm:text-2xl">{title}</h1>
+        <h1 className={cn('mt-0.5 font-semibold text-text', TITULO_POR_TAMANO[size])}>{title}</h1>
         {description !== undefined && (
           <p className="mt-1 max-w-2xl text-sm text-text-muted">{description}</p>
         )}

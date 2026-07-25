@@ -4,9 +4,6 @@
  * La comparten F3 (dashboard) y F4 (ficha de llamada). Vive en `shared/ui` y no
  * en una feature porque la regla 4 prohibe que F4 importe internals de F3, y
  * duplicarla garantizaria que se desincronicen.
- *
- * El chip "demo · datos simulados" no es decorativo: el jurado tiene que saber
- * en todo momento que no esta viendo datos de personas reales.
  */
 
 import type { ReactElement } from 'react';
@@ -14,8 +11,6 @@ import { cn } from '../lib/cn';
 
 export interface ConsoleHeaderProps {
   closerName: string;
-  /** Oculta el chip de demo cuando la consola habla con datos reales. */
-  showDemoBadge?: boolean;
   className?: string;
 }
 
@@ -49,7 +44,6 @@ function BrandMark(): ReactElement {
 
 export function ConsoleHeader({
   closerName,
-  showDemoBadge = true,
   className,
 }: ConsoleHeaderProps): ReactElement {
   return (
@@ -69,11 +63,6 @@ export function ConsoleHeader({
       </div>
 
       <div className="flex items-center gap-3">
-        {showDemoBadge && (
-          <span className="hidden font-mono text-[12px] text-console-mute sm:inline">
-            demo · datos simulados
-          </span>
-        )}
         <span className="text-[14px] font-bold text-console-paper">{closerName}</span>
         <span
           aria-hidden="true"

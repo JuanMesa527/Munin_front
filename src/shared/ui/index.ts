@@ -42,7 +42,7 @@ export { EmptyState, type EmptyStateProps } from './empty-state';
 export { FactorBars, type FactorBarsProps } from './factor-bars';
 export { Field, FIELD_CONTROL_CLASS, type FieldProps } from './field';
 export { Modal, type ModalProps, type ModalSize } from './modal';
-export { PageHeader, type PageHeaderProps } from './page-header';
+export { PageHeader, type PageHeaderProps, type PageHeaderSize } from './page-header';
 export {
   ProgressBar,
   type ProgressBarProps,
