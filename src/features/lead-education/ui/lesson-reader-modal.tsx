@@ -19,6 +19,9 @@ import { Badge, Button, Modal } from '@shared/ui';
 import { cn } from '@shared/lib/cn';
 import type { EtapaCopy } from '../model/etapa-copy';
 import { ETIQUETA_POR_TIPO, ICONO_POR_TIPO } from '../model/contenido-tipo';
+import { LessonCalculator } from './lesson-calculator';
+import { LessonChecklist } from './lesson-checklist';
+import { LessonQuiz } from './lesson-quiz';
 import { LessonVideoPlayer } from './lesson-video-player';
 import { TuCasoCallout } from './tu-caso-callout';
 
@@ -174,6 +177,16 @@ export function LessonReaderModal({
 
               {contenido.videoId !== undefined && (
                 <LessonVideoPlayer videoId={contenido.videoId} titulo={contenido.titulo} />
+              )}
+
+              {contenido.interactivo?.tipo === 'calculadora' && (
+                <LessonCalculator calculadora={contenido.interactivo.calculadora} />
+              )}
+              {contenido.interactivo?.tipo === 'quiz' && (
+                <LessonQuiz preguntas={contenido.interactivo.preguntas} />
+              )}
+              {contenido.interactivo?.tipo === 'checklist' && (
+                <LessonChecklist items={contenido.interactivo.items} />
               )}
 
               <TuCasoCallout plan={plan} contenidoId={contenido.id} />

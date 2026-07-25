@@ -32,6 +32,9 @@ export function EtapaCurriculo({
   onAbrirLector,
 }: EtapaCurriculoProps): ReactElement {
   const completada = metaEducativa?.completada ?? false;
+  // Currículo adaptativo (adenda A12): una meta opcional no bloquea nada, así
+  // que no tiene sentido mostrarla como "pendiente" — se lo decimos directo.
+  const esOpcional = metaEducativa?.opcional === true && !completada;
   const Icono = etapaCopy.icono;
 
   return (
@@ -54,8 +57,8 @@ export function EtapaCurriculo({
             </p>
           </div>
         </div>
-        <Badge tone={completada ? 'success' : 'accent'} size="sm">
-          {completada ? 'Completada' : 'En progreso'}
+        <Badge tone={completada ? 'success' : esOpcional ? 'neutral' : 'accent'} size="sm">
+          {completada ? 'Completada' : esOpcional ? 'No hace falta para vos' : 'En progreso'}
         </Badge>
       </CardHeader>
 

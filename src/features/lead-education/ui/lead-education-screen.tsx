@@ -117,7 +117,16 @@ export function LeadEducationScreen({ leadId, onIrAProgreso }: LeadEducationScre
     (contenido) => contenido.etapa === etapaEfectiva,
   );
   const metasDeLaEtapa = journey.metas.filter((meta) => meta.etapa === etapaEfectiva);
-  const metasAccionablesDeLaEtapa = metasDeLaEtapa.filter((meta) => meta.tipo !== 'educacion');
+  // La meta de ahorro se muestra SIEMPRE (ver bloque "Tu meta de ahorro" más
+  // abajo), sin importar qué etapa esté seleccionada — antes vivía solo
+  // dentro de "Pasos de esta etapa", invisible en cuanto el usuario navegaba
+  // a otra etapa (p. ej. "financiar"), que es justo lo que reportó el
+  // usuario: "no vi ninguna opción para ir añadiendo dinero". Se excluye acá
+  // para no duplicarla si la etapa actual es justo "capacidad".
+  const metaAhorro = journey.metas.find((meta) => meta.tipo === 'ahorro');
+  const metasAccionablesDeLaEtapa = metasDeLaEtapa.filter(
+    (meta) => meta.tipo !== 'educacion' && meta.id !== metaAhorro?.id,
+  );
   const siguienteMeta = metasDeLaEtapa.find((meta) => !meta.completada);
   const contenidoDestacado =
     contenidosDeLaEtapa.find((c) => c.titulo.toLowerCase().includes('crédito')) ??
@@ -190,6 +199,39 @@ export function LeadEducationScreen({ leadId, onIrAProgreso }: LeadEducationScre
           />
         </section>
       </Reveal>
+
+      {metaAhorro !== undefined && (
+        <Reveal>
+          <section id={`meta-${metaAhorro.id}`} aria-labelledby="ahorro-titulo" className="grid gap-3">
+            <h2 id="ahorro-titulo" className="text-sm font-semibold text-text-muted">
+              Tu meta de ahorro
+            </h2>
+            <MetaCard
+              meta={metaAhorro}
+              isPending={isPending}
+              ritmoAhorro={data?.ritmoAhorro}
+              onRegistrarAhorro={(valor) => {
+                registrar({ metaId: metaAhorro.id, tipo: 'ahorro_registrado', valor });
+              }}
+              onCompletar={() => {
+                registrar({
+                  metaId: metaAhorro.id,
+                  tipo: eventoCompletarPara(metaAhorro),
+                  valor: 1,
+                });
+              }}
+              onConfigurarFechaObjetivo={(fechaObjetivoIso) => {
+                registrar({
+                  metaId: metaAhorro.id,
+                  tipo: 'ahorro_registrado',
+                  valor: 0,
+                  fechaObjetivo: fechaObjetivoIso,
+                });
+              }}
+            />
+          </section>
+        </Reveal>
+      )}
 
       <Reveal>
         <Card className="shadow-card">

@@ -28,8 +28,13 @@ export interface InicioScreenProps {
 function primeraEtapaIncompleta(journey: EducationJourney): EtapaId | undefined {
   const etapas = [...(journey.etapas ?? [])].sort((a, b) => a.orden - b.orden);
   const incompleta = etapas.find((etapa) => {
-    const propias = journey.metas.filter((meta) => meta.etapa === etapa.id);
-    return propias.length === 0 || propias.some((meta) => !meta.completada);
+    const todas = journey.metas.filter((meta) => meta.etapa === etapa.id);
+    if (todas.length === 0) return true; // caso borde: etapa sin metas, tratarla como pendiente.
+    // Las metas opcionales (adenda A12) no cuentan: si TODAS las metas reales
+    // de la etapa son opcionales (o ya están completas), la etapa no debería
+    // seguir marcada como "en progreso" para siempre.
+    const queCuentan = todas.filter((meta) => meta.opcional !== true);
+    return queCuentan.some((meta) => !meta.completada);
   });
   return (incompleta ?? etapas[0])?.id;
 }
