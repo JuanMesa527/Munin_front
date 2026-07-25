@@ -172,47 +172,57 @@ export function ProgresoScreen({ leadId }: ProgresoScreenProps): ReactElement {
         <Card className="shadow-card">
           <p className="text-sm font-bold text-text">Evolución de tu aprendizaje</p>
           <p className="mb-2 text-xs text-text-muted">Así ha crecido tu progreso con el tiempo.</p>
-          <div className="h-56 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={evolucion} margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
-                <CartesianGrid stroke="var(--color-border)" vertical={false} />
-                <XAxis
-                  dataKey="etiqueta"
-                  tick={{ fontSize: 11, fill: 'var(--color-text-subtle)' }}
-                  axisLine={{ stroke: 'var(--color-border)' }}
-                  tickLine={false}
-                />
-                <YAxis
-                  domain={[0, 100]}
-                  tick={{ fontSize: 11, fill: 'var(--color-text-subtle)' }}
-                  axisLine={false}
-                  tickLine={false}
-                  tickFormatter={(v: number) => `${String(v)}%`}
-                />
-                <Tooltip
-                  formatter={(value) => [`${String(value)}%`, 'Progreso']}
-                  contentStyle={{
-                    borderRadius: 10,
-                    borderColor: 'var(--color-border)',
-                    fontSize: 12,
-                  }}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="porcentaje"
-                  stroke="var(--color-accent-600)"
-                  strokeWidth={2.5}
-                  dot={{ r: 3.5 }}
-                  activeDot={{ r: 5 }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-          <p className="mt-2 rounded-card bg-accent-50 px-3 py-2 text-xs font-medium text-accent-800">
-            {journey.progreso >= 0.5
-              ? '¡Vas mejorando! Tu constancia está dando resultados.'
-              : 'Cada paso cuenta — seguí completando etapas para ver tu curva subir.'}
-          </p>
+          {evolucion.length >= 2 ? (
+            <>
+              <div className="h-56 w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={evolucion} margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
+                    <CartesianGrid stroke="var(--color-border)" vertical={false} />
+                    <XAxis
+                      dataKey="etiqueta"
+                      tick={{ fontSize: 11, fill: 'var(--color-text-subtle)' }}
+                      axisLine={{ stroke: 'var(--color-border)' }}
+                      tickLine={false}
+                    />
+                    <YAxis
+                      domain={[0, 100]}
+                      tick={{ fontSize: 11, fill: 'var(--color-text-subtle)' }}
+                      axisLine={false}
+                      tickLine={false}
+                      tickFormatter={(v: number) => `${String(v)}%`}
+                    />
+                    <Tooltip
+                      formatter={(value) => [`${String(value)}%`, 'Progreso']}
+                      contentStyle={{
+                        borderRadius: 10,
+                        borderColor: 'var(--color-border)',
+                        fontSize: 12,
+                      }}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="porcentaje"
+                      stroke="var(--color-accent-600)"
+                      strokeWidth={2.5}
+                      dot={{ r: 3.5 }}
+                      activeDot={{ r: 5 }}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+              <p className="mt-2 rounded-card bg-accent-50 px-3 py-2 text-xs font-medium text-accent-800">
+                {journey.progreso >= 0.5
+                  ? '¡Vas mejorando! Tu constancia está dando resultados.'
+                  : 'Cada paso cuenta — seguí completando etapas para ver tu curva subir.'}
+              </p>
+            </>
+          ) : (
+            <EmptyState
+              className="h-56 justify-center"
+              title="Todavía no hay suficiente historial de lecciones completadas para mostrar tu evolución"
+              description="A medida que avances, esta curva se va a llenar sola."
+            />
+          )}
         </Card>
       </Reveal>
 

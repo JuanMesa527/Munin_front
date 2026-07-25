@@ -53,7 +53,8 @@ export function LessonCalculator({ calculadora }: LessonCalculatorProps): ReactE
     <Card className="shadow-card">
       <p className="text-sm font-bold text-text">Calculá tu cuota inicial</p>
       <p className="mt-1 text-xs text-text-muted">
-        Metele tus propios números — no se guardan ni se envían a ningún lado.
+        Metele tus propios números — no se guardan ni se envían a ningún lado. Es un ejercicio
+        libre: no cambia "Tu plan estimado", que usa lo que declaraste al perfilarte.
       </p>
 
       <div className="mt-3 grid gap-3 sm:grid-cols-2">

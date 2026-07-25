@@ -27,6 +27,12 @@ function metasDe(etapaId: EtapaId, metas: readonly Meta[]): Meta[] {
   return metas.filter((meta) => meta.etapa === etapaId);
 }
 
+// Mirror exacto de `metasQueCuentan` en Munin_back (domain/journey.ts): las
+// metas opcionales (adenda A12) no cuentan para el progreso del lead.
+function metasQueCuentan(metas: readonly Meta[]): Meta[] {
+  return metas.filter((meta) => meta.opcional !== true);
+}
+
 export function resumenCamino(journey: EducationJourney): ResumenCamino {
   const etapas = journey.etapas ?? [];
   let completadas = 0;
@@ -113,34 +119,42 @@ export function conocimientoPorArea(journey: EducationJourney): AreaConocimiento
     .sort((a, b) => b.porcentaje - a.porcentaje);
 }
 
+/**
+ * Un array vacío significa "sin suficiente historial real todavía" (menos de
+ * dos metas-que-cuentan completadas con `completadaEn`), NUNCA "0% de
+ * progreso". El consumidor (`progreso-screen.tsx`) debe tratarlo como un
+ * empty-state propio, no graficar un punto suelto ni rellenar con ceros.
+ */
 export interface PuntoEvolucion {
   etiqueta: string;
   porcentaje: number;
 }
 
+/** Con 0 o 1 fecha real no hay curva que trazar, solo un punto suelto. */
+const PUNTOS_MINIMOS_PARA_CURVA = 2;
+
 /**
- * Serie de "evolución" derivada del progreso ACTUAL, no de historial real (no
- * lo tenemos sin login). Es una rampa suave y determinista hasta el % de hoy:
- * ilustra la tendencia sin fabricar eventos que nunca ocurrieron.
+ * Serie de "evolución" derivada 100% de `Meta.completadaEn` real (adenda
+ * A15): ordena las metas-que-cuentan ya completadas por su fecha real de
+ * finalización y acumula, en cada una, el % de metas-que-cuentan completadas
+ * hasta ese punto. Ya no fabrica una rampa hacia atrás desde el progreso de
+ * hoy — antes de A15 no existía la fecha real de cada meta, ahora sí.
  */
 export function evolucionAprendizaje(journey: EducationJourney): PuntoEvolucion[] {
-  const objetivo = Math.round(journey.progreso * 100);
-  const pasos = 6;
-  const hoy = new Date(journey.actualizadoEn);
+  const queCuentan = metasQueCuentan(journey.metas);
+  const total = queCuentan.length;
+  if (total === 0) return [];
 
-  return Array.from({ length: pasos }, (_, indice) => {
-    const fraccion = indice / (pasos - 1);
-    // Ease-out cuadratico: arranca mas lento, se acerca al valor de hoy al final.
-    const curva = 1 - (1 - fraccion) * (1 - fraccion);
-    const dias = (pasos - 1 - indice) * 7;
-    const fecha = new Date(hoy);
-    fecha.setDate(fecha.getDate() - dias);
+  const completadasConFecha = queCuentan
+    .filter((meta): meta is Meta & { completadaEn: string } => meta.completadaEn !== undefined)
+    .sort((a, b) => new Date(a.completadaEn).getTime() - new Date(b.completadaEn).getTime());
 
-    return {
-      etiqueta: fecha.toLocaleDateString('es-CO', { day: '2-digit', month: 'short' }),
-      porcentaje: Math.round(objetivo * curva),
-    };
-  });
+  if (completadasConFecha.length < PUNTOS_MINIMOS_PARA_CURVA) return [];
+
+  return completadasConFecha.map((meta, indice) => ({
+    etiqueta: new Date(meta.completadaEn).toLocaleDateString('es-CO', { day: '2-digit', month: 'short' }),
+    porcentaje: Math.round(((indice + 1) / total) * 100),
+  }));
 }
 
 export interface DistribucionTiempo {
