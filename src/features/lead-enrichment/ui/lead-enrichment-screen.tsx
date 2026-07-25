@@ -14,9 +14,9 @@
  */
 
 import { AnimatePresence } from 'motion/react';
-import { useCallback, useEffect, useState, type ReactElement } from 'react';
+import { useCallback, useEffect, useRef, useState, type ReactElement } from 'react';
 import type { ProjectMatchCard, SwipeAction } from '@contracts';
-import { Alert, Button, ProgressBar, Skeleton } from '@shared/ui';
+import { Alert, Button, ProgressBar, Skeleton, Spinner } from '@shared/ui';
 import { useProjectDeck } from '../model/use-project-deck';
 import { EnrichmentSummaryView } from './enrichment-summary';
 import { ProjectCard } from './project-card';
@@ -34,8 +34,19 @@ export function LeadEnrichmentScreen({ leadId }: LeadEnrichmentScreenProps): Rea
   const mazo = useProjectDeck(leadId);
   const [detalleMovil, setDetalleMovil] = useState<ProjectMatchCard | null>(null);
 
-  const { decidir, terminado } = mazo;
+  const { cerrar, decidir, terminado } = mazo;
   const modalAbierto = detalleMovil !== null;
+
+  // Al agotar la baraja NO hay pantalla intermedia: se dispara el cierre solo y
+  // el usuario cae directo en su resumen. El `ref` garantiza un unico disparo;
+  // si el POST falla, no reintentamos en bucle -- dejamos el boton de reintento.
+  const cierreDisparado = useRef(false);
+  useEffect(() => {
+    if (terminado && !cierreDisparado.current) {
+      cierreDisparado.current = true;
+      cerrar();
+    }
+  }, [terminado, cerrar]);
 
   // Atajos de teclado. Se apagan con la hoja abierta para no decidir por
   // debajo de un modal que tiene el foco atrapado.
@@ -138,13 +149,24 @@ export function LeadEnrichmentScreen({ leadId }: LeadEnrichmentScreenProps): Rea
 
             {terminado && (
               <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 rounded-card border border-dashed border-border-strong p-8 text-center">
-                <p className="text-xl">Ya viste todos los proyectos</p>
-                <p className="text-sm text-text-muted">
-                  Guardamos lo que elegiste. Cierra para que un asesor lo reciba.
-                </p>
-                <Button onClick={mazo.cerrar} loading={mazo.cerrando} size="lg">
-                  Ver mi resumen
-                </Button>
+                {mazo.cierreFallo ? (
+                  <>
+                    {/* Red de seguridad: si el cierre automatico falla, el usuario
+                        no queda atrapado en un spinner -- puede reintentarlo. */}
+                    <p className="text-xl">No pudimos preparar tu resumen</p>
+                    <p className="text-sm text-text-muted">
+                      Guardamos lo que elegiste. Volvamos a intentarlo.
+                    </p>
+                    <Button onClick={mazo.cerrar} loading={mazo.cerrando} size="lg">
+                      Ver mi resumen
+                    </Button>
+                  </>
+                ) : (
+                  <div className="flex flex-col items-center gap-3 text-text-muted">
+                    <Spinner size="lg" label="Preparando tu resumen…" />
+                    <p className="text-sm">Preparando tu resumen…</p>
+                  </div>
+                )}
               </div>
             )}
           </div>

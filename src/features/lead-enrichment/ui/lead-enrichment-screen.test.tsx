@@ -179,13 +179,33 @@ describe('LeadEnrichmentScreen', () => {
     expect(screen.getByText('No hay datos calibrados disponibles')).toBeTruthy();
   });
 
-  it('al agotar la baraja ofrece cerrar, no deja al usuario sin salida', async () => {
+  it('al agotar la baraja salta directo al resumen, sin pantalla intermedia', async () => {
     fetchDeck.mockResolvedValue(deck([tarjeta('a')]));
+    postSummary.mockResolvedValue({
+      lead: { intentScore: 70, intereses: [] },
+      guardados: [],
+    });
     renderPantalla();
 
     (await screen.findByRole('button', { name: /Me sirve \(tecla →\)/u })).click();
 
-    expect(await screen.findByText('Ya viste todos los proyectos')).toBeTruthy();
+    // El cierre se dispara solo: nunca aparece la pantalla "Ya viste todos".
+    await waitFor(() => {
+      expect(postSummary).toHaveBeenCalledWith('demo-lead');
+    });
+    expect(await screen.findByText('No guardaste ningún proyecto')).toBeTruthy();
+    expect(screen.queryByText('Ya viste todos los proyectos')).toBeNull();
+  });
+
+  it('si el cierre automatico falla, ofrece reintentar en vez de dejar un spinner', async () => {
+    fetchDeck.mockResolvedValue(deck([tarjeta('a')]));
+    postSummary.mockRejectedValue(new Error('sin red'));
+    renderPantalla();
+
+    (await screen.findByRole('button', { name: /Me sirve \(tecla →\)/u })).click();
+
+    expect(await screen.findByText('No pudimos preparar tu resumen')).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Ver mi resumen' })).toBeTruthy();
   });
 
   it('el detalle del proyecto activo esta siempre en pantalla', async () => {

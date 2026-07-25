@@ -41,6 +41,8 @@ export interface DeckState {
   /** Cierra F2.1 y persiste el lead enriquecido. */
   cerrar: () => void;
   cerrando: boolean;
+  /** `true` si el POST del resumen fallo: habilita reintentar el cierre. */
+  cierreFallo: boolean;
   resumen: EnrichmentSummary | undefined;
 }
 
@@ -250,6 +252,7 @@ export function useProjectDeck(leadId: string): DeckState {
     notificarDetalle,
     cerrar,
     cerrando: cierre.isPending,
+    cierreFallo: cierre.isError,
     resumen: cierre.data,
   };
 }
