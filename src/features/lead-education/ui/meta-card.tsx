@@ -9,7 +9,17 @@
 
 import { useState, type ReactElement, type SubmitEvent } from 'react';
 import type { Meta, RitmoAhorro } from '@contracts';
-import { Badge, Button, Card, CardContent, CardHeader, CardTitle, Field, ProgressBar } from '@shared/ui';
+import {
+  Badge,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  DatePicker,
+  Field,
+  ProgressBar,
+} from '@shared/ui';
 import { formatRelative } from '@shared/lib/format-date';
 import { formatCOP } from '@shared/lib/format-money';
 
@@ -103,12 +113,12 @@ export function MetaCard({
         {!meta.completada && esAhorro && onConfigurarFechaObjetivo !== undefined && (
           <form onSubmit={guardarFechaObjetivo} className="mt-3 flex items-end gap-2">
             <div className="flex-1">
-              <Field
+              <DatePicker
                 label="Fecha objetivo"
-                type="date"
                 value={fechaObjetivo}
-                onChange={(evento) => {
-                  setFechaObjetivo(evento.target.value);
+                soloFuturo
+                onChange={(valor) => {
+                  setFechaObjetivo(valor);
                 }}
               />
             </div>

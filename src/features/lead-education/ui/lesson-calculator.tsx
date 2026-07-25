@@ -13,6 +13,7 @@
  */
 
 import { useState, type ReactElement } from 'react';
+import type { COP } from '@contracts';
 import { Card, Field } from '@shared/ui';
 import { formatCOP } from '@shared/lib/format-money';
 
@@ -21,6 +22,14 @@ const PORCENTAJE_CUOTA_INICIAL = 0.3;
 
 export interface LessonCalculatorProps {
   calculadora: 'cuota-inicial';
+  /**
+   * `NurturePlan.precioObjetivo` ya conocido para este lead (mostrado en "Tu
+   * plan estimado"). Se usa para precargar el campo de precio: preguntarlo de
+   * cero sería incoherente, ya lo sabemos. El ingreso mensual NO tiene
+   * equivalente — `LeadProfile.rangoSalarial` es una banda de texto, no una
+   * cifra — por eso ese campo se deja vacío.
+   */
+  precioObjetivoConocido?: COP;
 }
 
 function parsearMonto(texto: string): number | null {
@@ -30,8 +39,16 @@ function parsearMonto(texto: string): number | null {
   return Number.isFinite(valor) && valor > 0 ? valor : null;
 }
 
-export function LessonCalculator({ calculadora }: LessonCalculatorProps): ReactElement | null {
-  const [precioTexto, setPrecioTexto] = useState('');
+/** Mismo separador de miles que `formatCOP`, pero sin el signo `$` — el campo es editable. */
+const formatoMontoEditable = new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 });
+
+export function LessonCalculator({
+  calculadora,
+  precioObjetivoConocido,
+}: LessonCalculatorProps): ReactElement | null {
+  const [precioTexto, setPrecioTexto] = useState(
+    precioObjetivoConocido !== undefined ? formatoMontoEditable.format(precioObjetivoConocido) : '',
+  );
   const [ingresoTexto, setIngresoTexto] = useState('');
 
   // Único tipo de calculadora hoy (el union type de `calculadora` solo tiene
@@ -53,8 +70,9 @@ export function LessonCalculator({ calculadora }: LessonCalculatorProps): ReactE
     <Card className="shadow-card">
       <p className="text-sm font-bold text-text">Calculá tu cuota inicial</p>
       <p className="mt-1 text-xs text-text-muted">
-        Metele tus propios números — no se guardan ni se envían a ningún lado. Es un ejercicio
-        libre: no cambia "Tu plan estimado", que usa lo que declaraste al perfilarte.
+        El precio ya viene precargado con el de tu plan (podés cambiarlo para simular otro
+        escenario). El ingreso no lo sabemos con exactitud, así que metelo vos. Nada de esto se
+        guarda ni se envía a ningún lado: es un ejercicio libre que no cambia "Tu plan estimado".
       </p>
 
       <div className="mt-3 grid gap-3 sm:grid-cols-2">

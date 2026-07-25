@@ -180,7 +180,10 @@ export function LessonReaderModal({
               )}
 
               {contenido.interactivo?.tipo === 'calculadora' && (
-                <LessonCalculator calculadora={contenido.interactivo.calculadora} />
+                <LessonCalculator
+                  calculadora={contenido.interactivo.calculadora}
+                  precioObjetivoConocido={plan.precioObjetivo}
+                />
               )}
               {contenido.interactivo?.tipo === 'quiz' && (
                 <LessonQuiz preguntas={contenido.interactivo.preguntas} />

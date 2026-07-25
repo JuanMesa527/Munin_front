@@ -38,6 +38,7 @@ export {
   type NurturedBadgeProps,
 } from './console-badges';
 export { ConsoleHeader, type ConsoleHeaderProps } from './console-header';
+export { DatePicker, type DatePickerProps } from './date-picker';
 export { EmptyState, type EmptyStateProps } from './empty-state';
 export { FactorBars, type FactorBarsProps } from './factor-bars';
 export { Field, FIELD_CONTROL_CLASS, type FieldProps } from './field';

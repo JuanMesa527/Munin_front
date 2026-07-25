@@ -14,10 +14,11 @@
  * las features del cliente se desarrollen en paralelo sin conocerse.
  */
 
-import { useEffect, useState, type ReactElement } from 'react';
+import { useState, type ReactElement } from 'react';
 import { LeadIntakeScreen } from '@features/lead-intake';
 import { LeadEnrichmentScreen } from '@features/lead-enrichment';
 import {
+  GraduationModal,
   InicioScreen,
   LeadEducationScreen,
   LeadLoginScreen,
@@ -53,12 +54,12 @@ function CaminoNutricion({ leadId, onGraduar }: CaminoNutricionProps): ReactElem
   // esto NO agrega un fetch extra): solo lo leemos acá para detectar la
   // graduación sin importar en qué pestaña esté el usuario.
   const { data } = useEducationJourney(leadId);
-
-  useEffect(() => {
-    if (data?.journey.reclasificadoAViable === true) {
-      onGraduar(leadId);
-    }
-  }, [data?.journey.reclasificadoAViable, leadId, onGraduar]);
+  // Derivado del dato, no un `useState` + efecto: la reclasificación ya no
+  // dispara `onGraduar` de una, se celebra primero con `GraduationModal`
+  // (confetti + aviso) y solo el click del lead en "Ver proyectos" completa
+  // el handoff a F2.1 (que desmonta este componente entero) — no hace falta
+  // "recordar" que se mostró, el dato del journey ya es la fuente de verdad.
+  const mostrarGraduacion = data?.journey.reclasificadoAViable === true;
 
   const pantalla =
     vista === 'inicio' ? (
@@ -100,6 +101,12 @@ function CaminoNutricion({ leadId, onGraduar }: CaminoNutricionProps): ReactElem
         open={mostrarOnboarding}
         onClose={() => {
           setMostrarOnboarding(false);
+        }}
+      />
+      <GraduationModal
+        open={mostrarGraduacion}
+        onVerProyectos={() => {
+          onGraduar(leadId);
         }}
       />
       <VistaTransition vistaKey={vista}>{pantalla}</VistaTransition>

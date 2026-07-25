@@ -4,6 +4,7 @@
  * `api/` directamente (EQUIPO.md §4).
  */
 
+export { GraduationModal, type GraduationModalProps } from './ui/graduation-modal';
 export { InicioScreen, type InicioScreenProps } from './ui/inicio-screen';
 export { LeadEducationScreen, type LeadEducationScreenProps } from './ui/lead-education-screen';
 export { LeadLoginScreen, type LeadLoginScreenProps } from './ui/lead-login-screen';
