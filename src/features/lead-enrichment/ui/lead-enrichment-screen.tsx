@@ -109,7 +109,11 @@ export function LeadEnrichmentScreen({ leadId }: LeadEnrichmentScreenProps): Rea
   if (mazo.resumen !== undefined) {
     return (
       <Marco>
-        <EnrichmentSummaryView resumen={mazo.resumen} />
+        <EnrichmentSummaryView
+          resumen={mazo.resumen}
+          onGuardarHorario={mazo.guardarPreferenciaContacto}
+          guardando={mazo.cerrando}
+        />
       </Marco>
     );
   }

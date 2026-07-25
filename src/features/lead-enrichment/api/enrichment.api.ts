@@ -9,6 +9,7 @@ import type {
   EnrichmentDeck,
   EnrichmentSummary,
   EnrichmentTelemetry,
+  PreferenciaContacto,
   SwipeAction,
   SwipeEvent,
 } from '@contracts';
@@ -56,8 +57,23 @@ export function postSwipe(
   );
 }
 
-export function postSummary(leadId: string): Promise<EnrichmentSummary> {
-  return unwrap(apiPost<EnrichmentSummary>(API_ROUTES.enrichment.summary, { leadId }));
+/**
+ * Cierra F2.1. `preferenciaContacto` es opcional porque el cierre ocurre
+ * automaticamente al agotar la baraja, ANTES de que el usuario elija cuando lo
+ * llamamos; la pantalla de resumen vuelve a llamar con la preferencia cuando la
+ * responde. Sin respuesta, la ficha del closer dice "Sin franja preferida" en
+ * vez de inventar un horario.
+ */
+export function postSummary(
+  leadId: string,
+  preferenciaContacto?: PreferenciaContacto,
+): Promise<EnrichmentSummary> {
+  return unwrap(
+    apiPost<EnrichmentSummary>(API_ROUTES.enrichment.summary, {
+      leadId,
+      ...(preferenciaContacto === undefined ? {} : { preferenciaContacto }),
+    }),
+  );
 }
 
 /**

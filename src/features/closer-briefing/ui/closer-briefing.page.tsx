@@ -101,7 +101,7 @@ export function CloserBriefingPage(): ReactElement {
         <div className="flex min-w-0 flex-col gap-[18px] lg:sticky lg:top-[88px]">
           <CallScript puntos={briefing.talkingPoints} estado={guion} />
           <LeadJourney timeline={lead.timeline} />
-          <CallNotes />
+          <CallNotes leadId={leadId} gestion={lead.gestion} />
         </div>
       </main>
     </div>

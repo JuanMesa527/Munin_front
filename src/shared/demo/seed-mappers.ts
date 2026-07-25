@@ -170,6 +170,7 @@ export function toEnrichedLead(seed: SeedLead): EnrichedLead {
     ingresosSmmlv: seed.ingresosSmmlv,
     subsidioEstimado: seed.subsidio > 0 ? seed.subsidio : null,
     citaTextual: seed.cita,
+    gestion: null,
     contactabilidad: seed.contactabilidad.map((intensidad, i) => ({
       dia: (['L', 'M', 'X', 'J', 'V', 'S', 'D'] as const)[i] ?? 'L',
       intensidad,
