@@ -134,6 +134,31 @@ export function apiPost<T>(path: string, body?: unknown): Promise<ApiResponse<T>
   });
 }
 
+/**
+ * Envio best-effort que SOBREVIVE al cierre de pestana o al desmontaje: usa
+ * `navigator.sendBeacon`, pensado justamente para telemetria que se dispara al
+ * abandonar. Devuelve `false` si el navegador no lo soporta o la cola esta
+ * llena, para que el llamador caiga a un `apiPost` normal. El `Blob` va como
+ * `application/json` para que el parser del backend lo entienda igual que un POST.
+ */
+export function sendBeacon(path: string, body: unknown): boolean {
+  if (
+    typeof navigator === 'undefined' ||
+    typeof navigator.sendBeacon !== 'function' ||
+    typeof Blob === 'undefined'
+  ) {
+    return false;
+  }
+  try {
+    const blob = new Blob([JSON.stringify(body ?? {})], { type: 'application/json' });
+    return navigator.sendBeacon(buildUrl(path), blob);
+  } catch {
+    // Nunca propaga: la telemetria es best-effort y no puede romper al llamador
+    // (p. ej. en un entorno de test sin `Blob`/`sendBeacon` reales).
+    return false;
+  }
+}
+
 /** Error con el `ApiError` adjunto para que la UI decida por `code`. */
 export class ApiRequestError extends Error {
   readonly code: string;

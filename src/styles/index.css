@@ -2,14 +2,43 @@
  *  index.css - design system del perfilador (capa shared)
  * --------------------------------------------------------------------------
  *  Tailwind v4 CSS-first: la fuente de verdad de los tokens es ESTE archivo,
- *  no un tailwind.config.js. Todo color va en OKLCH porque las escalas quedan
- *  perceptualmente uniformes y el contraste AA se sostiene al cambiar de tono.
+ *  no un tailwind.config.js.
+ *
+ *  ORIGEN DE LA PALETA: `Design System Colsubsidio.html`, en la raiz del
+ *  proyecto (sistema del hackaton Colsubsidio x 30X), con UNA correccion.
+ *
+ *  ESTRUCTURA, del DS tal cual: "Nada de verde". Blanco dominante -- en el DS
+ *  `#fff` aparece 28 veces como fondo contra 9 del crema --, amarillo y tinta
+ *  como BLOQUES planos de acento (27 y 19 usos), tipografia, radios y
+ *  espaciado. El crema es una banda suave, nunca el fondo de la pagina.
+ *
+ *  COLOR DE MARCA, corregido: el DS trae `#F2CE1B` y `#1E5AA8`, pero el
+ *  logotipo oficial de Colsubsidio usa `#FFD000` y `#0067A3`. Puestos al lado
+ *  del logo real, los del DS se leen como una aproximacion mostaza. Manda el
+ *  logo: es el que va a estar en pantalla.
+ *
+ *  Los valores van en HEX y no en OKLCH para que un revisor pueda muestrear un
+ *  pixel del logo y encontrar el mismo numero aqui.
  *
  *  Convencion: los componentes usan SIEMPRE tokens semanticos (surface, text,
  *  border, brand, success...). Nadie escribe un hex suelto en un .tsx.
+ *
+ *  OJO CON EL AMARILLO: `brand` es un color de FONDO, no de texto. Amarillo
+ *  sobre blanco no llega a 4.5:1 ni de lejos. Sobre amarillo siempre va tinta
+ *  (`text-text`), nunca blanco. Para texto de marca sobre fondo claro se usa
+ *  `brand-800` en adelante, que ya es ambar oscuro.
  * ========================================================================== */
 
 @import 'tailwindcss';
+@import './fonts.css';
+
+/* Dark mode OPT-IN por atributo, no por preferencia del SO.
+ * El DS es light-first ("la pagina es BLANCA"): el default tiene que ser claro
+ * SIEMPRE, aunque el SO del jurado este en oscuro. Se apunta la variante `dark:`
+ * de Tailwind al selector `[data-theme='dark']` para que las 13 utilidades
+ * `dark:*` del design system y los tokens del bloque de abajo cambien JUNTOS y
+ * solo cuando alguien lo pide explicitamente. */
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
 
 /* ==========================================================================
  *  Fuentes de la consola del closer — AUTOHOSPEDADAS
@@ -67,103 +96,131 @@
 
 @theme {
   /* ---- Tipografia -------------------------------------------------------
-   * Stack del sistema a proposito: cero webfonts remotas = cero request
-   * bloqueante y cero fuga de datos del usuario a un CDN de terceros.
+   * Space Grotesk para titulos, cifras y cuerpo (caracter geometrico y
+   * contemporaneo); JetBrains Mono para etiquetas, navegacion y datos
+   * tecnicos. Las dos van AUTOHOSPEDADAS desde `public/fonts/`: cero webfonts
+   * remotas = cero request bloqueante y cero fuga de datos del titular a un
+   * CDN de terceros. Ver la cabecera de `fonts.css`.
    */
-  --font-sans:
-    'Inter', 'Segoe UI Variable', 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial,
-    sans-serif;
+  --font-sans: 'Space Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
 
-  /* ---- Marca: verde institucional Colsubsidio --------------------------
-   * Escala 50-950. El core de marca es brand-600 (el verde de los avisos);
-   * brand-700 se usa para texto sobre fondo claro porque brand-600 sobre
-   * blanco no siempre llega a 4.5:1 en tamano de cuerpo.
-   */
-  --color-brand-50: oklch(0.974 0.026 152);
-  --color-brand-100: oklch(0.942 0.055 152);
-  --color-brand-200: oklch(0.887 0.099 151);
-  --color-brand-300: oklch(0.816 0.14 150);
-  --color-brand-400: oklch(0.734 0.165 149);
-  --color-brand-500: oklch(0.664 0.171 149);
-  --color-brand-600: oklch(0.582 0.157 150);
-  --color-brand-700: oklch(0.487 0.131 151);
-  --color-brand-800: oklch(0.402 0.106 152);
-  --color-brand-900: oklch(0.339 0.086 153);
-  --color-brand-950: oklch(0.221 0.06 154);
-  --color-brand: oklch(0.582 0.157 150);
+  /* Escala del DS: 12·13·15·17·18·22·28·40·46·68 px. */
+  --text-2xs: 0.75rem; /* 12 */
+  --text-xs: 0.8125rem; /* 13 */
+  --text-sm: 0.9375rem; /* 15 */
+  --text-base: 1.0625rem; /* 17 */
+  --text-lg: 1.125rem; /* 18 */
+  --text-xl: 1.375rem; /* 22 */
+  --text-2xl: 1.75rem; /* 28 */
+  --text-3xl: 2.5rem; /* 40 */
+  --text-4xl: 2.875rem; /* 46 */
+  --text-5xl: 4.25rem; /* 68 */
 
-  /* ---- Acento calido: gamificacion (F2.2) -----------------------------
-   * El carril de educacion tiene que sentirse un juego, no un castigo por
-   * "no ser viable". El ambar separa visualmente ese carril del verde
-   * transaccional de marca.
+  /* ---- Marca: amarillo Colsubsidio -------------------------------------
+   * El core es brand-500 (#FFD000), muestreado del logotipo oficial. La escala
+   * se construyo alrededor de el: hacia arriba aclarando, hacia abajo hasta un
+   * ambar oscuro que SI sirve para texto sobre blanco.
    */
-  --color-accent-50: oklch(0.98 0.024 85);
-  --color-accent-100: oklch(0.958 0.055 87);
-  --color-accent-200: oklch(0.914 0.11 86);
-  --color-accent-300: oklch(0.867 0.152 82);
-  --color-accent-400: oklch(0.822 0.174 76);
-  --color-accent-500: oklch(0.779 0.176 68);
-  --color-accent-600: oklch(0.696 0.171 58);
-  --color-accent-700: oklch(0.583 0.148 51);
-  --color-accent-800: oklch(0.483 0.121 49);
-  --color-accent-900: oklch(0.412 0.101 48);
-  --color-accent-950: oklch(0.267 0.068 46);
-  --color-accent: oklch(0.696 0.171 58);
+  --color-brand-50: #fffbe6;
+  --color-brand-100: #fff3b8;
+  --color-brand-200: #ffe985;
+  --color-brand-300: #ffdf47;
+  --color-brand-400: #ffd000;
+  --color-brand-500: #ffd000;
+  --color-brand-600: #e6b800;
+  --color-brand-700: #b38f00;
+  --color-brand-800: #856a00;
+  --color-brand-900: #665200;
+  --color-brand-950: #3b2f00;
+  --color-brand: #ffd000;
+
+  /* ---- Acento: azul Colsubsidio ---------------------------------------
+   * accent-600 (#0067A3) tambien sale del logotipo. Es el color de los enlaces
+   * y del anillo de foco, y el que separa un carril de otro (p. ej. la
+   * gamificacion de F2.2 frente a lo transaccional). El DS pide usarlo "con
+   * moderacion": no es un segundo color de marca.
+   */
+  --color-accent-50: #eff7fc;
+  --color-accent-100: #d6ebf7;
+  --color-accent-200: #aed6ee;
+  --color-accent-300: #74b8e0;
+  --color-accent-400: #3494cd;
+  --color-accent-500: #0d76b4;
+  --color-accent-600: #0067a3;
+  --color-accent-700: #005688;
+  --color-accent-800: #01476f;
+  --color-accent-900: #053b5c;
+  --color-accent-950: #03253c;
+  --color-accent: #0067a3;
 
   /* ---- Semanticos de estado -------------------------------------------
-   * Cada tono trae 3 variantes: base (texto/icono/barra), soft (relleno) y
-   * border. Se reasignan en dark mas abajo.
+   * Los cuatro salen del DS. Cada tono trae 3 variantes: base (texto, icono o
+   * barra), soft (relleno) y border. Se reasignan en dark mas abajo.
    */
-  --color-success: oklch(0.52 0.132 152);
-  --color-success-soft: oklch(0.955 0.043 152);
-  --color-success-border: oklch(0.855 0.09 152);
+  --color-success: #2e9e4f;
+  --color-success-soft: #dceedf;
+  --color-success-border: #a6d4b2;
 
-  --color-warning: oklch(0.55 0.128 62);
-  --color-warning-soft: oklch(0.964 0.05 83);
-  --color-warning-border: oklch(0.87 0.108 78);
+  --color-warning: #e0b000;
+  --color-warning-soft: #fcf3c7;
+  --color-warning-border: #ecd479;
 
-  --color-danger: oklch(0.531 0.192 26);
-  --color-danger-soft: oklch(0.958 0.032 25);
-  --color-danger-border: oklch(0.868 0.078 25);
+  --color-danger: #d64545;
+  --color-danger-soft: #fad6d6;
+  --color-danger-border: #eba3a3;
 
-  --color-info: oklch(0.519 0.161 258);
-  --color-info-soft: oklch(0.958 0.028 253);
-  --color-info-border: oklch(0.858 0.072 255);
+  --color-info: #0067a3;
+  --color-info-soft: #dde8f5;
+  --color-info-border: #a7c3e2;
 
-  /* ---- Superficies y texto (valores de light; dark se sobreescribe) ---- */
-  --color-surface: oklch(1 0 0);
-  --color-surface-2: oklch(0.978 0.004 150);
-  --color-surface-3: oklch(0.947 0.007 150);
-  --color-text: oklch(0.24 0.022 154);
-  --color-text-muted: oklch(0.508 0.016 154);
-  --color-text-subtle: oklch(0.615 0.014 154);
-  --color-text-inverse: oklch(0.995 0.002 150);
-  --color-border: oklch(0.907 0.008 150);
-  --color-border-strong: oklch(0.818 0.012 150);
-  --color-ring: oklch(0.487 0.131 151);
-  --color-overlay: oklch(0.221 0.06 154 / 0.55);
+  /* ---- Superficies y texto (valores de light; dark se sobreescribe) ----
+   * La pagina es BLANCA. `surface-3` es la unica banda tenida y se usa para
+   * separar zonas (rieles, cabeceras de tabla), nunca como fondo general: en
+   * el DS el crema aparece 3 veces menos que el blanco.
+   *
+   * Los neutros son CALIDOS a proposito: sobre un gris azulado el amarillo se
+   * lee como advertencia en vez de como marca.
+   */
+  --color-surface: #ffffff;
+  --color-surface-2: #ffffff;
+  --color-surface-3: #f4f2ea; /* banda suave, no fondo de pagina */
+  --color-text: #0d0d0d; /* negro tinta */
+  --color-text-muted: #3a382f; /* gris 800 */
+  --color-text-subtle: #8a867a; /* gris 500 */
+  --color-text-inverse: #fbf9f2;
+  --color-border: #e6e3da;
+  --color-border-strong: #cfcabb; /* gris 300 */
+  /* El anillo de foco va en azul y no en amarillo: sobre un boton primario
+   * amarillo, un anillo amarillo seria invisible (WCAG 2.4.7). */
+  --color-ring: #0067a3;
+  --color-overlay: rgb(13 13 13 / 0.55);
 
   /* ---- Chat estilo WhatsApp (F1 y F2.1) -------------------------------
-   * Tokens propios para que el mock se lea como la app real sin que el resto
-   * del producto herede esos colores.
+   * Tokens propios y DELIBERADAMENTE fuera de la paleta del DS: el mock tiene
+   * que leerse como la app real. Que el resto del producto no herede estos
+   * colores es justamente el punto de aislarlos aqui.
    */
-  --color-whatsapp-header: oklch(0.514 0.093 176);
-  --color-whatsapp-bg: oklch(0.938 0.011 92);
-  --color-whatsapp-in: oklch(1 0 0);
-  --color-whatsapp-out: oklch(0.945 0.062 148);
-  --color-whatsapp-text: oklch(0.245 0.018 155);
-  --color-whatsapp-meta: oklch(0.585 0.013 155);
+  --color-whatsapp-header: #075e54;
+  --color-whatsapp-bg: #ece5dd;
+  --color-whatsapp-in: #ffffff;
+  --color-whatsapp-out: #dcf8c6;
+  --color-whatsapp-text: #1f2c34;
+  --color-whatsapp-meta: #7d8b91;
 
-  /* ---- Radios, sombras, transiciones ---------------------------------- */
-  --radius-field: 0.625rem;
-  --radius-card: 1rem;
-  --radius-bubble: 1.125rem;
+  /* ---- Radios (DS: 8 · 12 · 18 · full) -------------------------------- */
+  --radius-field: 0.5rem; /* 8 */
+  --radius-card: 0.75rem; /* 12 */
+  --radius-bubble: 1.125rem; /* 18 */
   --radius-pill: 9999px;
 
-  --shadow-card: 0 1px 2px oklch(0.221 0.06 154 / 0.06), 0 8px 24px oklch(0.221 0.06 154 / 0.06);
-  --shadow-bubble: 0 1px 1px oklch(0.221 0.06 154 / 0.13);
-  --shadow-pop: 0 10px 30px oklch(0.221 0.06 154 / 0.18);
+  /* ---- Elevacion (DS: sm · md · lg) -----------------------------------
+   * Sombras calidas (tinta con alfa) en vez de negro puro: sobre crema, una
+   * sombra gris neutro se ve sucia.
+   */
+  --shadow-card: 0 1px 2px rgb(13 13 13 / 0.06), 0 8px 24px rgb(13 13 13 / 0.08);
+  --shadow-bubble: 0 1px 1px rgb(13 13 13 / 0.13);
+  --shadow-pop: 0 10px 30px rgb(13 13 13 / 0.18);
 
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-pop: cubic-bezier(0.22, 1.2, 0.36, 1);
@@ -271,56 +328,64 @@
  *  reasignar los mismos tokens sin pelear especificidad.
  * ------------------------------------------------------------------------ */
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* La variante `dark:` de Tailwind v4 usa esta misma media query, asi que
-     * tokens y utilidades cambian juntos. */
-    --color-surface: oklch(0.253 0.013 156);
-    --color-surface-2: oklch(0.197 0.012 158);
-    --color-surface-3: oklch(0.311 0.015 156);
-    --color-text: oklch(0.967 0.006 150);
-    --color-text-muted: oklch(0.765 0.013 150);
-    --color-text-subtle: oklch(0.655 0.013 150);
-    --color-text-inverse: oklch(0.208 0.018 154);
-    --color-border: oklch(0.351 0.015 156);
-    --color-border-strong: oklch(0.452 0.018 156);
-    --color-ring: oklch(0.734 0.165 149);
-    --color-overlay: oklch(0.145 0.03 154 / 0.7);
+[data-theme='dark'] {
+  color-scheme: dark;
+  /* La variante `dark:` de Tailwind apunta a este mismo selector (ver
+   * @custom-variant arriba), asi que tokens y utilidades cambian juntos.
+   * Dark es opt-in: sin `data-theme="dark"` en <html>, la app queda en claro.
+   *
+   * El DS no especifica tema oscuro. Se derivo manteniendo la temperatura:
+     * neutros calidos oscuros (#1A1A16, #2A2A24 salen del propio DS), nunca
+     * grises azulados, para que el amarillo siga leyendose como el mismo
+     * amarillo. */
+    --color-surface: #1a1a16;
+    --color-surface-2: #121210;
+    --color-surface-3: #2a2a24;
+    --color-text: #fbf9f2;
+    --color-text-muted: #cfcabb;
+    --color-text-subtle: #8a867a;
+    --color-text-inverse: #0d0d0d;
+    --color-border: #3a382f;
+    --color-border-strong: #55524a;
+    /* En oscuro el anillo pasa a amarillo: el azul sobre fondo tinta pierde
+     * contraste, el amarillo lo gana. */
+    --color-ring: #ffd000;
+    --color-overlay: rgb(0 0 0 / 0.7);
 
-    /* En dark el verde de marca sube de luminosidad: brand-600 sobre fondo
-     * oscuro no alcanza contraste AA para texto. */
-    --color-brand: oklch(0.734 0.165 149);
+    /* El amarillo no se toca: sobre fondo oscuro rinde mejor que sobre claro. */
+    --color-brand: #ffd000;
+    /* El azul si sube de luminosidad: #1E5AA8 sobre tinta no llega a AA. */
+    --color-accent: #74b8e0;
 
-    --color-success: oklch(0.79 0.145 152);
-    --color-success-soft: oklch(0.315 0.062 153);
-    --color-success-border: oklch(0.427 0.093 152);
+    --color-success: #5cc47a;
+    --color-success-soft: #17301f;
+    --color-success-border: #2a5537;
 
-    --color-warning: oklch(0.845 0.152 84);
-    --color-warning-soft: oklch(0.335 0.062 68);
-    --color-warning-border: oklch(0.452 0.098 70);
+    --color-warning: #f5d400;
+    --color-warning-soft: #332a08;
+    --color-warning-border: #5c4c10;
 
-    --color-danger: oklch(0.735 0.16 25);
-    --color-danger-soft: oklch(0.322 0.082 26);
-    --color-danger-border: oklch(0.44 0.125 26);
+    --color-danger: #ff8a80;
+    --color-danger-soft: #2a1215;
+    --color-danger-border: #5c2b2e;
 
-    --color-info: oklch(0.775 0.115 253);
-    --color-info-soft: oklch(0.312 0.068 259);
-    --color-info-border: oklch(0.428 0.101 258);
+    --color-info: #6fb6e2;
+    --color-info-soft: #12203a;
+    --color-info-border: #234066;
 
-    --color-whatsapp-header: oklch(0.311 0.032 175);
-    --color-whatsapp-bg: oklch(0.192 0.014 205);
-    --color-whatsapp-in: oklch(0.271 0.014 208);
-    --color-whatsapp-out: oklch(0.371 0.058 165);
-    --color-whatsapp-text: oklch(0.955 0.006 150);
-    --color-whatsapp-meta: oklch(0.735 0.012 175);
+    --color-whatsapp-header: #1f2c34;
+    --color-whatsapp-bg: #0b141a;
+    --color-whatsapp-in: #202c33;
+    --color-whatsapp-out: #005c4b;
+    --color-whatsapp-text: #e9edef;
+    --color-whatsapp-meta: #8696a0;
 
-    --shadow-card: 0 1px 2px oklch(0 0 0 / 0.4), 0 8px 24px oklch(0 0 0 / 0.28);
-    --shadow-bubble: 0 1px 1px oklch(0 0 0 / 0.35);
-    --shadow-pop: 0 10px 30px oklch(0 0 0 / 0.45);
-  }
+    --shadow-card: 0 1px 2px rgb(0 0 0 / 0.4), 0 8px 24px rgb(0 0 0 / 0.28);
+    --shadow-bubble: 0 1px 1px rgb(0 0 0 / 0.35);
+    --shadow-pop: 0 10px 30px rgb(0 0 0 / 0.45);
 }
 
 /* --------------------------------------------------------------------------
@@ -394,21 +459,25 @@
   }
 
   body {
-    background-color: var(--color-surface-2);
+    background-color: var(--color-surface);
     color: var(--color-text);
     font-family: var(--font-sans);
-    font-size: 0.9375rem;
-    line-height: 1.55;
+    font-size: var(--text-sm);
+    line-height: 1.55; /* interlineado de cuerpo del DS */
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
 
+  /* Interlineado .98 y tracking negativo en titulos: es lo que le da al DS su
+   * caracter compacto y geometrico. */
   h1,
   h2,
   h3,
   h4 {
+    font-weight: 700;
+    line-height: 0.98;
+    letter-spacing: -0.02em;
     text-wrap: balance;
-    letter-spacing: -0.014em;
   }
 
   p {
@@ -423,7 +492,7 @@
   }
 
   ::selection {
-    background-color: var(--color-brand-200);
+    background-color: var(--color-brand-300);
     color: var(--color-brand-950);
   }
 
@@ -441,6 +510,16 @@
 /* --------------------------------------------------------------------------
  *  Utilidades propias
  * ------------------------------------------------------------------------ */
+
+/* Etiqueta tecnica del DS: mono, versalita, tracking abierto. Se usa en
+ * cabeceras de seccion, badges de dato y navegacion. */
+@utility label-mono {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: var(--text-xs);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
 
 /* Anillo de foco accesible y consistente. `:focus-visible` para que el mouse
  * no lo dispare, y `outline` (no box-shadow) para que sobreviva al modo de

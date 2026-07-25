@@ -12,28 +12,30 @@ import type { ComponentPropsWithRef, ReactElement, ReactNode } from 'react';
 import { cn } from '../lib/cn';
 import { Spinner } from './spinner';
 
-export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'accent' | 'danger';
+export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'dark' | 'accent' | 'danger';
 export type ButtonSize = 'sm' | 'md' | 'lg';
 
 const BASE =
-  'focus-ring relative inline-flex select-none items-center justify-center gap-2 rounded-field ' +
-  'font-semibold whitespace-nowrap transition-colors duration-150 ' +
+  'focus-ring relative inline-flex select-none items-center justify-center gap-2 rounded-pill ' +
+  'font-bold whitespace-nowrap transition-colors duration-150 ' +
   'disabled:pointer-events-none disabled:opacity-55';
 
 const VARIANTES: Record<ButtonVariant, string> = {
-  // Verde institucional. En claro se usa brand-700 (no el 600) porque el texto
-  // blanco sobre brand-600 no llega a 4.5:1; en oscuro se invierte el par.
-  primary:
-    'bg-brand-700 text-white shadow-sm hover:bg-brand-800 active:bg-brand-900 ' +
-    'dark:bg-brand-400 dark:text-brand-950 dark:hover:bg-brand-300',
+  // Amarillo hackaton + tinta, tal cual el boton primario del Design System.
+  // El texto SIEMPRE es tinta, nunca blanco: blanco sobre #F2CE1B da ~1.6:1,
+  // que no pasa ni de lejos. Tinta sobre amarillo da ~12:1.
+  primary: 'bg-brand-500 text-[#0d0d0d] shadow-sm hover:bg-brand-600 active:bg-brand-700',
   secondary:
-    'border border-border bg-surface text-text shadow-sm hover:bg-surface-3 ' +
-    'active:bg-surface-3 dark:border-border-strong',
+    'border border-border-strong bg-surface text-text shadow-sm hover:bg-surface-3 ' +
+    'active:bg-surface-3',
   ghost: 'bg-transparent text-text-muted hover:bg-surface-3 hover:text-text',
-  // CTA del carril gamificado (F2.2): ambar con texto oscuro, AA en los dos temas.
-  accent: 'bg-accent-500 text-accent-950 shadow-sm hover:bg-accent-400 active:bg-accent-600',
-  // `text-surface` sigue al tema: blanco en claro, oscuro en oscuro.
-  danger: 'bg-danger text-surface shadow-sm hover:opacity-90 active:opacity-100',
+  // El par invertido del DS: fondo tinta con letra amarilla. Es el CTA
+  // secundario fuerte, para cuando ya hay un primario amarillo en pantalla.
+  dark: 'bg-[#0d0d0d] text-brand-500 shadow-sm hover:bg-[#2a2a24] active:bg-[#3a382f]',
+  // Azul Colsubsidio para el carril gamificado (F2.2): separa ese lane del
+  // amarillo transaccional sin salirse de la paleta.
+  accent: 'bg-accent-600 text-white shadow-sm hover:bg-accent-700 active:bg-accent-800',
+  danger: 'bg-danger text-white shadow-sm hover:opacity-90 active:opacity-100',
 };
 
 const TAMANOS: Record<ButtonSize, string> = {
