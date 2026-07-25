@@ -118,7 +118,7 @@ export function ProjectCard({
             porcentaje sin contexto se lee como una medicion cerrada. */}
         <div
           className="absolute top-0 right-0 flex flex-col items-end bg-brand-500 px-3 py-2 text-[#0d0d0d]"
-          title={afinidad.explicacion}
+          title={`¿Por que ${String(afinidad.porcentaje)}%? ${match.razon} ${afinidad.explicacion}`}
         >
           <span className="flex items-baseline gap-0.5">
             <span className="text-xl leading-none font-bold tabular-nums">

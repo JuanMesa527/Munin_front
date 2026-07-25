@@ -35,7 +35,8 @@ export function EnrichmentSummaryView({ resumen }: EnrichmentSummaryProps): Reac
               : `Guardaste ${String(guardados.length)} ${guardados.length === 1 ? 'proyecto' : 'proyectos'}`}
           </h2>
           <p className="text-base text-text-muted">
-            Un asesor de Colsubsidio va a contactarte con esta información a la mano.
+            Un comercial de Colsubsidio se va a contactar contigo pronto, con esta
+            información a la mano.
           </p>
         </div>
 
@@ -116,6 +117,20 @@ export function EnrichmentSummaryView({ resumen }: EnrichmentSummaryProps): Reac
           </ul>
         </section>
       )}
+
+      {/* El proximo paso se repite al pie a proposito: la pantalla scrollea, y
+          arriba la frase compite con el titulo y con el puntaje. Aqui, donde
+          el usuario termina de leer, es donde de verdad se pregunta "¿y ahora
+          que?". */}
+      <aside className="flex flex-col gap-2 border-t border-border pt-8">
+        <p className="label-mono text-text-subtle">Que sigue</p>
+        <p className="text-lg font-bold">Un comercial se contactará contigo pronto.</p>
+        <p className="max-w-[70ch] text-sm text-text-muted">
+          Va a llamarte con lo que guardaste y con lo que dedujimos de ti a la vista, así
+          que no tienes que repetir nada. Si algo cambió o no te representa, díselo y lo
+          corregimos.
+        </p>
+      </aside>
     </div>
   );
 }

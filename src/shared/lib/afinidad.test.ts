@@ -76,7 +76,7 @@ describe('leerAfinidad', () => {
 
     expect(lectura.nivel).toBe('sin-base');
     expect(lectura.rotulo).toBe('sin calcular');
-    expect(lectura.explicacion).toContain('no esta calculado');
+    expect(lectura.explicacion).toContain('no está calculado');
     // "estimado" o "aproximado" sugieren una medicion imprecisa; aqui no hubo
     // medicion, y la diferencia es justamente lo que hay que comunicar.
     expect(lectura.explicacion).not.toContain('estimado');

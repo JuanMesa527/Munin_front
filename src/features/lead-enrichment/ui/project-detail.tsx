@@ -82,11 +82,12 @@ export function ProjectDetailContent({ tarjeta }: ProjectDetailProps): ReactElem
       )}
 
       {/* GLASS-BOX: el desglose con pesos y aportes (regla 21). */}
-      <Seccion titulo="Por que te lo mostramos">
+      <Seccion titulo={`Por que este ${String(afinidad.porcentaje)}%`}>
         <p className="text-sm text-text-muted">{match.razon}</p>
-        {afinidad.nivel !== 'calculada' && (
-          <p className="text-sm text-text-subtle">{afinidad.explicacion}</p>
-        )}
+        {/* La explicacion va SIEMPRE, no solo cuando el calculo salio corto:
+            que el perfil este completo tambien es informacion, y callarlo deja
+            al usuario sin saber que ejes movieron el numero. */}
+        <p className="text-sm text-text-subtle">{afinidad.explicacion}</p>
         <FactorBars factores={factores} />
       </Seccion>
 

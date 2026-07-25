@@ -72,10 +72,10 @@ export function leerAfinidad(match: ProjectMatch): LecturaDeAfinidad {
   // medicion imprecisa, y aqui no hubo medicion.
   const explicacion =
     nivel === 'sin-base'
-      ? `Este ${String(porcentaje)}% no esta calculado: falta ${faltantes || 'el dato de base'}. Sirve para ordenar la lista, no para decidir.`
+      ? `Este ${String(porcentaje)}% no está calculado: falta ${faltantes || 'el dato de base'}. Sirve para ordenar la lista, no para decidir.`
       : nivel === 'parcial'
-        ? `Calculado con parte de tu perfil: nos falta ${faltantes}. Los datos que faltan cuentan como neutros, asi que el porcentaje puede subir o bajar cuando los tengamos.`
-        : `Calculado con tu perfil completo: capacidad de pago, ubicacion, tamano del hogar, tipo de vivienda y amenidades.`;
+        ? `Calculado con parte de tu perfil: nos falta ${faltantes}. Los datos que faltan cuentan como neutros, así que el porcentaje puede subir o bajar cuando los tengamos.`
+        : `Calculado con tu perfil completo: capacidad de pago, ubicación, tamaño del hogar, tipo de vivienda y amenidades.`;
 
   return {
     porcentaje,
