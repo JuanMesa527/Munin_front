@@ -549,12 +549,12 @@
   animation: var(--animate-shimmer);
 }
 
-/* Fondo del hilo de chat: patron sutil para que la burbuja tenga contra que
- * contrastar, como en WhatsApp. */
+/* Fondo del hilo de chat: crema del DS con patron sutil para que la burbuja
+ * tenga contra que contrastar, sin el beige WhatsApp. */
 @utility chat-canvas {
-  background-color: var(--color-whatsapp-bg);
+  background-color: var(--color-surface-3);
   background-image: radial-gradient(
-    color-mix(in oklab, var(--color-whatsapp-meta) 12%, transparent) 1px,
+    color-mix(in oklab, var(--color-text-subtle) 18%, transparent) 1px,
     transparent 1px
   );
   background-size: 22px 22px;

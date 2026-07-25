@@ -307,7 +307,7 @@ export const FIXTURE_TURNS: readonly ConversationTurn[] = [
     mensajes: [
       mensajeBot(
         'fixture-msg-7',
-        'Con lo que me compartiste, tu perfil se ve viable para continuar con un asesor. Esto es una demostración: los datos no representan a un comprador real.',
+        'Con lo que me compartiste, tu perfil se ve viable para continuar con un asesor.',
       ),
     ],
     siguientePaso: null,
@@ -316,7 +316,7 @@ export const FIXTURE_TURNS: readonly ConversationTurn[] = [
       carril: 'viable',
       razones: [],
       explicacion:
-        '(Demo) Tu combinación de afiliación, ahorro y capacidad mensual estimada te ubica en el carril viable.',
+        'Tu combinación de afiliación, ahorro y capacidad mensual estimada te ubica en el carril viable.',
       decididoEn: AHORA,
     },
   },

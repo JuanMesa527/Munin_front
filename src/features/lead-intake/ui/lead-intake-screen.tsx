@@ -20,6 +20,7 @@ import {
   TypingIndicator,
 } from '@shared/ui';
 import type { FinalidadTratamiento } from '@contracts';
+import { cn } from '@shared/lib/cn';
 import { useIntakeConversation } from '../model';
 import { ChatShell } from './chat-shell';
 import { IntakeOutcome } from './intake-outcome';
@@ -41,23 +42,37 @@ const FINALIDADES: readonly FinalidadTratamiento[] = [
 const CANAL = 'web-chat';
 
 /**
- * Marco tipo telefono (boceto Design.pdf): la app es una columna centrada,
- * fondo crema alrededor, tarjeta blanca con esquinas redondeadas y sombra. En
- * movil ocupa toda la pantalla; en desktop flota como una tarjeta de mensajeria.
+ * Frame full-bleed de F1: chrome de borde a borde, sin columna tipo telefono
+ * ni margenes laterales. El contenido de lectura (consent, outcome) se centra
+ * con max-w-3xl; el chat gestiona su propio ancho interno.
  */
-function PhoneFrame({ children }: { children: ReactElement }): ReactElement {
+function ChatFrame({
+  children,
+  tone = 'plain',
+}: {
+  children: ReactElement;
+  /** `cream` = fondo suave para pantallas de lectura (consent/outcome). */
+  tone?: 'plain' | 'cream';
+}): ReactElement {
   return (
-    <div className="flex min-h-dvh justify-center bg-surface-2 sm:p-4">
-      <main className="flex h-dvh w-full max-w-[460px] flex-col overflow-hidden bg-surface shadow-card sm:h-[calc(100dvh-2rem)] sm:rounded-card">
-        {children}
-      </main>
+    <div
+      className={cn(
+        'flex min-h-dvh w-full flex-col',
+        tone === 'cream' ? 'bg-surface-3' : 'bg-surface',
+      )}
+    >
+      <main className="flex h-dvh w-full flex-col overflow-hidden">{children}</main>
     </div>
   );
 }
 
 /** Contenedor scrollable para las fases que no son el chat (que gestiona su propio scroll). */
 function Panel({ children }: { children: ReactElement }): ReactElement {
-  return <div className="flex-1 overflow-y-auto scrollbar-slim p-4">{children}</div>;
+  return (
+    <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col justify-center overflow-y-auto scrollbar-slim px-4 py-5 sm:px-6 sm:py-6">
+      {children}
+    </div>
+  );
 }
 
 export interface LeadIntakeScreenProps {
@@ -102,23 +117,25 @@ export function LeadIntakeScreen({ onViable }: LeadIntakeScreenProps = {}): Reac
 
   if (phase === 'cargando') {
     return (
-      <PhoneFrame>
+      <ChatFrame>
         <Panel>
           <div aria-busy="true" className="flex flex-col gap-3">
             <Skeleton variant="text" lines={2} />
             <Skeleton variant="block" className="h-40" />
             <ul className="flex flex-col gap-2">
-              <TypingIndicator />
+              <li>
+                <TypingIndicator />
+              </li>
             </ul>
           </div>
         </Panel>
-      </PhoneFrame>
+      </ChatFrame>
     );
   }
 
   if (phase === 'error') {
     return (
-      <PhoneFrame>
+      <ChatFrame>
         <Panel>
           <div className="flex flex-col gap-3">
             <Alert tone="danger" title="No pudimos continuar">
@@ -126,18 +143,18 @@ export function LeadIntakeScreen({ onViable }: LeadIntakeScreenProps = {}): Reac
             </Alert>
             {canUseFixture && (
               <Button variant="secondary" onClick={useFixture}>
-                Ver datos de ejemplo
+                Continuar con perfil de respaldo
               </Button>
             )}
           </div>
         </Panel>
-      </PhoneFrame>
+      </ChatFrame>
     );
   }
 
   if (phase === 'consent-pendiente') {
     return (
-      <PhoneFrame>
+      <ChatFrame tone="cream">
         <Panel>
           <div>
             <ConsentNotice
@@ -153,20 +170,20 @@ export function LeadIntakeScreen({ onViable }: LeadIntakeScreenProps = {}): Reac
                 });
               }}
             />
-            <div className="mt-3 flex justify-center">
+            <div className="mt-4 flex justify-center">
               <Button variant="ghost" size="sm" disabled={isPending} onClick={declineConsent}>
                 No, prefiero no continuar
               </Button>
             </div>
           </div>
         </Panel>
-      </PhoneFrame>
+      </ChatFrame>
     );
   }
 
   if (phase === 'consent-rechazado') {
     return (
-      <PhoneFrame>
+      <ChatFrame tone="cream">
         <Panel>
           <EmptyState
             title="Entendido, no vamos a tratar tus datos"
@@ -188,18 +205,19 @@ export function LeadIntakeScreen({ onViable }: LeadIntakeScreenProps = {}): Reac
             }
           />
         </Panel>
-      </PhoneFrame>
+      </ChatFrame>
     );
   }
 
   if (phase === 'conversando') {
     if (turn === null) return <></>;
     return (
-      <PhoneFrame>
+      <ChatFrame>
         <ChatShell
           messages={messages}
           step={turn.siguientePaso}
           progreso={turn.progreso}
+          profile={turn.profile}
           isSending={isPending}
           onQuickReply={(value) => {
             // La burbuja muestra el `label` del chip ("Sí"), no el `value` ("true").
@@ -212,17 +230,17 @@ export function LeadIntakeScreen({ onViable }: LeadIntakeScreenProps = {}): Reac
           }}
           className="flex-1"
         />
-      </PhoneFrame>
+      </ChatFrame>
     );
   }
 
   // completado-viable | completado-no-viable | completado-sin-clasificar
   if (turn === null) return <></>;
   return (
-    <PhoneFrame>
+    <ChatFrame>
       <Panel>
         <IntakeOutcome turn={turn} />
       </Panel>
-    </PhoneFrame>
+    </ChatFrame>
   );
 }

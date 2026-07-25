@@ -16,7 +16,7 @@
 interface ImportMetaEnv {
   /** Base de la API. Vacio o ausente = mismo origen (proxy de Vite en dev). */
   readonly VITE_API_BASE_URL?: string;
-  /** `'true'` habilita banner y datos semilla de la demo. */
+  /** `'true'` habilita datos semilla locales cuando no hay backend. */
   readonly VITE_DEMO_MODE?: string;
 }
 

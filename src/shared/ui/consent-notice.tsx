@@ -81,110 +81,137 @@ export function ConsentNotice({
     <section
       aria-labelledby={`${idBase}-titulo`}
       className={cn(
-        'flex flex-col gap-4 rounded-card border border-brand-200 bg-surface p-4 shadow-card dark:border-brand-800',
+        'animate-rise relative flex flex-col overflow-hidden rounded-card border border-border bg-surface shadow-card',
         className,
       )}
     >
-      <header className="flex items-start gap-3">
-        <span
-          aria-hidden="true"
-          className="flex size-9 shrink-0 items-center justify-center rounded-full bg-brand-50 text-brand-700 dark:bg-brand-950 dark:text-brand-300"
-        >
-          <ShieldCheck className="size-5" />
-        </span>
-        <div>
-          <h2 id={`${idBase}-titulo`} className="text-base font-semibold text-text">
-            Antes de empezar: tus datos
-          </h2>
-          <p className="mt-1 text-sm text-text-muted">
-            Para perfilarte necesitamos tu autorización. Así lo exige la Ley 1581 de 2012 de
-            protección de datos personales, y así queremos hacerlo.
+      <div aria-hidden="true" className="h-1 w-full bg-brand" />
+
+      <div className="flex flex-col gap-4 p-4 sm:gap-5 sm:p-6">
+        {/*
+          Logo oficial de Colsubsidio. No lo cambies sin confirmar con producto.
+        */}
+        <header className="flex flex-wrap items-center gap-x-4 gap-y-3">
+          <img
+            src="/colsubsidio-logo.png"
+            alt="Colsubsidio"
+            className="h-7 w-auto"
+            width={146}
+            height={28}
+          />
+          <span aria-hidden="true" className="hidden h-8 w-px bg-border sm:block" />
+          <div className="flex min-w-0 flex-1 items-start gap-2.5">
+            <span
+              aria-hidden="true"
+              className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full bg-brand text-text"
+            >
+              <ShieldCheck className="size-4" strokeWidth={2.25} />
+            </span>
+            <div className="min-w-0">
+              <p className="font-mono text-[0.625rem] tracking-widest text-text-subtle uppercase">
+                Asistente de vivienda
+              </p>
+              <h2
+                id={`${idBase}-titulo`}
+                className="font-display text-lg font-bold tracking-tight text-text sm:text-xl"
+              >
+                Antes de empezar: tus datos
+              </h2>
+              <p className="mt-1 text-sm leading-snug text-text-muted">
+                Para perfilarte necesitamos tu autorización (Ley 1581 de 2012).
+              </p>
+            </div>
+          </div>
+        </header>
+
+        {/* Dos columnas en desktop: menos altura, menos scroll */}
+        <div className="grid gap-4 md:grid-cols-2 md:gap-5">
+          <div>
+            <p className="font-display text-sm font-bold text-text">
+              ¿Para qué vamos a usar tus datos?
+            </p>
+            <ul id={idFinalidades} className="mt-2 flex flex-col gap-1.5">
+              {finalidades.map((finalidad) => (
+                <li key={finalidad} className="flex gap-2 text-sm leading-snug text-text-muted">
+                  <span
+                    aria-hidden="true"
+                    className="mt-1.5 size-1.5 shrink-0 rounded-full bg-brand"
+                  />
+                  {TEXTO_FINALIDAD[finalidad]}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="rounded-field border border-border bg-surface-3 px-3.5 py-3">
+            <p className="font-display text-sm font-bold text-text">Qué NO te vamos a pedir</p>
+            <p className="mt-1 text-sm leading-snug text-text-muted">
+              Ni cédula, ni número de cuenta, ni documentos. Tampoco consultamos centrales de
+              riesgo: tu capacidad se estima con lo que tú nos cuentas.
+            </p>
+          </div>
+        </div>
+
+        <div className="grid gap-2 text-xs leading-snug text-text-muted sm:text-sm md:grid-cols-2 md:gap-4">
+          <p>
+            Tus respuestas de texto libre pueden ser procesadas por un proveedor externo de
+            inteligencia artificial fuera de Colombia, solo para entender y redactar la
+            conversación: la decisión sobre tu perfil siempre es de nuestro sistema, nunca del
+            proveedor.
+          </p>
+          <p>
+            Como titular puedes{' '}
+            <strong className="font-semibold text-text">conocer, actualizar y rectificar</strong>{' '}
+            tus datos, <strong className="font-semibold text-text">revocar</strong> esta
+            autorización y{' '}
+            <strong className="font-semibold text-text">solicitar su supresión</strong> (hoy de
+            forma manual).{' '}
+            <a
+              href={RUTA_POLITICA}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="focus-ring inline-flex items-center gap-1 rounded-sm font-semibold text-accent-700 underline underline-offset-2 hover:text-accent-800"
+            >
+              Leer la política
+              <ExternalLink aria-hidden="true" className="size-3.5" />
+              <span className="sr-only">(se abre en una pestaña nueva)</span>
+            </a>
           </p>
         </div>
-      </header>
 
-      <div>
-        <p className="text-sm font-medium text-text">¿Para qué vamos a usar tus datos?</p>
-        <ul id={idFinalidades} className="mt-2 flex flex-col gap-1.5">
-          {finalidades.map((finalidad) => (
-            <li key={finalidad} className="flex gap-2 text-sm text-text-muted">
-              <span aria-hidden="true" className="mt-1.5 size-1.5 shrink-0 rounded-full bg-brand-500" />
-              {TEXTO_FINALIDAD[finalidad]}
-            </li>
-          ))}
-        </ul>
-      </div>
+        <div className="flex flex-col gap-3 border-t border-border pt-4 sm:flex-row sm:items-center sm:gap-4">
+          <div className="flex min-w-0 flex-1 items-start gap-2.5 rounded-field bg-brand-50 px-3 py-2.5">
+            <input
+              id={idCheckbox}
+              type="checkbox"
+              checked={aceptado}
+              disabled={disabled}
+              aria-describedby={idFinalidades}
+              onChange={(evento) => {
+                onChange(evento.currentTarget.checked);
+              }}
+              className="focus-ring mt-0.5 size-5 shrink-0 rounded-sm accent-brand-600"
+            />
+            <label htmlFor={idCheckbox} className="text-sm leading-snug font-medium text-text">
+              Autorizo el tratamiento de mis datos personales para las finalidades descritas.
+              <span className="mt-0.5 block text-[0.625rem] font-normal text-text-subtle">
+                Política {versionPolitica} · no guardamos tu IP
+              </span>
+            </label>
+          </div>
 
-      {/* Diferenciador real y verificable del producto: la minimizacion de datos
-          es un requisito del reto, no un adorno. */}
-      <div className="rounded-field bg-surface-3 p-3 text-sm text-text-muted">
-        <p className="font-medium text-text">Qué NO te vamos a pedir</p>
-        <p className="mt-1">
-          Ni cédula, ni número de cuenta, ni documentos. Tampoco consultamos centrales de riesgo:
-          tu capacidad se estima con lo que tú nos cuentas.
-        </p>
-      </div>
-
-      {/* Divulgacion requerida desde que el backend usa DeepSeek (LLM_PROVIDER)
-          para redactar la conversacion — misma linea que /politica-de-datos. */}
-      <p className="text-sm text-text-muted">
-        Tus respuestas de texto libre pueden ser procesadas por un proveedor externo de
-        inteligencia artificial fuera de Colombia, solo para entender y redactar la conversación:
-        la decisión sobre tu perfil siempre es de nuestro sistema, nunca del proveedor.
-      </p>
-
-      <p className="text-sm text-text-muted">
-        Como titular puedes <strong className="font-medium text-text">conocer, actualizar y
-        rectificar</strong> tus datos, <strong className="font-medium text-text">revocar</strong>{' '}
-        esta autorización en cualquier momento, y{' '}
-        <strong className="font-medium text-text">solicitar su supresión</strong> — hoy esa
-        solicitud se atiende de forma manual, no con un botón de autogestión inmediata.{' '}
-        <a
-          href={RUTA_POLITICA}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="focus-ring inline-flex items-center gap-1 rounded-sm font-medium text-brand-700 underline underline-offset-2 hover:text-brand-800 dark:text-brand-300 dark:hover:text-brand-200"
-        >
-          Leer la política de tratamiento de datos
-          <ExternalLink aria-hidden="true" className="size-3.5" />
-          <span className="sr-only">(se abre en una pestaña nueva)</span>
-        </a>
-      </p>
-
-      <div className="flex flex-col gap-3 border-t border-border pt-3">
-        <div className="flex items-start gap-3">
-          <input
-            id={idCheckbox}
-            type="checkbox"
-            checked={aceptado}
-            disabled={disabled}
-            aria-describedby={idFinalidades}
-            onChange={(evento) => {
-              onChange(evento.currentTarget.checked);
-            }}
-            className="focus-ring mt-0.5 size-5 shrink-0 rounded-sm accent-brand-600 dark:accent-brand-400"
-          />
-          <label htmlFor={idCheckbox} className="text-sm text-text">
-            Autorizo el tratamiento de mis datos personales para las finalidades descritas.
-          </label>
+          {onContinue !== undefined && (
+            <Button
+              variant="primary"
+              size="lg"
+              disabled={!aceptado || disabled}
+              onClick={onContinue}
+              className="w-full shrink-0 sm:w-auto sm:min-w-[11rem]"
+            >
+              {continueLabel}
+            </Button>
+          )}
         </div>
-
-        <p className="text-[0.6875rem] text-text-subtle">
-          Versión de la política: {versionPolitica}. Guardamos la fecha y el canal de tu
-          autorización como evidencia; no guardamos tu dirección IP.
-        </p>
-
-        {onContinue !== undefined && (
-          <Button
-            variant="primary"
-            size="lg"
-            fullWidth
-            disabled={!aceptado || disabled}
-            onClick={onContinue}
-          >
-            {continueLabel}
-          </Button>
-        )}
       </div>
     </section>
   );

@@ -22,6 +22,11 @@ export interface QuickRepliesProps {
   selected?: readonly string[] | undefined;
   multiSelect?: boolean;
   disabled?: boolean;
+  /**
+   * `primary` = chips rellenos en amarillo de marca (CTA principal cuando hay
+   * pocas opciones). `default` = outline.
+   */
+  emphasis?: 'default' | 'primary';
   /** Nombre del grupo para el lector de pantalla. */
   label?: string | undefined;
   className?: string | undefined;
@@ -33,6 +38,7 @@ export function QuickReplies({
   selected,
   multiSelect = false,
   disabled = false,
+  emphasis = 'default',
   label = 'Respuestas rápidas',
   className,
 }: QuickRepliesProps): ReactElement {
@@ -55,11 +61,16 @@ export function QuickReplies({
               onSelect(opcion.value);
             }}
             className={cn(
-              'focus-ring inline-flex items-center rounded-pill border px-3 py-1.5 text-sm font-medium',
+              'focus-ring inline-flex items-center rounded-pill border px-4 py-2.5 text-sm font-semibold',
               'transition-colors duration-150 disabled:pointer-events-none disabled:opacity-50',
-              activo
-                ? 'border-brand-600 bg-brand-600 text-white dark:border-brand-400 dark:bg-brand-400 dark:text-brand-950'
-                : 'border-brand-200 bg-surface text-brand-800 hover:bg-brand-50 dark:border-brand-800 dark:text-brand-200 dark:hover:bg-brand-950',
+              emphasis === 'primary' && !activo && 'border-brand bg-brand text-text hover:bg-brand-400',
+              emphasis === 'primary' && activo && 'border-brand-600 bg-brand-600 text-text',
+              emphasis === 'default' &&
+                activo &&
+                'border-brand bg-brand text-text',
+              emphasis === 'default' &&
+                !activo &&
+                'border-border bg-surface text-text hover:border-brand-300 hover:bg-brand-50',
             )}
           >
             {opcion.label}

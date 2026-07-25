@@ -1,9 +1,9 @@
 /**
- * Burbuja de mensaje estilo WhatsApp (design system, capa shared).
+ * Burbuja de mensaje del chat de perfilamiento (design system, capa shared).
  *
- * El canal del reto es WhatsApp, asi que la UI imita ese lenguaje visual:
- * burbuja con cola, hora dentro de la burbuja y checks de estado. Usa los
- * tokens `--color-whatsapp-*`, que tienen su propia version en tema oscuro.
+ * Lenguaje visual Colsubsidio: bot en superficie blanca con borde, usuario en
+ * amarillo de marca con tinta (nunca blanco sobre amarillo). Conserva cola SVG
+ * y hora inline como en un chat real.
  *
  * ACCESIBILIDAD: el contenedor del hilo (en la feature) debe ser
  * `role="log" aria-live="polite"` para que los mensajes nuevos se anuncien
@@ -26,7 +26,7 @@ export interface ChatBubbleProps {
   enviadoEn?: IsoDateTime | undefined;
   /** Solo aplica a mensajes salientes; el bot no muestra checks. */
   estado?: EstadoEnvio | undefined;
-  /** Avatar del bot, a la izquierda de la burbuja (boceto). Ignorado para el usuario. */
+  /** Avatar del bot, a la izquierda de la burbuja. Ignorado para el usuario. */
   avatar?: ReactNode;
   children?: ReactNode;
   className?: string | undefined;
@@ -70,9 +70,9 @@ export function ChatBubble({
       )}
       <div
         className={cn(
-          'relative max-w-[85%] rounded-bubble px-3 py-2 shadow-bubble sm:max-w-[75%]',
-          'text-[0.9375rem] leading-snug text-whatsapp-text',
-          esUsuario ? 'rounded-tr-sm bg-whatsapp-out' : 'rounded-tl-sm bg-whatsapp-in',
+          'relative max-w-[85%] rounded-bubble px-3.5 py-2.5 shadow-bubble sm:max-w-[75%]',
+          'animate-rise text-[0.9375rem] leading-snug text-text',
+          esUsuario ? 'rounded-tr-sm bg-brand' : 'rounded-tl-sm bg-surface',
         )}
       >
         {/* Cola de la burbuja: SVG en vez de borde rotado para que no se vea
@@ -82,9 +82,7 @@ export function ChatBubble({
           viewBox="0 0 8 13"
           className={cn(
             'absolute top-0 h-[13px] w-[8px]',
-            esUsuario
-              ? 'right-[-7px] text-whatsapp-out'
-              : 'left-[-7px] text-whatsapp-in',
+            esUsuario ? 'right-[-7px] text-brand' : 'left-[-7px] text-surface',
           )}
         >
           <path
@@ -97,8 +95,7 @@ export function ChatBubble({
           {texto}
           {children}
           {/* Espaciador inline: reserva el hueco de la hora en la ultima linea,
-              igual que WhatsApp, para que el texto no quede debajo. Los
-              mensajes del usuario reservan un poco mas por los checks. */}
+              igual que un chat tipico, para que el texto no quede debajo. */}
           {enviadoEn !== undefined && (
             <span
               aria-hidden="true"
@@ -111,7 +108,7 @@ export function ChatBubble({
         </div>
 
         {enviadoEn !== undefined && (
-          <span className="absolute right-2.5 bottom-1.5 flex items-center gap-1 text-[0.6875rem] text-whatsapp-meta">
+          <span className="absolute right-2.5 bottom-1.5 flex items-center gap-1 text-[0.6875rem] text-text-subtle">
             <time dateTime={enviadoEn}>{formatTimeOfDay(enviadoEn)}</time>
             {esUsuario && estado !== undefined && <Checks estado={estado} />}
           </span>

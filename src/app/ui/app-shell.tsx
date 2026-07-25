@@ -6,10 +6,8 @@
  * con un borde de un pixel, como en el sistema de Colsubsidio: el color se
  * reserva para los bloques de contenido, no para el cromado.
  *
- * SOBRE EL LOGO: es el logotipo oficial de Colsubsidio, porque esto es una
- * entrega al hackaton que la propia Colsubsidio organiza y evalua. El aviso de
- * demo del pie deja explicito que es un prototipo y no un producto suyo
- * aprobado (EQUIPO.md seccion 8).
+ * SOBRE EL LOGO: es el logotipo oficial de Colsubsidio, con uso autorizado
+ * por el dueno de producto. El pie aclara que los precios son estimados.
  */
 
 import type { ReactElement, ReactNode } from 'react';
@@ -46,8 +44,8 @@ export function AppShell({ acciones, children }: AppShellProps): ReactElement {
       <footer className="border-t border-border">
         <div className="mx-auto w-full max-w-[1400px] px-5 py-5 lg:px-10">
           <p className="text-xs text-text-subtle">
-            Prototipo del Hackathon Colsubsidio × 30X. No es un canal oficial de
-            Colsubsidio: los precios son estimados y no constituyen oferta comercial.
+            Los precios y la capacidad de compra son estimados a partir de lo que nos cuentas.
+            No constituyen oferta comercial vinculante.
           </p>
         </div>
       </footer>
