@@ -60,7 +60,16 @@ function Panel({ children }: { children: ReactElement }): ReactElement {
   return <div className="flex-1 overflow-y-auto scrollbar-slim p-4">{children}</div>;
 }
 
-export function LeadIntakeScreen(): ReactElement {
+export interface LeadIntakeScreenProps {
+  /**
+   * Se dispara UNA vez cuando el perfilamiento termina en carril `viable`, con
+   * el `leadId` para que `app/` (client-flow) pase el control a F2.1. F1 no
+   * conoce a F2.1: solo avisa "este lead es viable" y quien orquesta decide.
+   */
+  onViable?: (leadId: string) => void;
+}
+
+export function LeadIntakeScreen({ onViable }: LeadIntakeScreenProps = {}): ReactElement {
   const {
     phase,
     turn,
@@ -83,6 +92,13 @@ export function LeadIntakeScreen(): ReactElement {
     start();
     // eslint-disable-next-line react-hooks/exhaustive-deps -- solo al montar
   }, []);
+
+  // Handoff F1 -> F2.1: al cerrar en `viable`, avisa a `app/` con el leadId.
+  useEffect(() => {
+    if (phase === 'completado-viable' && turn !== null) {
+      onViable?.(turn.profile.id);
+    }
+  }, [phase, turn, onViable]);
 
   if (phase === 'cargando') {
     return (
