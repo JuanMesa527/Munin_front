@@ -101,6 +101,12 @@ export function toEnrichedLead(seed: SeedLead): EnrichedLead {
     id: seed.id,
     consentimiento: toConsentimiento(seed),
 
+    // Identidad de contacto declarada (LeadProfile) + tokenizada (closer).
+    nombre: seed.nombre,
+    email: null,
+    telefono: null,
+    estadoCivil: null,
+
     esAfiliado: seed.esAfiliado,
     rangoSalarial: seed.rangoSalarial,
     segmento: seed.segmento,

@@ -29,6 +29,11 @@ function perfilBase(overrides: Partial<ConversationTurn['profile']> = {}): Conve
     id: 'lead-1',
     consentimiento: null,
     identidad: null,
+    nombre: null,
+    email: null,
+    telefono: null,
+    edad: null,
+    estadoCivil: null,
     esAfiliado: null,
     rangoSalarial: null,
     segmento: null,
@@ -206,7 +211,7 @@ describe('LeadIntakeScreen', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('error de conectividad: Alert con el mensaje del backend y boton de datos de ejemplo', async () => {
+  it('error de conectividad: Alert con el mensaje del backend y boton de perfil de respaldo', async () => {
     const user = userEvent.setup();
     const error: ApiRequestError = Object.assign(new Error('No pudimos conectarnos.'), {
       name: 'ApiRequestError',
@@ -216,12 +221,12 @@ describe('LeadIntakeScreen', () => {
     await renderScreen({ phase: 'error', error, canUseFixture: true });
 
     expect(screen.getByText('No pudimos conectarnos.')).toBeInTheDocument();
-    const boton = screen.getByRole('button', { name: /ver datos de ejemplo/i });
+    const boton = screen.getByRole('button', { name: /perfil de respaldo/i });
     await user.click(boton);
     expect(useFixtureMock).toHaveBeenCalledTimes(1);
   });
 
-  it('error de validacion (no conectividad): sin boton de datos de ejemplo', async () => {
+  it('error de validacion (no conectividad): sin boton de perfil de respaldo', async () => {
     const error: ApiRequestError = Object.assign(new Error('Dato inválido.'), {
       name: 'ApiRequestError',
       code: 'VALIDATION_ERROR',
@@ -230,6 +235,6 @@ describe('LeadIntakeScreen', () => {
     await renderScreen({ phase: 'error', error, canUseFixture: false });
 
     expect(screen.getByText('Dato inválido.')).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: /ver datos de ejemplo/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /perfil de respaldo/i })).not.toBeInTheDocument();
   });
 });

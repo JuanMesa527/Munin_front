@@ -47,7 +47,7 @@ function FichaCargando(): ReactElement {
 export function CloserBriefingPage(): ReactElement {
   const { leadId = '' } = useParams<{ leadId: string }>();
   const { session } = useCloserSession();
-  const { briefing, isLoading, isDemo, error } = useBriefing(leadId);
+  const { briefing, isLoading, error } = useBriefing(leadId);
 
   const timer = useCallTimer();
   const guion = useTalkingPoints(briefing?.talkingPoints.length ?? 0);
@@ -57,7 +57,7 @@ export function CloserBriefingPage(): ReactElement {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-console-paper font-display text-console-ink antialiased">
-        <ConsoleHeader closerName={closerName} showDemoBadge={false} />
+        <ConsoleHeader closerName={closerName} />
         <FichaCargando />
       </div>
     );
@@ -66,7 +66,7 @@ export function CloserBriefingPage(): ReactElement {
   if (briefing === null) {
     return (
       <div className="min-h-screen bg-console-paper font-display text-console-ink antialiased">
-        <ConsoleHeader closerName={closerName} showDemoBadge={false} />
+        <ConsoleHeader closerName={closerName} />
         <div className="mx-auto max-w-[640px] px-4 py-20 text-center">
           <h1 className="mb-3 text-[28px] font-bold tracking-[-0.03em]">Ficha no disponible</h1>
           <p className="text-[15px] text-console-mute">
@@ -81,7 +81,7 @@ export function CloserBriefingPage(): ReactElement {
 
   return (
     <div className="min-h-screen bg-console-paper font-display text-console-ink antialiased">
-      <ConsoleHeader closerName={closerName} showDemoBadge={isDemo} />
+      <ConsoleHeader closerName={closerName} />
       <BriefingHeader lead={lead} timer={timer} />
 
       <main

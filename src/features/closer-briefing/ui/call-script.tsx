@@ -10,6 +10,7 @@
  * lo usa con el teclado mientras sostiene el telefono.
  */
 
+import { Check } from 'lucide-react';
 import type { CSSProperties, ReactElement } from 'react';
 import type { TalkingPoint } from '@contracts';
 import { cn } from '@shared/lib/cn';
@@ -55,7 +56,7 @@ export function CallScript({ puntos, estado }: CallScriptProps): ReactElement {
                       : 'border-white/45 bg-transparent text-white',
                   )}
                 >
-                  {cubierto ? '✓' : i + 1}
+                  {cubierto ? <Check aria-hidden="true" className="size-3.5 stroke-[3]" /> : i + 1}
                 </span>
                 <span className={cn('transition-opacity', cubierto && 'opacity-50')}>
                   <span className="block text-[15px] leading-[1.35] font-bold">

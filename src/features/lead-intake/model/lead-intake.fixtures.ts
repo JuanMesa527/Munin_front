@@ -10,10 +10,11 @@
  * es el UNICO lugar que decide cuando ofrecer este arreglo, y solo lo hace
  * tras un error de conectividad.
  *
- * Guion: 6 preguntas confirmadas con producto, en este orden — afiliacion,
- * rango salarial, segmento familiar, ciudad, ahorro, capacidad de ahorro
- * mensual — y un cierre `completado-viable`. Cero PII real: la identidad
- * tokenizada queda en `null` y los textos son puramente de guion.
+ * Guion offline (fallback de red): identidad de contacto (nombre/email/
+ * telefono/edad/estadoCivil) + perfilamiento financiero (afiliacion, rango
+ * salarial, segmento familiar, ciudad, ahorro, capacidad mensual) + cierre
+ * `completado-viable`. Datos ficticios (example.com / 300…). `identidad`
+ * tokenizada queda en `null` (el telefono real no viaja en el DTO).
  */
 
 import type { ConversationTurn, LeadProfile } from '@contracts';
@@ -28,6 +29,11 @@ const PERFIL_BASE: LeadProfile = {
   id: 'fixture-lead-001',
   consentimiento: null,
   identidad: null,
+  nombre: null,
+  email: null,
+  telefono: null,
+  edad: null,
+  estadoCivil: null,
   esAfiliado: null,
   rangoSalarial: null,
   segmento: null,
@@ -43,6 +49,18 @@ const PERFIL_BASE: LeadProfile = {
   carril: null,
   createdAt: AHORA,
   updatedAt: AHORA,
+};
+
+const CONSENT = {
+  otorgado: true as const,
+  versionPolitica: 'v1.0-2026-07',
+  finalidades: [
+    'perfilamiento_vivienda' as const,
+    'contacto_comercial' as const,
+    'educacion_financiera' as const,
+  ],
+  otorgadoEn: AHORA,
+  canal: 'web-chat',
 };
 
 /**
@@ -70,19 +88,33 @@ export const FIXTURE_TURNS: readonly ConversationTurn[] = [
     progreso: 0,
     routing: null,
   },
-  // 1 · consentimiento otorgado -> primera pregunta: afiliacion
+  // 1 · consentimiento -> nombre
+  {
+    profile: { ...PERFIL_BASE, consentimiento: CONSENT },
+    mensajes: [mensajeBot('fixture-msg-1', '¡Gracias! Para empezar, ¿cómo te llamas?')],
+    siguientePaso: {
+      id: 'fixture-paso-nombre',
+      slot: 'nombre',
+      tipo: 'pregunta',
+      permiteTextoLibre: true,
+      quickReplies: [],
+    },
+    progreso: 0,
+    routing: null,
+  },
+  // 2 · nombre -> email (identidad ya avanzada en el perfil del turn)
   {
     profile: {
       ...PERFIL_BASE,
-      consentimiento: {
-        otorgado: true,
-        versionPolitica: 'v1.0-2026-07',
-        finalidades: ['perfilamiento_vivienda', 'contacto_comercial', 'educacion_financiera'],
-        otorgadoEn: AHORA,
-        canal: 'web-chat',
-      },
+      consentimiento: CONSENT,
+      nombre: 'María Demo',
+      email: 'maria.demo@example.com',
+      telefono: '3001234567',
+      edad: 27,
+      estadoCivil: 'Soltero/a',
+      slotsLlenos: ['nombre', 'email', 'telefono', 'edad', 'estadoCivil'],
     },
-    mensajes: [mensajeBot('fixture-msg-1', '¡Gracias! Para empezar, ¿estás afiliado a Colsubsidio?')],
+    mensajes: [mensajeBot('fixture-msg-2', '¿Estás afiliado a Colsubsidio?')],
     siguientePaso: {
       id: 'fixture-paso-afiliacion',
       slot: 'afiliacion',
@@ -93,24 +125,23 @@ export const FIXTURE_TURNS: readonly ConversationTurn[] = [
         { label: 'No, no soy afiliado', value: 'false' },
       ],
     },
-    progreso: 0.12,
+    progreso: 5 / 11,
     routing: null,
   },
-  // 2 · afiliacion respondida -> rango salarial
+  // 3 · afiliacion -> rango salarial
   {
     profile: {
       ...PERFIL_BASE,
-      consentimiento: {
-        otorgado: true,
-        versionPolitica: 'v1.0-2026-07',
-        finalidades: ['perfilamiento_vivienda', 'contacto_comercial', 'educacion_financiera'],
-        otorgadoEn: AHORA,
-        canal: 'web-chat',
-      },
+      consentimiento: CONSENT,
+      nombre: 'María Demo',
+      email: 'maria.demo@example.com',
+      telefono: '3001234567',
+      edad: 27,
+      estadoCivil: 'Soltero/a',
       esAfiliado: true,
-      slotsLlenos: ['afiliacion'],
+      slotsLlenos: ['nombre', 'email', 'telefono', 'edad', 'estadoCivil', 'afiliacion'],
     },
-    mensajes: [mensajeBot('fixture-msg-2', 'Perfecto. ¿En qué rango de ingresos mensuales estás?')],
+    mensajes: [mensajeBot('fixture-msg-3', 'Perfecto. ¿En qué rango de ingresos mensuales estás?')],
     siguientePaso: {
       id: 'fixture-paso-rango-salarial',
       slot: 'rangoSalarial',
@@ -121,25 +152,32 @@ export const FIXTURE_TURNS: readonly ConversationTurn[] = [
         { label: '4-6 SMMLV', value: '4-6 SMMLV' },
       ],
     },
-    progreso: 0.28,
+    progreso: 6 / 11,
     routing: null,
   },
-  // 3 · rango salarial respondido -> segmento familiar
+  // 4 · rango -> segmento familiar
   {
     profile: {
       ...PERFIL_BASE,
-      consentimiento: {
-        otorgado: true,
-        versionPolitica: 'v1.0-2026-07',
-        finalidades: ['perfilamiento_vivienda', 'contacto_comercial', 'educacion_financiera'],
-        otorgadoEn: AHORA,
-        canal: 'web-chat',
-      },
+      consentimiento: CONSENT,
+      nombre: 'María Demo',
+      email: 'maria.demo@example.com',
+      telefono: '3001234567',
+      edad: 27,
+      estadoCivil: 'Soltero/a',
       esAfiliado: true,
       rangoSalarial: '4-6 SMMLV',
-      slotsLlenos: ['afiliacion', 'rangoSalarial'],
+      slotsLlenos: [
+        'nombre',
+        'email',
+        'telefono',
+        'edad',
+        'estadoCivil',
+        'afiliacion',
+        'rangoSalarial',
+      ],
     },
-    mensajes: [mensajeBot('fixture-msg-3', 'Bien. ¿Cómo describirías tu hogar?')],
+    mensajes: [mensajeBot('fixture-msg-4', 'Bien. ¿Cómo describirías tu hogar?')],
     siguientePaso: {
       id: 'fixture-paso-segmento-familiar',
       slot: 'segmentoFamiliar',
@@ -150,26 +188,34 @@ export const FIXTURE_TURNS: readonly ConversationTurn[] = [
         { label: 'Pareja sin hijos', value: 'Pareja sin hijos' },
       ],
     },
-    progreso: 0.44,
+    progreso: 7 / 11,
     routing: null,
   },
-  // 4 · segmento familiar respondido -> ciudad
+  // 5 · segmento -> ciudad
   {
     profile: {
       ...PERFIL_BASE,
-      consentimiento: {
-        otorgado: true,
-        versionPolitica: 'v1.0-2026-07',
-        finalidades: ['perfilamiento_vivienda', 'contacto_comercial', 'educacion_financiera'],
-        otorgadoEn: AHORA,
-        canal: 'web-chat',
-      },
+      consentimiento: CONSENT,
+      nombre: 'María Demo',
+      email: 'maria.demo@example.com',
+      telefono: '3001234567',
+      edad: 27,
+      estadoCivil: 'Soltero/a',
       esAfiliado: true,
       rangoSalarial: '4-6 SMMLV',
       segmentoFamiliar: 'Pareja con hijos',
-      slotsLlenos: ['afiliacion', 'rangoSalarial', 'segmentoFamiliar'],
+      slotsLlenos: [
+        'nombre',
+        'email',
+        'telefono',
+        'edad',
+        'estadoCivil',
+        'afiliacion',
+        'rangoSalarial',
+        'segmentoFamiliar',
+      ],
     },
-    mensajes: [mensajeBot('fixture-msg-4', '¿En qué ciudad estás buscando vivienda?')],
+    mensajes: [mensajeBot('fixture-msg-5', '¿En qué ciudad estás buscando vivienda?')],
     siguientePaso: {
       id: 'fixture-paso-ciudad',
       slot: 'ciudad',
@@ -180,27 +226,36 @@ export const FIXTURE_TURNS: readonly ConversationTurn[] = [
         { label: 'Soacha', value: 'Soacha' },
       ],
     },
-    progreso: 0.6,
+    progreso: 8 / 11,
     routing: null,
   },
-  // 5 · ciudad respondida -> ahorro
+  // 6 · ciudad -> ahorro
   {
     profile: {
       ...PERFIL_BASE,
-      consentimiento: {
-        otorgado: true,
-        versionPolitica: 'v1.0-2026-07',
-        finalidades: ['perfilamiento_vivienda', 'contacto_comercial', 'educacion_financiera'],
-        otorgadoEn: AHORA,
-        canal: 'web-chat',
-      },
+      consentimiento: CONSENT,
+      nombre: 'María Demo',
+      email: 'maria.demo@example.com',
+      telefono: '3001234567',
+      edad: 27,
+      estadoCivil: 'Soltero/a',
       esAfiliado: true,
       rangoSalarial: '4-6 SMMLV',
       segmentoFamiliar: 'Pareja con hijos',
       ciudad: 'Bogotá',
-      slotsLlenos: ['afiliacion', 'rangoSalarial', 'segmentoFamiliar', 'ciudad'],
+      slotsLlenos: [
+        'nombre',
+        'email',
+        'telefono',
+        'edad',
+        'estadoCivil',
+        'afiliacion',
+        'rangoSalarial',
+        'segmentoFamiliar',
+        'ciudad',
+      ],
     },
-    mensajes: [mensajeBot('fixture-msg-5', '¿Cuánto tienes ahorrado hoy para tu vivienda, aproximadamente?')],
+    mensajes: [mensajeBot('fixture-msg-6', '¿Cuánto tienes ahorrado hoy para tu vivienda, aproximadamente?')],
     siguientePaso: {
       id: 'fixture-paso-ahorro',
       slot: 'ahorro',
@@ -208,29 +263,39 @@ export const FIXTURE_TURNS: readonly ConversationTurn[] = [
       permiteTextoLibre: true,
       quickReplies: [],
     },
-    progreso: 0.76,
+    progreso: 9 / 11,
     routing: null,
   },
-  // 6 · ahorro respondido -> capacidad de ahorro mensual
+  // 7 · ahorro -> capacidad mensual
   {
     profile: {
       ...PERFIL_BASE,
-      consentimiento: {
-        otorgado: true,
-        versionPolitica: 'v1.0-2026-07',
-        finalidades: ['perfilamiento_vivienda', 'contacto_comercial', 'educacion_financiera'],
-        otorgadoEn: AHORA,
-        canal: 'web-chat',
-      },
+      consentimiento: CONSENT,
+      nombre: 'María Demo',
+      email: 'maria.demo@example.com',
+      telefono: '3001234567',
+      edad: 27,
+      estadoCivil: 'Soltero/a',
       esAfiliado: true,
       rangoSalarial: '4-6 SMMLV',
       segmentoFamiliar: 'Pareja con hijos',
       ciudad: 'Bogotá',
       ahorroDeclarado: 30_000_000,
-      slotsLlenos: ['afiliacion', 'rangoSalarial', 'segmentoFamiliar', 'ciudad', 'ahorro'],
+      slotsLlenos: [
+        'nombre',
+        'email',
+        'telefono',
+        'edad',
+        'estadoCivil',
+        'afiliacion',
+        'rangoSalarial',
+        'segmentoFamiliar',
+        'ciudad',
+        'ahorro',
+      ],
     },
     mensajes: [
-      mensajeBot('fixture-msg-6', 'Última pregunta: ¿cuánto podrías ahorrar cada mes de aquí en adelante?'),
+      mensajeBot('fixture-msg-7', 'Última pregunta: ¿cuánto podrías ahorrar cada mes de aquí en adelante?'),
     ],
     siguientePaso: {
       id: 'fixture-paso-capacidad-ahorro',
@@ -239,20 +304,19 @@ export const FIXTURE_TURNS: readonly ConversationTurn[] = [
       permiteTextoLibre: true,
       quickReplies: [],
     },
-    progreso: 0.9,
+    progreso: 10 / 11,
     routing: null,
   },
-  // 7 · cierre: completado-viable (demo, con score y factores explicables)
+  // 8 · cierre viable
   {
     profile: {
       ...PERFIL_BASE,
-      consentimiento: {
-        otorgado: true,
-        versionPolitica: 'v1.0-2026-07',
-        finalidades: ['perfilamiento_vivienda', 'contacto_comercial', 'educacion_financiera'],
-        otorgadoEn: AHORA,
-        canal: 'web-chat',
-      },
+      consentimiento: CONSENT,
+      nombre: 'María Demo',
+      email: 'maria.demo@example.com',
+      telefono: '3001234567',
+      edad: 27,
+      estadoCivil: 'Soltero/a',
       esAfiliado: true,
       rangoSalarial: '4-6 SMMLV',
       segmentoFamiliar: 'Pareja con hijos',
@@ -260,6 +324,11 @@ export const FIXTURE_TURNS: readonly ConversationTurn[] = [
       ahorroDeclarado: 30_000_000,
       capacidadAhorroMensual: 900_000,
       slotsLlenos: [
+        'nombre',
+        'email',
+        'telefono',
+        'edad',
+        'estadoCivil',
         'afiliacion',
         'rangoSalarial',
         'segmentoFamiliar',
@@ -306,8 +375,8 @@ export const FIXTURE_TURNS: readonly ConversationTurn[] = [
     },
     mensajes: [
       mensajeBot(
-        'fixture-msg-7',
-        'Con lo que me compartiste, tu perfil se ve viable para continuar con un asesor. Esto es una demostración: los datos no representan a un comprador real.',
+        'fixture-msg-8',
+        'Con lo que me compartiste, tu perfil se ve viable para continuar con un asesor.',
       ),
     ],
     siguientePaso: null,
@@ -316,7 +385,7 @@ export const FIXTURE_TURNS: readonly ConversationTurn[] = [
       carril: 'viable',
       razones: [],
       explicacion:
-        '(Demo) Tu combinación de afiliación, ahorro y capacidad mensual estimada te ubica en el carril viable.',
+        'Tu combinación de afiliación, ahorro y capacidad mensual estimada te ubica en el carril viable.',
       decididoEn: AHORA,
     },
   },

@@ -1,0 +1,16 @@
+/**
+ * API publica de F2.2 · lead-education (capa: superficie de la feature).
+ * Unica via de acceso desde fuera: ESLint bloquea importar `ui/`, `model/` o
+ * `api/` directamente (EQUIPO.md §4).
+ */
+
+export { InicioScreen, type InicioScreenProps } from './ui/inicio-screen';
+export { LeadEducationScreen, type LeadEducationScreenProps } from './ui/lead-education-screen';
+export { LogrosScreen, type LogrosScreenProps } from './ui/logros-screen';
+export {
+  OnboardingWelcomeModal,
+  type OnboardingWelcomeModalProps,
+} from './ui/onboarding-welcome-modal';
+export { PerfilScreen, type PerfilScreenProps } from './ui/perfil-screen';
+export { ProgresoScreen, type ProgresoScreenProps } from './ui/progreso-screen';
+export { VistaTransition, type VistaTransitionProps } from './ui/vista-transition';
