@@ -19,6 +19,7 @@ import { Badge, Button, Modal } from '@shared/ui';
 import { cn } from '@shared/lib/cn';
 import type { EtapaCopy } from '../model/etapa-copy';
 import { ETIQUETA_POR_TIPO, ICONO_POR_TIPO } from '../model/contenido-tipo';
+import { LessonVideoPlayer } from './lesson-video-player';
 import { TuCasoCallout } from './tu-caso-callout';
 
 export interface LessonReaderModalProps {
@@ -170,6 +171,10 @@ export function LessonReaderModal({
               <p className="text-sm leading-relaxed whitespace-pre-line text-text">
                 {contenido.cuerpo}
               </p>
+
+              {contenido.videoId !== undefined && (
+                <LessonVideoPlayer videoId={contenido.videoId} titulo={contenido.titulo} />
+              )}
 
               <TuCasoCallout plan={plan} contenidoId={contenido.id} />
             </motion.div>

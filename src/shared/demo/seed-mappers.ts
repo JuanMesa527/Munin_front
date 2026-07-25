@@ -101,6 +101,14 @@ export function toEnrichedLead(seed: SeedLead): EnrichedLead {
     id: seed.id,
     consentimiento: toConsentimiento(seed),
 
+    // Identidad de contacto (F1): el dataset de demo de F3/F4 no modela email
+    // ni estado civil, y el telefono normalizado no viaja al dashboard del
+    // closer sin vault (ver el comentario de `LeadProfile.telefono`).
+    nombre: seed.nombre,
+    email: null,
+    telefono: null,
+    estadoCivil: null,
+
     esAfiliado: seed.esAfiliado,
     rangoSalarial: seed.rangoSalarial,
     segmento: seed.segmento,

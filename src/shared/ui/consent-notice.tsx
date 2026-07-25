@@ -95,34 +95,33 @@ export function ConsentNotice({
           <img
             src="/colsubsidio-logo.png"
             alt="Colsubsidio"
-            className="h-7 w-auto"
+            className="h-7 w-auto shrink-0"
             width={146}
             height={28}
           />
-          <span aria-hidden="true" className="hidden h-8 w-px bg-border sm:block" />
-          <div className="flex min-w-0 flex-1 items-start gap-2.5">
+          <span aria-hidden="true" className="hidden h-7 w-px bg-border sm:block" />
+          <p className="inline-flex min-w-0 flex-1 items-center justify-end gap-2 text-right text-sm font-semibold tracking-tight text-text sm:text-base">
+            Asistente de vivienda
             <span
               aria-hidden="true"
-              className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full bg-brand text-text"
+              className="flex size-7 shrink-0 items-center justify-center rounded-full bg-brand text-text"
             >
-              <ShieldCheck className="size-4" strokeWidth={2.25} />
+              <ShieldCheck className="size-3.5" strokeWidth={2.25} />
             </span>
-            <div className="min-w-0">
-              <p className="font-mono text-[0.625rem] tracking-widest text-text-subtle uppercase">
-                Asistente de vivienda
-              </p>
-              <h2
-                id={`${idBase}-titulo`}
-                className="font-display text-lg font-bold tracking-tight text-text sm:text-xl"
-              >
-                Antes de empezar: tus datos
-              </h2>
-              <p className="mt-1 text-sm leading-snug text-text-muted">
-                Para perfilarte necesitamos tu autorización (Ley 1581 de 2012).
-              </p>
-            </div>
-          </div>
+          </p>
         </header>
+
+        <div className="mt-2 sm:mt-3">
+          <h2
+            id={`${idBase}-titulo`}
+            className="font-display text-lg font-bold tracking-tight text-text sm:text-xl"
+          >
+            Antes de empezar: tus datos
+          </h2>
+          <p className="mt-1 text-sm leading-snug text-text-muted">
+            Para perfilarte necesitamos tu autorización (Ley 1581 de 2012).
+          </p>
+        </div>
 
         {/* Dos columnas en desktop: menos altura, menos scroll */}
         <div className="grid gap-4 md:grid-cols-2 md:gap-5">

@@ -17,12 +17,22 @@ export interface BadgeUnlockModalProps {
   onClose: () => void;
 }
 
+/**
+ * Funcion (no un componente con nombre en PascalCase) a proposito: asignar
+ * `iconoDeBadge(...)` a una variable capitalizada dentro del render dispara
+ * `react-hooks/static-components` (React no puede probar que el componente es
+ * estable entre renders). Envolver la creacion del elemento en una funcion
+ * minuscula evita el falso positivo sin perder el lookup dinamico.
+ */
+function iconoBadgeDesbloqueado(icono: string): ReactElement {
+  const Icono = iconoDeBadge(icono);
+  return <Icono className="animate-pop size-12" />;
+}
+
 export function BadgeUnlockModal({ badge, onClose }: BadgeUnlockModalProps): ReactElement | null {
   const reducir = useReducedMotion() ?? false;
 
   if (badge === null) return null;
-
-  const Icono = iconoDeBadge(badge.icono);
 
   return (
     <Modal
@@ -39,7 +49,7 @@ export function BadgeUnlockModal({ badge, onClose }: BadgeUnlockModalProps): Rea
           animate={{ opacity: 1, scale: 1 }}
           transition={{ type: 'spring', stiffness: 380, damping: 18 }}
         >
-          <Icono className="animate-pop size-12" />
+          {iconoBadgeDesbloqueado(badge.icono)}
         </motion.span>
         <motion.p
           className="text-lg font-semibold text-text"

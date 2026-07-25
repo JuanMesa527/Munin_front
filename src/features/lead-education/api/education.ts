@@ -19,6 +19,11 @@ export function fetchJourney(leadId: string): ReturnType<typeof apiGet<JourneyVi
 export interface RecordProgressInput {
   leadId: string;
   event: Omit<ProgressEvent, 'ocurridoEn'>;
+  /**
+   * Fecha límite de la meta de ahorro (adenda A10). Ortogonal al evento: el
+   * backend la configura ADEMÁS de aplicar `event`, sin tocar `alcanzado`.
+   */
+  fechaObjetivo?: string;
 }
 
 export function recordProgress(
@@ -27,5 +32,6 @@ export function recordProgress(
   return apiPost<EducationJourney>(API_ROUTES.education.progress, {
     leadId: input.leadId,
     ...input.event,
+    ...(input.fechaObjetivo !== undefined ? { fechaObjetivo: input.fechaObjetivo } : {}),
   });
 }
