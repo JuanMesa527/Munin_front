@@ -170,7 +170,9 @@ describe('LeadIntakeScreen', () => {
         carril: 'viable',
         score: {
           valor: 80,
-          factores: [{ nombre: 'Afiliación', peso: 0.4, valor: 'Afiliado', contribucion: 20 }],
+          factores: [
+            { nombre: 'Afiliación', peso: 0.4, valor: 'Afiliado', contribucion: 20, intensidad: 100 },
+          ],
           weightsVersion: 'v-test',
           calculadoEn: AHORA,
         },

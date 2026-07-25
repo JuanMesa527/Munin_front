@@ -1,5 +1,7 @@
-/// <reference types="vitest/config" />
-import { defineConfig } from 'vite';
+// `defineConfig` sale de vitest/config, no de vite: es el mismo tipo de Vite
+// mas la clave `test`, y asi la config de build y la de tests viven juntas sin
+// duplicar los alias.
+import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { fileURLToPath } from 'node:url';

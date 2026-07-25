@@ -1,34 +1,36 @@
 /**
- * RED (tasks.md 4.3): la tabla de rutas monta solo `/` -> `LeadIntakeScreen`
- * y `/politica-de-datos`. Ningun `/closer/*` existe todavia (F3/F4, fuera de
- * alcance de este cambio) — spec `app-bootstrap-front`, escenario
- * "No closer routes exist yet".
+ * La tabla de rutas monta el flujo del cliente en `/` (F1 → F2.1/F2.2, via
+ * `ClientFlowPage`), `/politica-de-datos`, y las rutas del closer bajo
+ * `/closer/*` detras de `CloserGuard`. Post-integracion F1+F2.1: el arbol ya
+ * NO es minimo — incluye la consola comercial (F3/F4).
  */
-import type { ReactElement } from 'react';
 import { describe, expect, it } from 'vitest';
-import { LeadIntakeScreen } from '@features/lead-intake';
-import { routes } from './index';
-import { PrivacyPolicyPage } from './privacy-policy.page';
+import type { RouteObject } from 'react-router';
+import { router } from './index';
+
+/** Aplana el arbol de rutas recolectando todos los `path`, incluidos los hijos. */
+function pathsDe(rutas: readonly RouteObject[]): string[] {
+  return rutas.flatMap((ruta) => [
+    ...(ruta.path === undefined ? [] : [ruta.path]),
+    ...('children' in ruta && ruta.children ? pathsDe(ruta.children) : []),
+  ]);
+}
 
 describe('app routes', () => {
-  it('define exactamente "/" y "/politica-de-datos", en ese orden', () => {
-    expect(routes.map((route) => route.path)).toEqual(['/', '/politica-de-datos']);
+  const paths = pathsDe(router.routes);
+
+  it('monta el flujo del cliente y la política de datos', () => {
+    expect(paths).toContain('/');
+    expect(paths).toContain('/politica-de-datos');
   });
 
-  it('"/" renderiza LeadIntakeScreen', () => {
-    const root = routes.find((route) => route.path === '/');
-    const element = root?.element as ReactElement | null;
-    expect(element?.type).toBe(LeadIntakeScreen);
+  it('monta las rutas del closer (F3/F4) tras la integración', () => {
+    expect(paths).toContain('/closer/login');
+    expect(paths).toContain('/closer');
+    expect(paths).toContain('/closer/leads/:leadId');
   });
 
-  it('"/politica-de-datos" renderiza PrivacyPolicyPage', () => {
-    const politica = routes.find((route) => route.path === '/politica-de-datos');
-    const element = politica?.element as ReactElement | null;
-    expect(element?.type).toBe(PrivacyPolicyPage);
-  });
-
-  it('no define ninguna ruta /closer/* (F3/F4, fuera de alcance)', () => {
-    const tieneRutaCloser = routes.some((route) => route.path?.startsWith('/closer') ?? false);
-    expect(tieneRutaCloser).toBe(false);
+  it('tiene un catch-all 404', () => {
+    expect(paths).toContain('*');
   });
 });

@@ -1,10 +1,11 @@
 /**
- * Punto de entrada del frontend (capa app) — tasks.md 4.5.
+ * Punto de entrada del frontend (capa app).
  *
  * `index.html` ya apunta aqui (`<script type="module" src="/src/main.tsx">`);
  * sin este archivo `npm run build` falla al resolverlo. `StrictMode` queda
  * fuera a proposito: monta el arbol dos veces en dev, lo que duplicaria el
- * `start()` de `LeadIntakeScreen` (tasks.md 3.11) y su mutacion inicial.
+ * `start()` de `LeadIntakeScreen` (F1) y su mutacion inicial. Al unir F1 con
+ * F2.1 se mantiene apagado; reactivarlo exige guardar ese efecto de arranque.
  */
 
 import { createRoot } from 'react-dom/client';

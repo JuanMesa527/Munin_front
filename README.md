@@ -6,7 +6,7 @@ Experiencia de cliente (chat) y de closer (dashboard + ficha técnica) —
 React 19 + Vite 8 + TypeScript + Tailwind 4 + Motion, **Feature-Sliced**. Cinco features
 aisladas que solo se hablan por su `index.ts` y por el contrato compartido.
 
-> 📖 **Antes de escribir código, lee [`EQUIPO.md`](./EQUIPO.md).** Tiene el flujo completo, las
+> 📖 **Antes de escribir código, lee [`CLAUDE.md`](./CLAUDE.md).** Tiene el flujo completo, las
 > reglas de arquitectura y seguridad, los límites legales y qué puede/no puede hacer Colsubsidio.
 > No es documentación decorativa: ESLint hace cumplir buena parte de ella.
 
@@ -23,18 +23,19 @@ npm run dev
 Levanta en **http://localhost:5173**. El proxy de Vite manda `/api` al backend en el puerto 3000,
 así que en dev todo es mismo origen y la cookie de sesión del closer viaja bien.
 
-**Sin backend también se ve todo:** cada feature trae `model/<feature>.fixtures.ts` con datos
-ficticios tipados contra el contrato.
+**Sin backend también funciona:** con `VITE_DEMO_MODE=true` la consola del closer se alimenta de
+`src/shared/demo` (6 leads ficticios) y el header muestra "demo · datos simulados".
 
 ## Rutas
 
-| Ruta | Qué | Auth |
-|---|---|---|
-| `/` | F1 chat → F2.1 enrichment / F2.2 education según carril | **Sin login** |
-| `/politica-de-datos` | Aviso de tratamiento de datos (Ley 1581) | Público |
-| `/closer/login` | Login del comercial | — |
-| `/closer` | F3 dashboard de leads viables | **Closer** |
-| `/closer/leads/:leadId` | F4 ficha técnica de la llamada | **Closer** |
+| Ruta | Qué | Auth | Estado |
+|---|---|---|---|
+| `/` | F1 chat → F2.1 / F2.2 según carril | **Sin login** | ⬜ portada provisional |
+| `/closer/login` | Login del comercial | — | ✅ |
+| `/closer` | **F3** · cola de leads viables | **Closer** | ✅ |
+| `/closer/leads/:leadId` | **F4** · ficha de la llamada | **Closer** | ✅ |
+
+Prueba rápida: **http://localhost:5173/closer**
 
 El **switch de carril** vive en `src/app/routes/client-flow.page.tsx`, no dentro de las
 features: por eso F1, F2.1 y F2.2 se desarrollan en paralelo sin conocerse.
@@ -71,16 +72,21 @@ src/
   main.tsx
 ```
 
-## Estado actual: scaffolding
+## Estado actual
 
-**Implementado de verdad:** el design system completo (`shared/ui`), los formatters, el http
-client, el guard del closer, el routing por rol, los providers, el aviso de privacidad, y los
-componentes visuales de cada feature con sus fixtures.
+**✅ F3 y F4 implementadas** contra el diseño aprobado (proyecto Claude Design *"F3 y F4
+Colsubsidio"*), funcionando de punta a punta: filtros, búsqueda, orden, revelado auditado del
+teléfono, cronómetro de llamada y checklist del guion. Se pueden mostrar al jurado ya.
 
-**Stubs tipados** (`throw new Error('TODO: not implemented')`): los hooks de `model/` y la
-lógica de estado de cada feature.
+**✅ Listo también:** design system (`shared/ui`, incluidos los primitivos de consola),
+formatters, http client, guard del closer, routing por rol, providers y app shell.
 
-**Cada dev implementa su feature.** Empieza por el `index.ts` y la pantalla de entrada.
+**⬜ Pendiente:** F1 `lead-intake`, F2.1 `lead-enrichment`, F2.2 `lead-education`, y la ruta
+`/politica-de-datos` (va con F1, porque es el destino del `ConsentNotice`). La ruta `/` es hoy
+una portada provisional que explica eso y deja entrar a la consola.
+
+**Cada dev implementa su feature.** Empieza por el `index.ts` y la pantalla de entrada, y usa
+F3/F4 como referencia de estructura (`ui/` presentacional, `model/` estado, `api/` I/O).
 
 ## Las cinco cosas que se olvidan
 

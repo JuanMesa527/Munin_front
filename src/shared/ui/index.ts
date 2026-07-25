@@ -30,6 +30,14 @@ export {
   RUTA_POLITICA,
   type ConsentNoticeProps,
 } from './consent-notice';
+export {
+  AffiliationBadge,
+  NurturedBadge,
+  type AffiliationBadgeProps,
+  type ConsoleBadgeTone,
+  type NurturedBadgeProps,
+} from './console-badges';
+export { ConsoleHeader, type ConsoleHeaderProps } from './console-header';
 export { EmptyState, type EmptyStateProps } from './empty-state';
 export { FactorBars, type FactorBarsProps } from './factor-bars';
 export { Field, FIELD_CONTROL_CLASS, type FieldProps } from './field';
@@ -42,6 +50,7 @@ export {
   type ProgressTone,
 } from './progress-bar';
 export { QuickReplies, type QuickRepliesProps } from './quick-replies';
+export { ScoreDial, type ScoreDialProps, type ScoreDialTone } from './score-dial';
 export {
   ScoreGauge,
   type GaugeSize,

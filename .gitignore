@@ -21,3 +21,5 @@ Thumbs.db
 .atl/
 .claude/
 .codegraph/
+# Brainstorm visual companion
+.superpowers/

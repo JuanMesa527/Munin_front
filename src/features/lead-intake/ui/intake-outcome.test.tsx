@@ -68,11 +68,23 @@ describe('IntakeOutcome', () => {
         carril: 'viable',
         score: {
           valor: 80,
-          factores: [{ nombre: 'Afiliación', peso: 0.4, valor: 'Afiliado', contribucion: 20 }],
+          factores: [
+            { nombre: 'Afiliación', peso: 0.4, valor: 'Afiliado', contribucion: 20, intensidad: 100 },
+          ],
           weightsVersion: 'v-test',
           calculadoEn: AHORA,
         },
-        proyectos: [{ proyectoId: 'p1', similitud: 0.9, razon: 'Calza con tu ciudad y tu ahorro.' }],
+        proyectos: [
+          {
+            proyectoId: 'p1',
+            similitud: 0.9,
+            razon: 'Calza con tu ciudad y tu ahorro.',
+            nombre: 'Proyecto 1',
+            etapa: 'Etapa 1',
+            precioDesde: 180_000_000,
+            tipologia: 'VIS · 3 hab',
+          },
+        ],
       }),
       mensajes: [],
       siguientePaso: null,
@@ -99,7 +111,9 @@ describe('IntakeOutcome', () => {
         carril: 'no_viable',
         score: {
           valor: 30,
-          factores: [{ nombre: 'Ahorro declarado', peso: 0.3, valor: 'Bajo', contribucion: -5 }],
+          factores: [
+            { nombre: 'Ahorro declarado', peso: 0.3, valor: 'Bajo', contribucion: -5, intensidad: 15 },
+          ],
           weightsVersion: 'v-test',
           calculadoEn: AHORA,
         },

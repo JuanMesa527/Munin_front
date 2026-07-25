@@ -1,5 +1,5 @@
 /**
- * ErrorBoundary de la app (capa app) — tasks.md 4.2.
+ * ErrorBoundary de la app (capa app).
  *
  * Unico lugar del frontend donde un error de render se atrapa antes de
  * volverse una pagina en blanco. Los detalles van a la consola, nunca a la

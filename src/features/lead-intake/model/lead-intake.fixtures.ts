@@ -276,10 +276,16 @@ export const FIXTURE_TURNS: readonly ConversationTurn[] = [
       score: {
         valor: 78,
         factores: [
-          { nombre: 'Afiliación', peso: 0.35, valor: 'Afiliado', contribucion: 28 },
-          { nombre: 'Ahorro declarado', peso: 0.25, valor: '$30.000.000', contribucion: 14 },
-          { nombre: 'Capacidad de ahorro mensual', peso: 0.25, valor: '$900.000', contribucion: 12 },
-          { nombre: 'Personas a cargo', peso: 0.15, valor: 'No informado', contribucion: -6 },
+          { nombre: 'Afiliación', peso: 0.35, valor: 'Afiliado', contribucion: 28, intensidad: 100 },
+          { nombre: 'Ahorro declarado', peso: 0.25, valor: '$30.000.000', contribucion: 14, intensidad: 56 },
+          {
+            nombre: 'Capacidad de ahorro mensual',
+            peso: 0.25,
+            valor: '$900.000',
+            contribucion: 12,
+            intensidad: 48,
+          },
+          { nombre: 'Personas a cargo', peso: 0.15, valor: 'No informado', contribucion: -6, intensidad: 20 },
         ],
         weightsVersion: 'demo-fixture-1.0',
         calculadoEn: AHORA,
@@ -290,6 +296,10 @@ export const FIXTURE_TURNS: readonly ConversationTurn[] = [
           similitud: 0.86,
           razon:
             'Tu ahorro y tu ciudad calzan con el perfil típico de compradores de este proyecto en Bogotá.',
+          nombre: 'Ciudadela del Norte',
+          etapa: 'Etapa 2',
+          precioDesde: 180_000_000,
+          tipologia: 'VIS · 3 hab',
         },
       ],
       carril: 'viable',
