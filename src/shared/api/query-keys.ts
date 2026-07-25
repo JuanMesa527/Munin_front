@@ -26,6 +26,8 @@ export const queryKeys = {
   education: {
     all: [...LEADS, 'education'] as const,
     journey: (leadId: string) => [...LEADS, 'education', 'journey', leadId] as const,
+    /** Login por OTP (adenda A14): sesion del lead resuelta contra la cookie httpOnly. */
+    session: () => [...LEADS, 'education', 'session'] as const,
   },
 
   closer: {

@@ -6,6 +6,7 @@
 
 export { InicioScreen, type InicioScreenProps } from './ui/inicio-screen';
 export { LeadEducationScreen, type LeadEducationScreenProps } from './ui/lead-education-screen';
+export { LeadLoginScreen, type LeadLoginScreenProps } from './ui/lead-login-screen';
 export { LogrosScreen, type LogrosScreenProps } from './ui/logros-screen';
 export {
   OnboardingWelcomeModal,
@@ -15,3 +16,4 @@ export { PerfilScreen, type PerfilScreenProps } from './ui/perfil-screen';
 export { ProgresoScreen, type ProgresoScreenProps } from './ui/progreso-screen';
 export { VistaTransition, type VistaTransitionProps } from './ui/vista-transition';
 export { useEducationJourney } from './model/use-education-journey';
+export { useLeadSession, type LeadSessionState } from './model/use-lead-session';

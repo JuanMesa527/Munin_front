@@ -20,11 +20,13 @@ import { LeadEnrichmentScreen } from '@features/lead-enrichment';
 import {
   InicioScreen,
   LeadEducationScreen,
+  LeadLoginScreen,
   LogrosScreen,
   OnboardingWelcomeModal,
   PerfilScreen,
   ProgresoScreen,
   useEducationJourney,
+  useLeadSession,
   VistaTransition,
 } from '@features/lead-education';
 import type { ClientVista } from '../shell/client-vista';
@@ -110,6 +112,10 @@ export function ClientFlowPage(): ReactElement {
   // cierra el carril (viable o no_viable).
   const [leadViableId, setLeadViableId] = useState<string | null>(null);
   const [leadNoViableId, setLeadNoViableId] = useState<string | null>(null);
+  // Login por OTP (adenda A14): pantalla para recuperar el leadId cuando se
+  // cerró la pestaña y no quedó nada en memoria — no hay F1 que repetir.
+  const [mostrarLogin, setMostrarLogin] = useState(false);
+  const { session, isLoading: cargandoSesion } = useLeadSession();
 
   if (leadViableId !== null) {
     return <LeadEnrichmentScreen leadId={leadViableId} />;
@@ -119,5 +125,35 @@ export function ClientFlowPage(): ReactElement {
     return <CaminoNutricion leadId={leadNoViableId} onGraduar={setLeadViableId} />;
   }
 
-  return <LeadIntakeScreen onViable={setLeadViableId} onNoViable={setLeadNoViableId} />;
+  // Cookie de sesión viva (`lead_session`, TTL largo): retoma directo, sin
+  // pasar por F1 ni por la pantalla de login.
+  if (!cargandoSesion && session !== null) {
+    return <CaminoNutricion leadId={session.leadId} onGraduar={setLeadViableId} />;
+  }
+
+  if (mostrarLogin) {
+    return (
+      <LeadLoginScreen
+        onSuccess={setLeadNoViableId}
+        onCancel={() => {
+          setMostrarLogin(false);
+        }}
+      />
+    );
+  }
+
+  return (
+    <div className="relative">
+      <LeadIntakeScreen onViable={setLeadViableId} onNoViable={setLeadNoViableId} />
+      <button
+        type="button"
+        onClick={() => {
+          setMostrarLogin(true);
+        }}
+        className="focus-ring fixed top-3 right-3 z-50 rounded-pill bg-surface/90 px-3 py-1.5 text-xs font-bold text-text-muted shadow-sm hover:text-text"
+      >
+        ¿Ya empezaste? Volvé a tu camino
+      </button>
+    </div>
+  );
 }
