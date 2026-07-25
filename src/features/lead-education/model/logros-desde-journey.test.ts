@@ -7,6 +7,7 @@ const NOW = '2026-07-25T00:00:00.000Z';
 const PLAN_CON_BRECHA: NurturePlan = {
   precioObjetivo: 146_115_000,
   subsidioEstimado: 32_470_000,
+  cuotaInicialObjetivo: 29_223_000,
   gap: 105_645_000,
   mesesParaCalificar: 151,
   proyectoObjetivoId: 'vis-referencia',

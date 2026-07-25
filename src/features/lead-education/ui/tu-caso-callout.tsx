@@ -35,9 +35,11 @@ function ContenidoSfv({ plan }: { plan: NurturePlan }): ReactElement {
 function ContenidoPlan({ plan }: { plan: NurturePlan }): ReactElement {
   return (
     <p>
-      El precio de tu vivienda objetivo es <strong>{formatCOP(plan.precioObjetivo)}</strong>, tu
-      subsidio estimado es <strong>{formatCOP(plan.subsidioEstimado)}</strong>, y lo que te falta
-      cubrir (estimado) es <strong>{formatCOP(plan.gap)}</strong>.
+      El precio de tu vivienda objetivo es <strong>{formatCOP(plan.precioObjetivo)}</strong>. No
+      necesitás ahorrarlo completo: tu meta real es la cuota inicial, estimada en{' '}
+      <strong>{formatCOP(plan.cuotaInicialObjetivo)}</strong>. Tu subsidio estimado es{' '}
+      <strong>{formatCOP(plan.subsidioEstimado)}</strong>, y lo que te falta cubrir de esa cuota
+      inicial (estimado) es <strong>{formatCOP(plan.gap)}</strong>.
     </p>
   );
 }
@@ -45,8 +47,8 @@ function ContenidoPlan({ plan }: { plan: NurturePlan }): ReactElement {
 function ContenidoGapYMeses({ plan }: { plan: NurturePlan }): ReactElement {
   return (
     <p>
-      Con tu ahorro declarado, te falta <strong>{formatCOP(plan.gap)}</strong> y, estimado, te
-      tomaría{' '}
+      Con tu ahorro declarado, te falta <strong>{formatCOP(plan.gap)}</strong> para tu cuota
+      inicial estimada (no para el precio completo) y, estimado, te tomaría{' '}
       <strong>
         {plan.mesesParaCalificar > 0 ? `${String(plan.mesesParaCalificar)} meses` : 'ya lo lograste'}
       </strong>{' '}

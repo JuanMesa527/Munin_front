@@ -14,8 +14,11 @@ export const JOURNEY_FIXTURE: EducationJourney = {
   plan: {
     precioObjetivo: 146_115_000,
     subsidioEstimado: 32_470_000,
-    gap: 105_645_000,
-    mesesParaCalificar: 151,
+    // 20% de precioObjetivo (adenda A11): la meta real es la cuota inicial,
+    // no el precio completo. El subsidio ya la cubre, por eso gap = 0.
+    cuotaInicialObjetivo: 29_223_000,
+    gap: 0,
+    mesesParaCalificar: 0,
     proyectoObjetivoId: 'vis-referencia',
     aplicaSubsidio: true,
   },
@@ -249,6 +252,7 @@ export const CONTENIDOS_FIXTURE: ContenidoEducativo[] = [
     cuerpo:
       'El SFV es un aporte no reembolsable que entrega tu caja de compensación para completar la cuota inicial de tu vivienda: no es un préstamo, no se devuelve, y se suma a tu ahorro y tu crédito. Existen varias modalidades según lo que necesitás — comprar vivienda nueva o usada, arrendar, construir en tu propio lote o mejorar la que ya tenés — cada una con su propio monto y requisitos, que vas a ver en detalle a continuación. Acá lo calculamos siempre como estimado, nunca como aprobado: la caja confirma el otorgamiento final.',
     tipoContenido: 'concepto',
+    videoId: '7Xrc7veLOQc',
   },
   {
     id: 'cont-financiar-modalidad-vivienda-nueva',
@@ -257,6 +261,7 @@ export const CONTENIDOS_FIXTURE: ContenidoEducativo[] = [
     cuerpo:
       'Si el ingreso de tu hogar es de hasta 2 SMMLV ($3.501.810), el subsidio estimado para la cuota inicial de una vivienda VIS o VIP nueva es de 30 SMMLV, es decir $52.527.150. Si ganás más de 2 y hasta 4 SMMLV (entre $3.501.811 y $7.003.620), el subsidio estimado baja a 20 SMMLV, $35.018.100. En ambos casos el monto se suma a tu ahorro y a tu crédito hipotecario para cubrir la cuota inicial completa.',
     tipoContenido: 'concepto',
+    videoId: 'mUJWzzHCakQ',
   },
   {
     id: 'cont-financiar-modalidad-usada',
@@ -273,6 +278,7 @@ export const CONTENIDOS_FIXTURE: ContenidoEducativo[] = [
     cuerpo:
       'Este subsidio cubre hasta 0.6 SMMLV al mes ($1.050.543) y nunca más del 90% del canon pactado, por un plazo de entre 12 y 24 meses. El canon del inmueble también tiene tope: $2.626.357 en Bogotá y los municipios del Decreto 1607, y $2.363.722 en el resto de Cundinamarca. No es un beneficio aislado: para acceder necesitás estar vinculado a la compra de una VIS nueva y haber hecho al menos 6 pagos mensuales de tu cuota inicial antes de postular.',
     tipoContenido: 'concepto',
+    videoId: 'MgscsvfdjEw',
   },
   {
     id: 'cont-financiar-modalidad-construccion-mejoramiento',
@@ -289,6 +295,7 @@ export const CONTENIDOS_FIXTURE: ContenidoEducativo[] = [
     cuerpo:
       'Es un préstamo a largo plazo (típicamente 15-20 años) respaldado por la vivienda que comprás: si dejás de pagar, el banco puede recuperarla. Es la forma más común de financiar vivienda en Colombia, y se combina con tu ahorro y el subsidio estimado.',
     tipoContenido: 'concepto',
+    videoId: 'daCes3ud6QQ',
   },
   {
     id: 'cont-financiar-credito-vs-leasing',
@@ -329,6 +336,7 @@ export const CONTENIDOS_FIXTURE: ContenidoEducativo[] = [
     cuerpo:
       'Postular tiene cinco pasos: primero identificás la modalidad que te aplica y verificás tu ingreso y antigüedad de afiliación; luego reunís tus documentos en PDF, sin clave ni encriptación. El canal depende de la modalidad: vivienda nueva y arrendamiento se postulan por el Portal Transaccional (transacciones.colsubsidio.com) o en un centro presencial; construcción y mejoramiento, por correo a gerencia.proyectos@colsubsidio.com. Colsubsidio tiene 15 días hábiles para darte el resultado de la validación documental, y si tu radicación queda aprobada, pasa a "verificación de derechos" para asignarse según el calendario vigente. Colsubsidio se reserva el derecho de verificar la veracidad de la información en cualquier etapa, incluso después del desembolso.',
     tipoContenido: 'concepto',
+    videoId: 'K9nbx4QZlGs',
   },
   {
     id: 'cont-financiar-calendario-vigencia',

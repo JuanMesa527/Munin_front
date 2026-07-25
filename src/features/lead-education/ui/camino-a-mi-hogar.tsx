@@ -2,12 +2,22 @@
  * "Camino a Mi Hogar": recorrido visual de las 5 etapas (capa ui, F2.2).
  *
  * Diseño minimalista y consistente: iconos Lucide en círculos de color de
- * estado (amarillo=completa, azul=activa, gris=bloqueada) — el mismo
+ * estado (amarillo=completa, azul=activa, gris=pendiente) — el mismo
  * lenguaje visual que el resto del design system. Sin emoji, sin imágenes
  * sueltas: la consistencia importa más que la decoración.
+ *
+ * IMPORTANTE: los 3 estados son puramente narrativos (dónde vas en el
+ * recorrido), NUNCA control de acceso. Todas las etapas son siempre
+ * clickeables y su contenido siempre visible — nada de esto bloquea nada.
+ * Parte de la brecha financiera puede cubrirse con subsidios o caminos que el
+ * usuario no controla en el tiempo; no tiene sentido esconderle las
+ * lecciones de una etapa posterior (p. ej. financiar) solo porque una meta
+ * financiera de una etapa anterior (p. ej. ahorro) sigue incompleta. La única
+ * puerta real es la graduación fuera de F2.2, que exige el recorrido
+ * COMPLETO (ver `checkReadmission` en el backend) — eso no es esta pantalla.
  */
 
-import { Check, Footprints, Home, Lock } from 'lucide-react';
+import { Check, Footprints, Home } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
 import type { ReactElement } from 'react';
 import type { EtapaCamino, EtapaId, Meta } from '@contracts';
@@ -22,7 +32,7 @@ export interface CaminoAMiHogarProps {
   onSeleccionarEtapa?: (etapaId: string) => void;
 }
 
-type EstadoEtapa = 'completa' | 'activa' | 'bloqueada';
+type EstadoEtapa = 'completa' | 'activa' | 'pendiente';
 
 interface EtapaConEstado {
   etapa: EtapaCamino;
@@ -53,7 +63,7 @@ function calcularEstados(
         ? 'completa'
         : indice === (indiceActiva === -1 ? ordenadas.length : indiceActiva)
           ? 'activa'
-          : 'bloqueada';
+          : 'pendiente';
     return {
       etapa,
       estado,
@@ -190,9 +200,8 @@ function EstadoPill({ item }: { item: EtapaConEstado }): ReactElement {
     );
   }
   return (
-    <span className="inline-flex items-center gap-1 rounded-pill bg-ink/90 px-2.5 py-1 text-[0.6875rem] font-bold text-text-inverse">
-      <Lock aria-hidden="true" className="size-3" />
-      Bloqueado
+    <span className="inline-flex items-center rounded-pill bg-surface-3 px-2.5 py-1 text-[0.6875rem] font-bold text-text-subtle">
+      Pendiente
     </span>
   );
 }
@@ -211,13 +220,11 @@ function CirculoEtapa({ item, grande }: { item: EtapaConEstado; grande: boolean 
         grande ? 'size-14' : 'size-12',
         estado === 'completa' && 'bg-brand text-ink',
         esActiva && 'bg-accent-600 text-white ring-4 ring-accent-100',
-        estado === 'bloqueada' && 'bg-surface-3 text-text-subtle',
+        estado === 'pendiente' && 'bg-surface-3 text-text-subtle',
       )}
     >
       {estado === 'completa' ? (
         <Check className={grande ? 'size-6' : 'size-5'} strokeWidth={3} />
-      ) : estado === 'bloqueada' ? (
-        <Lock className={grande ? 'size-5' : 'size-4'} />
       ) : (
         <Icono className={grande ? 'size-6' : 'size-5'} />
       )}
