@@ -25,9 +25,9 @@ export function AppShell({ acciones, children }: AppShellProps): ReactElement {
         <div className="mx-auto flex h-16 w-full max-w-[1400px] items-center justify-between gap-6 px-5 lg:px-10">
           <div className="flex items-center gap-4">
             <img
-              src="/colsubsidio.png"
+              src="https://www.colsubsidio.com/campusvirtual/login-custom/img/colsubsidio1.png"
               alt="Colsubsidio"
-              className="h-7 w-auto dark:brightness-0 dark:invert"
+              className="h-7 w-auto"
             />
             <span aria-hidden="true" className="hidden h-6 w-px bg-border sm:block" />
             <p className="label-mono hidden text-text-subtle sm:block">

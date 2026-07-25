@@ -15,7 +15,6 @@ import { useParams } from 'react-router';
 import { ConsoleHeader, Skeleton } from '@shared/ui';
 import { useCloserSession } from '@shared/auth/use-closer-session';
 import { useBriefing } from '../model/use-briefing';
-import { useCallTimer } from '../model/use-call-timer';
 import { useTalkingPoints } from '../model/use-talking-points';
 import { BestTimeCard } from './best-time-card';
 import { BriefingHeader } from './briefing-header';
@@ -49,7 +48,6 @@ export function CloserBriefingPage(): ReactElement {
   const { session } = useCloserSession();
   const { briefing, isLoading, error } = useBriefing(leadId);
 
-  const timer = useCallTimer();
   const guion = useTalkingPoints(briefing?.talkingPoints.length ?? 0);
 
   const closerName = session?.nombre ?? 'Closer';
@@ -82,7 +80,7 @@ export function CloserBriefingPage(): ReactElement {
   return (
     <div className="min-h-screen bg-console-paper font-display text-console-ink antialiased">
       <ConsoleHeader closerName={closerName} />
-      <BriefingHeader lead={lead} timer={timer} />
+      <BriefingHeader briefing={briefing} />
 
       <main
         className={`mx-auto grid max-w-[1280px] items-start gap-[22px] px-4 pt-7 pb-[90px] sm:px-8 ${COLUMNAS}`}

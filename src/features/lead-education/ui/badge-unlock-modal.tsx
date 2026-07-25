@@ -6,7 +6,7 @@
  */
 
 import { motion, useReducedMotion } from 'motion/react';
-import type { ReactElement } from 'react';
+import { createElement, type ReactElement } from 'react';
 import type { Badge as BadgeType } from '@contracts';
 import { Button, Modal } from '@shared/ui';
 import { EASE_OUT_SOFT } from '../model/motion';
@@ -22,7 +22,10 @@ export function BadgeUnlockModal({ badge, onClose }: BadgeUnlockModalProps): Rea
 
   if (badge === null) return null;
 
-  const Icono = iconoDeBadge(badge.icono);
+  // `createElement` y no `<Icono />`: los iconos salen de un mapa de modulo, asi
+  // que su identidad es estable, pero asignarlos a una capitalizada dentro del
+  // render dispara `react-hooks/static-components` igual.
+  const icono = iconoDeBadge(badge.icono);
 
   return (
     <Modal
@@ -39,7 +42,7 @@ export function BadgeUnlockModal({ badge, onClose }: BadgeUnlockModalProps): Rea
           animate={{ opacity: 1, scale: 1 }}
           transition={{ type: 'spring', stiffness: 380, damping: 18 }}
         >
-          <Icono className="animate-pop size-12" />
+          {createElement(icono, { className: 'animate-pop size-12' })}
         </motion.span>
         <motion.p
           className="text-lg font-semibold text-text"

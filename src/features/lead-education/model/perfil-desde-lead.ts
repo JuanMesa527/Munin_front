@@ -45,7 +45,7 @@ function textoONull(valor: string | null | undefined): string {
 }
 
 function primerNombre(nombre: string): string {
-  return nombre.split(/\s+/u).filter(Boolean)[0] ?? nombre;
+  return nombre.split(/\s+/u).find(Boolean) ?? nombre;
 }
 
 function inicialesDe(lead: EducationLeadSnapshot): string {

@@ -66,15 +66,11 @@ export function CloserLoginPage(): ReactElement {
     <div className="flex min-h-screen items-center justify-center bg-console-paper px-4 font-display text-console-ink antialiased">
       <div className="w-full max-w-[420px]">
         <div className="mb-8 flex items-center gap-[14px]">
-          <span
-            aria-hidden="true"
-            className="grid grid-cols-[13px_13px] grid-rows-[13px_13px] gap-[2px]"
-          >
-            <span className="rounded-[2px] bg-console-signal" />
-            <span className="rounded-[2px] bg-console-blue" />
-            <span className="rounded-[2px] bg-console-blue" />
-            <span className="rounded-[2px] bg-console-signal" />
-          </span>
+          <img
+            src="https://www.colsubsidio.com/campusvirtual/login-custom/img/colsubsidio1.png"
+            alt="Colsubsidio"
+            className="h-6 w-auto"
+          />
           <span className="text-[15px] font-bold">Perfilador de leads</span>
         </div>
 
