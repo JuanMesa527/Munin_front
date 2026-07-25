@@ -2,7 +2,13 @@
  * I/O de F4 · closer-briefing.
  */
 
-import { API_ROUTES, type ApiResponse, type BriefingSheet } from '@contracts';
+import {
+  API_ROUTES,
+  type ApiResponse,
+  type BriefingSheet,
+  type EnrichedLead,
+  type EstadoGestion,
+} from '@contracts';
 import { apiGet, apiPost } from '@shared/api/http-client';
 
 /**
@@ -25,4 +31,18 @@ export interface RevealedContact {
  */
 export function revealContact(leadId: string): Promise<ApiResponse<RevealedContact>> {
   return apiPost<RevealedContact>(API_ROUTES.closer.revealContact, { leadId });
+}
+
+/**
+ * Guarda el resultado de la llamada y la nota del closer.
+ *
+ * `closerId` NO se manda: lo pone el backend desde la cookie de sesion. Mandarlo
+ * desde aqui dejaria que el cliente firme la gestion con el nombre de otro.
+ */
+export function registrarGestion(
+  leadId: string,
+  estado: EstadoGestion,
+  nota: string | null,
+): Promise<ApiResponse<EnrichedLead>> {
+  return apiPost<EnrichedLead>(API_ROUTES.closer.gestion, { leadId, estado, nota });
 }

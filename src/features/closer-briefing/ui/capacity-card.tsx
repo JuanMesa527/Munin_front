@@ -58,14 +58,10 @@ export function CapacityCard({ lead }: CapacityCardProps): ReactElement {
           value={formatCOPCompact(lead.capacidad?.cuotaMensualEstimada ?? null)}
         />
         <MiniTile label="AHORRO" value={formatCOPCompact(lead.ahorroDeclarado)} />
-        <MiniTile
-          label="SUBSIDIO EST."
-          value={
-            lead.subsidioEstimado === null
-              ? 'No aplica'
-              : formatCOPCompact(lead.subsidioEstimado)
-          }
-        />
+        {/* El subsidio estimado NO se muestra aqui: en una llamada comercial un
+            monto de subsidio en pantalla se convierte en promesa, y el SFV lo
+            asigna la caja, no nosotros. El calculo sigue existiendo para el plan
+            de nutricion de F2.2, que es donde el usuario lo lee como meta. */}
         <MiniTile label="INGRESOS" value={ingresos} />
       </div>
     </section>
