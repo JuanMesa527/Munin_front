@@ -9,6 +9,7 @@
 
 import type { ReactElement } from 'react';
 import type { ProjectMatch } from '@contracts';
+import { leerAfinidad } from '@shared/lib/afinidad';
 import { cn } from '@shared/lib/cn';
 import { formatCOP } from '@shared/lib/format-money';
 import { BriefingCard, CardTitle } from './briefing-card';
@@ -20,6 +21,8 @@ interface MatchCardProps {
 }
 
 function MatchCard({ proyecto, destacado }: MatchCardProps): ReactElement {
+  const afinidad = leerAfinidad(proyecto);
+
   return (
     <li
       className={cn(
@@ -38,14 +41,27 @@ function MatchCard({ proyecto, destacado }: MatchCardProps): ReactElement {
         <span className="font-mono text-[12px] text-console-mute">
           DESDE {formatCOP(proyecto.precioDesde)} · {proyecto.tipologia}
         </span>
+        {/* El closer va a citar este numero en la llamada. Lo que lo relativiza
+            se imprime junto a el, no en una nota al pie que nadie lee con el
+            cliente esperando. */}
+        {afinidad.advertenciaCapacidad !== null && (
+          <p className="mt-2 font-mono text-[11px] font-bold text-console-red-deep">
+            ⚠ {afinidad.advertenciaCapacidad.toUpperCase()} — NO LO OFREZCAS COMO CERRADO
+          </p>
+        )}
+        {afinidad.nivel !== 'calculada' && (
+          <p className="mt-2 text-[12px] leading-[1.4] text-console-mute">
+            {afinidad.explicacion}
+          </p>
+        )}
       </div>
 
       <div className="text-center">
         <div className="text-[28px] leading-none font-bold tracking-[-0.02em] tabular-nums text-console-ink">
-          {Math.round(proyecto.similitud * 100)}%
+          {afinidad.porcentaje}%
         </div>
         <div className="mt-1 font-mono text-[10px] tracking-[0.1em] text-console-mute">
-          AFINIDAD
+          {afinidad.rotulo === null ? 'AFINIDAD' : `AFINIDAD · ${afinidad.rotulo.toUpperCase()}`}
         </div>
       </div>
     </li>

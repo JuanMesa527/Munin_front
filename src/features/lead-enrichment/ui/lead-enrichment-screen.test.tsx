@@ -12,7 +12,7 @@
  */
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { EnrichmentDeck, ProjectCard, ProjectMatchCard } from '@contracts';
 import { LeadEnrichmentScreen } from './lead-enrichment-screen';
@@ -82,6 +82,9 @@ function tarjeta(id: string, estimado = true): ProjectMatchCard {
       etapa: 'Etapa 1',
       precioDesde: 180_000_000,
       tipologia: 'VIS · 3 hab',
+      confianza: 1,
+      datosFaltantes: [],
+      cabeEnCapacidad: true,
     },
     factores: [
       {
@@ -92,7 +95,6 @@ function tarjeta(id: string, estimado = true): ProjectMatchCard {
         intensidad: 100,
       },
     ],
-    cabeEnCapacidad: true,
   };
 }
 
@@ -214,7 +216,24 @@ describe('LeadEnrichmentScreen', () => {
 
     // El panel de escritorio muestra secciones que la tarjeta no tiene.
     expect(await screen.findByText('Tipologias')).toBeTruthy();
-    expect(screen.getByText('Por que te lo mostramos')).toBeTruthy();
+    expect(screen.getByText('Por que este 87%')).toBeTruthy();
+  });
+
+  it('el porcentaje se puede interrogar sin salir del mazo', async () => {
+    // El numero ordena la baraja, asi que el "¿por que?" tiene que estar a un
+    // control de distancia -- y ese control no puede vivir dentro de la
+    // tarjeta arrastrable.
+    fetchDeck.mockResolvedValue(deck([tarjeta('a')]));
+    renderPantalla();
+
+    const disparador = await screen.findByRole('button', { name: '¿Por qué 87%?' });
+    expect(screen.queryByRole('tooltip')).toBeNull();
+
+    fireEvent.focus(disparador);
+
+    const tooltip = screen.getByRole('tooltip');
+    expect(tooltip.textContent).toContain('Te lo mostramos porque cabe en tu techo');
+    expect(tooltip.textContent).toContain('Calculado con tu perfil completo');
   });
 
   it('NINGUN control vive dentro de la tarjeta arrastrable', async () => {

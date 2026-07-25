@@ -14,6 +14,7 @@ import type { ReactElement } from 'react';
 import { Link } from 'react-router';
 import type { ViableLeadListItem } from '@contracts';
 import { AffiliationBadge, NurturedBadge, ScoreDial } from '@shared/ui';
+import { leerAfinidad } from '@shared/lib/afinidad';
 import { describeLead } from '@shared/lib/describe-lead';
 import { formatCOP, formatCOPCompact } from '@shared/lib/format-money';
 
@@ -25,6 +26,7 @@ const GRID = 'md:grid-cols-[76px_1.5fr_1fr_1.2fr_auto]';
 
 export function LeadRow({ lead }: LeadRowProps): ReactElement {
   const proyecto = lead.proyectoTop;
+  const afinidad = proyecto === null ? null : leerAfinidad(proyecto);
 
   return (
     <div
@@ -53,16 +55,25 @@ export function LeadRow({ lead }: LeadRowProps): ReactElement {
       </div>
 
       <div className="flex min-w-0 flex-col gap-1">
-        {proyecto === null ? (
+        {proyecto === null || afinidad === null ? (
           <span className="text-[14px] text-console-mute">Sin proyectos afines aún</span>
         ) : (
           <>
             <span className="text-[15px] font-bold text-console-ink">
               {proyecto.nombre} · {proyecto.etapa}
             </span>
-            <span className="text-[13px] text-console-mute">
-              {String(Math.round(proyecto.similitud * 100))}% de afinidad · {proyecto.tipologia}
+            {/* El closer lee esta linea en voz alta al marcar. Si el porcentaje
+                no esta calculado o el proyecto no cabe en la capacidad, tiene
+                que enterarse ACA -- no despues, con el cliente al telefono. */}
+            <span className="text-[13px] text-console-mute" title={afinidad.explicacion}>
+              {String(afinidad.porcentaje)}% de afinidad
+              {afinidad.rotulo === null ? '' : ` (${afinidad.rotulo})`} · {proyecto.tipologia}
             </span>
+            {afinidad.advertenciaCapacidad !== null && (
+              <span className="font-mono text-[11px] text-console-red-deep">
+                ⚠ {afinidad.advertenciaCapacidad.toUpperCase()}
+              </span>
+            )}
           </>
         )}
       </div>

@@ -16,7 +16,8 @@
 import { AnimatePresence } from 'motion/react';
 import { useCallback, useEffect, useRef, useState, type ReactElement } from 'react';
 import type { ProjectMatchCard, SwipeAction } from '@contracts';
-import { Alert, Button, ProgressBar, Skeleton, Spinner } from '@shared/ui';
+import { leerAfinidad } from '@shared/lib/afinidad';
+import { Alert, Button, ProgressBar, Skeleton, Spinner, Tooltip } from '@shared/ui';
 import { useProjectDeck } from '../model/use-project-deck';
 import { EnrichmentSummaryView } from './enrichment-summary';
 import { ProjectCard } from './project-card';
@@ -179,6 +180,12 @@ export function LeadEnrichmentScreen({ leadId }: LeadEnrichmentScreenProps): Rea
                 <span className="tabular-nums">{mazo.restantes} por revisar</span>
 
                 <div className="flex items-center gap-4">
+                  {/* El porcentaje se pinta sobre la tarjeta, pero ahi no puede
+                      haber nada interactivo (el `drag` se come el click). Asi
+                      que la pregunta que dispara el numero -- "¿por que ese
+                      %?" -- se responde desde aqui, con un control real que
+                      abre con hover Y con foco de teclado. */}
+                  {activa !== null && <PorQueEsePorcentaje tarjeta={activa} />}
                   {/* Este boton vive FUERA de la tarjeta: dentro, el `drag` de
                       Motion se come el click y parece roto. Solo hace falta
                       debajo de `lg`; arriba el detalle ya esta en pantalla. */}
@@ -224,6 +231,39 @@ export function LeadEnrichmentScreen({ leadId }: LeadEnrichmentScreenProps): Rea
         }}
       />
     </Marco>
+  );
+}
+
+/**
+ * Explica el porcentaje de la tarjeta activa sin sacar al usuario del mazo.
+ *
+ * Dice las dos cosas que el numero calla: POR QUE este proyecto (`match.razon`,
+ * calculada en el backend) y CON QUE se calculo el puntaje (`explicacion`, que
+ * ademas confiesa cuando el perfil estaba incompleto). En escritorio el panel
+ * de detalle repite esto en extenso; aqui es el atajo para quien no lo mira.
+ */
+function PorQueEsePorcentaje({ tarjeta }: { tarjeta: ProjectMatchCard }): ReactElement {
+  const afinidad = leerAfinidad(tarjeta.match);
+
+  return (
+    <Tooltip
+      // Anclado al borde derecho: centrado sobre el disparador se saldria de
+      // la columna del mazo, que es angosta.
+      className="left-auto right-0 w-[17rem] max-w-[calc(100vw-2.5rem)] translate-x-0 px-3 py-2 leading-relaxed font-normal"
+      content={
+        <>
+          <span className="block font-bold">{tarjeta.match.razon}</span>
+          <span className="mt-1.5 block text-surface/75">{afinidad.explicacion}</span>
+        </>
+      }
+    >
+      <button
+        type="button"
+        className="focus-ring rounded-field px-1 underline decoration-dotted underline-offset-4 tabular-nums"
+      >
+        ¿Por qué {afinidad.porcentaje}%?
+      </button>
+    </Tooltip>
   );
 }
 

@@ -14,6 +14,7 @@
 
 import type { ReactElement, ReactNode } from 'react';
 import type { ProjectMatchCard } from '@contracts';
+import { leerAfinidad } from '@shared/lib/afinidad';
 import { FactorBars, Modal } from '@shared/ui';
 import { PriceBand } from './price-band';
 
@@ -42,6 +43,7 @@ function Dato({ etiqueta, valor }: { etiqueta: string; valor: ReactNode }): Reac
 
 export function ProjectDetailContent({ tarjeta }: ProjectDetailProps): ReactElement {
   const { ficha, match, factores } = tarjeta;
+  const afinidad = leerAfinidad(match);
   // Ver nota en `project-card`: el sector a veces ES la ciudad.
   const ubicacion =
     ficha.ubicacion.toLowerCase() === ficha.ciudad.toLowerCase()
@@ -61,16 +63,31 @@ export function ProjectDetailContent({ tarjeta }: ProjectDetailProps): ReactElem
         <PriceBand precio={ficha.precio} size="md" />
         <div className="text-right">
           <p className="text-3xl leading-none font-bold tabular-nums">
-            {Math.round(match.similitud * 100)}
+            {afinidad.porcentaje}
             <span className="text-lg">%</span>
           </p>
-          <p className="label-mono mt-1 text-text-subtle">afinidad</p>
+          <p className="label-mono mt-1 text-text-subtle">
+            afinidad{afinidad.rotulo === null ? '' : ` · ${afinidad.rotulo}`}
+          </p>
         </div>
       </div>
 
+      {/* Este es el panel donde el usuario viene a entender el numero, asi que
+          aqui la explicacion va completa y visible, no en un tooltip. */}
+      {afinidad.advertenciaCapacidad !== null && (
+        <p className="rounded-card border border-danger/40 bg-danger/10 px-4 py-3 text-sm text-danger">
+          {afinidad.advertenciaCapacidad}. Sigue en la baraja porque puede valer la pena
+          conversarlo, pero hoy no cabe en lo que estimamos que puedes pagar.
+        </p>
+      )}
+
       {/* GLASS-BOX: el desglose con pesos y aportes (regla 21). */}
-      <Seccion titulo="Por que te lo mostramos">
+      <Seccion titulo={`Por que este ${String(afinidad.porcentaje)}%`}>
         <p className="text-sm text-text-muted">{match.razon}</p>
+        {/* La explicacion va SIEMPRE, no solo cuando el calculo salio corto:
+            que el perfil este completo tambien es informacion, y callarlo deja
+            al usuario sin saber que ejes movieron el numero. */}
+        <p className="text-sm text-text-subtle">{afinidad.explicacion}</p>
         <FactorBars factores={factores} />
       </Seccion>
 

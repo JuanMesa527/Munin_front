@@ -13,6 +13,7 @@ export const PASOS_PERFILAMIENTO: readonly Slot[] = [
   'telefono',
   'edad',
   'estadoCivil',
+  'ocupacion',
   'afiliacion',
   'rangoSalarial',
   'segmentoFamiliar',
@@ -27,6 +28,7 @@ const ETIQUETA_SLOT: Record<Slot, string> = {
   telefono: 'Celular',
   edad: 'Edad',
   estadoCivil: 'Estado civil',
+  ocupacion: 'Ocupación',
   afiliacion: 'Afiliación',
   rangoSalarial: 'Ingresos',
   segmento: 'Segmento',
@@ -35,6 +37,12 @@ const ETIQUETA_SLOT: Record<Slot, string> = {
   segmentoFamiliar: 'Familia',
   ahorro: 'Ahorro',
   capacidadAhorroMensual: 'Ahorro mensual',
+  // Señales que F1 empezó a capturar en el backend. `viviendaPropia` alimenta
+  // el gate del subsidio de primera vivienda, así que la etiqueta dice lo que
+  // se pregunta, no el concepto legal.
+  viviendaPropia: 'Vivienda propia',
+  vinculacionLaboral: 'Vinculación laboral',
+  horizonteCompra: 'Cuándo compraría',
 };
 
 export function etiquetaSlot(slot: Slot): string {
@@ -67,6 +75,7 @@ export function resumenPerfil(profile: LeadProfile): readonly string[] {
   if (profile.nombre !== null) partes.push(profile.nombre.split(/\s+/u)[0] ?? profile.nombre);
   if (profile.edad !== null) partes.push(`${String(profile.edad)} años`);
   if (profile.estadoCivil !== null) partes.push(profile.estadoCivil);
+  if (profile.ocupacion !== null) partes.push(profile.ocupacion);
 
   if (profile.esAfiliado === true) partes.push('Afiliado');
   else if (profile.esAfiliado === false) partes.push('No afiliado');
