@@ -17,6 +17,14 @@ export default tseslint.config(
   ...tseslint.configs.strictTypeChecked,
   ...tseslint.configs.stylisticTypeChecked,
 
+  // Las reglas con tipos solo pueden correr sobre archivos que esten en un
+  // tsconfig. Este propio archivo y cualquier .js/.mjs no lo estan, asi que se
+  // les apagan: si no, ESLint muere al arrancar.
+  {
+    files: ['**/*.{js,mjs,cjs}'],
+    ...tseslint.configs.disableTypeChecked,
+  },
+
   {
     files: ['**/*.{ts,tsx}'],
     languageOptions: {

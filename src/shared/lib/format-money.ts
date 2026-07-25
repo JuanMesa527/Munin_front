@@ -36,6 +36,11 @@ export function formatCOP(valor: COP | null | undefined): string {
 /**
  * `523_620_000` -> `"$523,6 M"`. Para tarjetas y ejes de grafico donde el
  * numero completo rompe el layout.
+ *
+ * NO ABREVIA POR DEBAJO DEL MILLON a proposito: en pesos colombianos los miles
+ * se escriben completos (`$890.000`), y un `$890 K` se lee como una traduccion
+ * torpe del ingles. Solo se abrevia de millones para arriba, que es donde el
+ * numero completo si rompe el layout.
  */
 export function formatCOPCompact(valor: COP | null | undefined): string {
   if (valor === null || valor === undefined || !Number.isFinite(valor)) return SIN_DATO;
@@ -48,9 +53,6 @@ export function formatCOPCompact(valor: COP | null | undefined): string {
   }
   if (abs >= 1_000_000) {
     return `${signo}$${formatoCompacto.format(abs / 1_000_000)} M`;
-  }
-  if (abs >= 10_000) {
-    return `${signo}$${formatoCompacto.format(abs / 1_000)} K`;
   }
   return formatCOP(valor);
 }

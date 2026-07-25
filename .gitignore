@@ -16,3 +16,6 @@ Thumbs.db
 .idea/
 .vscode/*
 !.vscode/extensions.json
+
+# Brainstorm visual companion
+.superpowers/

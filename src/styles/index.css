@@ -11,6 +11,60 @@
 
 @import 'tailwindcss';
 
+/* ==========================================================================
+ *  Fuentes de la consola del closer — AUTOHOSPEDADAS
+ * --------------------------------------------------------------------------
+ *  El diseno aprobado pide Space Grotesk + JetBrains Mono. El diseno original
+ *  las cargaba desde fonts.googleapis.com, pero EQUIPO.md §8 prohibe CDN de
+ *  terceros: cada request a Google expone la IP del titular a un tercero que
+ *  no esta en las finalidades consentidas (Ley 1581). Se descargaron los
+ *  woff2 a public/fonts (82 KB en total) y se sirven desde nuestro dominio:
+ *  diseno idéntico, cero fuga de datos, cero request bloqueante externo.
+ *
+ *  Son fuentes VARIABLES, asi que un solo archivo por subset cubre todos los
+ *  pesos (de ahi el rango en `font-weight`).
+ * ========================================================================== */
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url('/fonts/SpaceGrotesk-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+    U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url('/fonts/SpaceGrotesk-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304,
+    U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0,
+    U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 100 800;
+  font-display: swap;
+  src: url('/fonts/JetBrainsMono-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+    U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 100 800;
+  font-display: swap;
+  src: url('/fonts/JetBrainsMono-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304,
+    U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0,
+    U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
 @theme {
   /* ---- Tipografia -------------------------------------------------------
    * Stack del sistema a proposito: cero webfonts remotas = cero request
@@ -120,6 +174,93 @@
   --animate-pop: pop 320ms var(--ease-pop) both;
   --animate-fade-in: fade-in 180ms var(--ease-out-soft) both;
   --animate-rise: rise 220ms var(--ease-out-soft) both;
+}
+
+/* ==========================================================================
+ *  Consola del closer (F3 · dashboard y F4 · ficha de llamada)
+ * --------------------------------------------------------------------------
+ *  Registro visual DELIBERADAMENTE distinto al del flujo del cliente: papel
+ *  crema, tinta casi negra, amarillo de senal y mono en versalitas. Es una
+ *  herramienta de trabajo interna, no una experiencia de consumo, y EQUIPO.md
+ *  §3 ya lo pedia explicitamente ("cambio de registro total").
+ *
+ *  POR QUE ESTOS TOKENS SON ABSOLUTOS Y NO REACTIVOS AL TEMA: el diseno se
+ *  compromete con un unico look (el contraste crema/tinta ES la identidad de
+ *  la consola). Una variante dark automatica lo desfiguraria, asi que se
+ *  declara un solo juego de valores a proposito. El flujo del cliente sigue
+ *  usando los tokens semanticos de arriba, que si responden al tema.
+ *
+ *  Existen para que ningun .tsx escriba un hex suelto (regla "tokens, no
+ *  valores magicos"). Tailwind v4 genera de aqui `bg-console-ink`,
+ *  `text-console-mute`, `border-console-line`, etc.
+ * ========================================================================== */
+@theme {
+  --font-display:
+    'Space Grotesk', 'Segoe UI Variable', 'Segoe UI', system-ui, -apple-system, sans-serif;
+
+  /* Superficies */
+  --color-console-paper: #fbf9f2;
+  --color-console-surface: #ffffff;
+  --color-console-ink: #0d0d0d;
+  --color-console-ink-2: #1a1a16;
+  --color-console-ink-3: #2a2a24;
+
+  /* Amarillo de senal: acciones primarias y foco de atencion */
+  --color-console-signal: #f2ce1b;
+  --color-console-signal-soft: #fcf3c7;
+  --color-console-signal-deep: #8a6400;
+  --color-console-signal-text: #b58a00;
+  --color-console-signal-dim: #e0b000;
+
+  /* Azul: guion de llamada */
+  --color-console-blue: #1e5aa8;
+  --color-console-blue-soft: #dde8f5;
+
+  /* Verde: afiliado, senal positiva */
+  --color-console-green: #2e9e4f;
+  --color-console-green-soft: #dceedf;
+  --color-console-green-deep: #1e6b36;
+
+  /* Rojo: colgar y objeciones */
+  --color-console-red: #d64545;
+  --color-console-red-soft: #fad6d6;
+  --color-console-red-deep: #a62e2e;
+
+  /* Lineas y texto */
+  --color-console-line: #e9e5d8;
+  --color-console-track: #eeebe0;
+  --color-console-edge: #cfcabb;
+  --color-console-mute: #8a867a;
+  --color-console-body: #3a382f;
+
+  --shadow-console-card: 0 6px 18px rgb(0 0 0 / 0.04);
+  --shadow-console-card-hover: 0 12px 28px rgb(0 0 0 / 0.1);
+
+  --animate-console-pulse: console-pulse 2s ease-in-out infinite;
+  --animate-console-rise: console-rise 0.35s ease both;
+}
+
+/* El punto "en vivo" del contador de ruido filtrado y del estado de llamada. */
+@keyframes console-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+/* Entrada de las filas de lead: da sensacion de cola que se va poblando. */
+@keyframes console-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 /* --------------------------------------------------------------------------

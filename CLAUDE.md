@@ -127,14 +127,24 @@ Eso es lo que permite que F1, F2.1 y F2.2 se desarrollen en paralelo sin conocer
 
 Cada feature es un **vertical slice**. **Un dev = una feature.**
 
-| # | Feature | Componente de entrada | Rol | Dueño |
-|---|---|---|---|---|
-| **F1** | `lead-intake` | `LeadIntakeScreen` | usuario final | _(asignar)_ |
-| **F2.1** | `lead-enrichment` | `LeadEnrichmentScreen` | usuario final (viable) | _(asignar)_ |
-| **F2.2** | `lead-education` | `LeadEducationScreen` | usuario final (no viable) | _(asignar)_ |
-| **F3** | `closer-dashboard` | `CloserDashboardPage`, `CloserLoginPage` | closer | _(asignar)_ |
-| **F4** | `closer-briefing` | `CloserBriefingPage` | closer | _(asignar)_ |
-| — | `shared/ui` + `app/` | design system, routing, providers | — | _(asignar)_ |
+| # | Feature | Componente de entrada | Rol | Estado | Dueño |
+|---|---|---|---|---|---|
+| **F1** | `lead-intake` | `LeadIntakeScreen` | usuario final | ⬜ pendiente | _(asignar)_ |
+| **F2.1** | `lead-enrichment` | `LeadEnrichmentScreen` | usuario final (viable) | ⬜ pendiente | _(asignar)_ |
+| **F2.2** | `lead-education` | `LeadEducationScreen` | usuario final (no viable) | ⬜ pendiente | _(asignar)_ |
+| **F3** | `closer-dashboard` | `CloserDashboardPage`, `CloserLoginPage` | closer | ✅ **implementada** | _(asignar)_ |
+| **F4** | `closer-briefing` | `CloserBriefingPage` | closer | ✅ **implementada** | _(asignar)_ |
+| — | `shared/ui` + `app/` | design system, routing, providers | — | ✅ listo | _(asignar)_ |
+
+> **F3 y F4 ya están construidas** a partir del diseño aprobado (proyecto Claude Design
+> *"F3 y F4 Colsubsidio"*). Funcionan de punta a punta con datos semilla, así que se pueden
+> mostrar al jurado sin esperar al backend: cuando los endpoints del closer existan solo
+> desaparece el fallback de `api/` y la UI no cambia.
+>
+> Si trabajas en F1/F2.x: **el registro visual del cliente NO es el de la consola.** La consola
+> usa los tokens `--color-console-*` (papel crema + tinta + amarillo de señal, fijos, un solo
+> look a propósito); el flujo del cliente usa los tokens semánticos (`surface`, `text`,
+> `brand`…), que sí responden a light/dark.
 
 > **Llena la columna "Dueño" antes de empezar a codear.** Dos personas en la misma feature es
 > la forma más rápida de perder una hora en conflictos de merge.
@@ -194,7 +204,14 @@ cita una regla de este documento, **el import está mal, no la regla**.
 > **anúncialo al equipo** — un cambio de contrato rompe a todos.
 
 Las **adendas al contrato original del brief** están documentadas con su justificación en la
-cabecera de `contracts.ts`. Léela una vez antes de empezar.
+cabecera de `contracts.ts` (A1–A8). Léela una vez antes de empezar.
+
+> **Adenda A8 — la más reciente, y la que más te afecta si tocas score o matching.** La consola
+> del closer necesitaba datos que el contrato no modelaba: `Factor.intensidad` (la barra, porque
+> `contribucion` trae signo y `peso` describe al modelo, no al lead), `ProjectMatch` con
+> `nombre`/`etapa`/`precioDesde`/`tipologia` ya resueltos, y varios campos de identidad y
+> recorrido en `EnrichedLead`. También cambió `ViableLeadListItem.proyectoTopId` por
+> `proyectoTop`. Si implementas el scoring en el backend, **tienes que llenar `intensidad`**.
 
 ### No inventes URLs
 
@@ -226,18 +243,47 @@ src/
     closer-briefing/     # F4 · ficha técnica
   shared/
     contracts.ts         # copia sincronizada — NO editar
-    ui/                  # design system + primitivos de chat WhatsApp
+    ui/                  # design system + primitivos de chat + primitivos de consola
     api/                 # http client, query keys
-    lib/                 # cn, formatters (money, SMMLV, fechas, máscaras)
+    lib/                 # cn, formatters (money, SMMLV, fechas, máscaras), describeLead
     auth/                # useCloserSession + CloserGuard
     config/              # env (recuerda: VITE_* es público)
+    demo/                # datos semilla del jurado (los comparten F3 y F4)
   app/
-    routes/              # / (cliente) · /closer/* (protegido) · /politica-de-datos
+    routes/              # / (cliente) · /closer/* (protegido)
     providers/           # QueryClient, ErrorBoundary, MotionConfig
     App.tsx
-  styles/index.css       # Tailwind v4 CSS-first: @theme con los tokens
+  styles/index.css       # Tailwind v4 CSS-first: @theme (cliente + consola) y @font-face
   main.tsx
+public/fonts/            # Space Grotesk + JetBrains Mono autohospedadas (82 KB, 4 archivos)
 ```
+
+### Por qué existe `shared/demo/`
+
+F3 y F4 necesitan los mismos leads de ejemplo y **no pueden importarse entre sí** (regla 4). La
+semilla vive en `shared/demo/` y sus mappers la traducen al contrato, así que las dos features
+consumen `ViableLeadListItem` y `BriefingSheet` reales — los mismos tipos que devolverá el
+backend. **Cuando el motor exista se borra la carpeta completa** y solo desaparecen los
+fallbacks de `api/`; ni una línea de UI cambia. Ese es el punto de tener un contrato.
+
+### Por qué las fuentes están autohospedadas
+
+El diseño pide Space Grotesk + JetBrains Mono y el original las cargaba del CDN de Google. Eso
+choca con la prohibición de CDN externos de §8: cada request expone la IP del titular a un
+tercero que no está en las finalidades consentidas. Se descargaron los `woff2` a `public/fonts`
+y se declaran con `@font-face` en `styles/index.css` — **mismo diseño, cero fuga de datos y
+cero request bloqueante externo.** Si agregas una fuente, hazlo igual: nada de `<link>` a un CDN.
+
+### Modo demo: cómo la consola funciona sin backend
+
+Con `VITE_DEMO_MODE=true`, si la petición de sesión falla por algo que **no** sea una decisión
+de autorización del servidor (401/403), `useCloserSession` devuelve una sesión ficticia y F3/F4
+se alimentan de `shared/demo`. El chip "demo · datos simulados" del header lo hace visible.
+
+**No es un hueco de seguridad:** `VITE_DEMO_MODE` es una bandera de *build* (el bundle de
+producción la compila en `false`), un 401/403 real siempre gana y manda al login, y esa sesión
+ficticia no es un token — la autorización real la impone el backend en cada request contra la
+cookie `httpOnly`. Está documentado en `shared/auth/use-closer-session.ts`.
 
 ### Reglas del design system
 
@@ -259,7 +305,11 @@ src/
 ```ts
 formatCOP(523_620_000)         // "$523.620.000"
 formatCOPCompact(523_620_000)  // "$523,6 M"
+formatCOPCompact(890_000)      // "$890.000"  ← NO abrevia bajo el millón
 ```
+
+`formatCOPCompact` solo abrevia de millones para arriba: en pesos colombianos los miles se
+escriben completos y un `$890 K` se lee como una traducción torpe del inglés.
 
 **Los montos llegan del backend YA normalizados, en pesos enteros.** El frontend **nunca**
 multiplica ni divide por 1000 (ver §7, trampa 1). Si un monto se ve raro en pantalla, el bug
