@@ -18,6 +18,7 @@ import { motion, useMotionValue, useReducedMotion, useTransform } from 'motion/r
 import type { PanInfo } from 'motion/react';
 import type { ReactElement } from 'react';
 import type { ProjectMatchCard, SwipeAction } from '@contracts';
+import { leerAfinidad } from '@shared/lib/afinidad';
 import { cn } from '@shared/lib/cn';
 import { formatCOPCompact } from '@shared/lib/format-money';
 
@@ -53,7 +54,7 @@ export function ProjectCard({
   const opacidadPass = useTransform(x, [-150, -40], [1, 0]);
 
   const { ficha, match } = tarjeta;
-  const porcentaje = Math.round(match.similitud * 100);
+  const afinidad = leerAfinidad(match);
   // En varios proyectos el sector ES la ciudad (Tocancipa, Girardot): repetirlo
   // da "TOCANCIPA · TOCANCIPA", que se lee como un bug de datos.
   const ubicacion =
@@ -112,11 +113,32 @@ export function ProjectCard({
         />
 
         {/* Afinidad: bloque plano amarillo, como los del sistema. Es el numero
-            que ordena el mazo, asi que no se esconde. */}
-        <div className="absolute top-0 right-0 flex items-baseline gap-0.5 bg-brand-500 px-3 py-2 text-[#0d0d0d]">
-          <span className="text-xl leading-none font-bold tabular-nums">{porcentaje}</span>
-          <span className="text-xs font-bold">%</span>
+            que ordena el mazo, asi que no se esconde -- pero tampoco viaja solo:
+            si se calculo con datos incompletos lo dice ahi mismo, porque un
+            porcentaje sin contexto se lee como una medicion cerrada. */}
+        <div
+          className="absolute top-0 right-0 flex flex-col items-end bg-brand-500 px-3 py-2 text-[#0d0d0d]"
+          title={afinidad.explicacion}
+        >
+          <span className="flex items-baseline gap-0.5">
+            <span className="text-xl leading-none font-bold tabular-nums">
+              {afinidad.porcentaje}
+            </span>
+            <span className="text-xs font-bold">%</span>
+          </span>
+          {afinidad.rotulo !== null && (
+            <span className="label-mono text-[10px] leading-tight">{afinidad.rotulo}</span>
+          )}
         </div>
+
+        {/* La advertencia de presupuesto va PEGADA al porcentaje, no en el
+            detalle: el usuario decide con el pulgar sobre esta pantalla, y un
+            proyecto que no le alcanza puede puntuar alto igual. */}
+        {afinidad.advertenciaCapacidad !== null && (
+          <span className="label-mono absolute right-0 bottom-0 left-0 bg-[#0d0d0d]/85 px-3 py-1.5 text-center text-[11px] text-white">
+            {afinidad.advertenciaCapacidad}
+          </span>
+        )}
 
         {/* Una sola etiqueta: VIS es la unica que cambia la conversacion
             (define el tope de precio y el acceso al subsidio). El resto vive

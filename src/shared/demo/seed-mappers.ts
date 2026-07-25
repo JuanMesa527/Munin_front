@@ -74,6 +74,16 @@ function toCapacityBand(seed: SeedLead): CapacityBand {
   };
 }
 
+/**
+ * `confianza: 0` NO es un descuido: el `match` de la semilla es un numero
+ * escrito a mano en `leads.seed.ts`, no la salida del motor de afinidad. Sirve
+ * para que la demo tenga tarjetas con orden creible, y nada mas.
+ *
+ * Sin declararlo, un "94% de afinidad" inventado se pinta identico a uno
+ * calculado, y el closer se para frente al cliente citando un numero que no
+ * mide nada. La UI usa `confianza` para rotularlo; cuando existan los endpoints
+ * reales este mapper se borra y el problema se va con el.
+ */
 function toProyectos(seed: SeedLead): ProjectMatch[] {
   return seed.proyectos.map((p) => ({
     proyectoId: p.proyectoId,
@@ -83,6 +93,11 @@ function toProyectos(seed: SeedLead): ProjectMatch[] {
     etapa: p.etapa,
     precioDesde: p.precioDesde,
     tipologia: p.tipologia,
+    confianza: 0,
+    datosFaltantes: ['el calculo real de afinidad (esta tarjeta es de demo)'],
+    // La semilla no modela el techo estimado contra el precio del proyecto:
+    // `null` (no sabemos) es lo unico honesto que se puede afirmar aqui.
+    cabeEnCapacidad: null,
   }));
 }
 

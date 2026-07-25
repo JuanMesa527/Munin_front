@@ -82,6 +82,9 @@ function tarjeta(id: string, estimado = true): ProjectMatchCard {
       etapa: 'Etapa 1',
       precioDesde: 180_000_000,
       tipologia: 'VIS · 3 hab',
+      confianza: 1,
+      datosFaltantes: [],
+      cabeEnCapacidad: true,
     },
     factores: [
       {
@@ -92,7 +95,6 @@ function tarjeta(id: string, estimado = true): ProjectMatchCard {
         intensidad: 100,
       },
     ],
-    cabeEnCapacidad: true,
   };
 }
 
