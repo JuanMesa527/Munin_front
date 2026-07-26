@@ -26,6 +26,8 @@ import type { ReactElement, ReactNode } from 'react';
 import { Link } from 'react-router';
 import { motion, type Variants } from 'motion/react';
 import { RUTA_POLITICA } from '@shared/ui';
+import { AuroraViva } from '@app/ui/aurora-viva';
+import { OndaDeClic } from '@app/ui/onda-de-clic';
 
 /** Curva del DS (`--ease-out-soft`). */
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
@@ -136,27 +138,17 @@ function Hero(): ReactElement {
   return (
     <section id="inicio" className="relative isolate scroll-mt-24">
       {/*
-        Aurora: dos capas desfasadas, decorativa al 100%.
-
-        Se DESBORDA por abajo a proposito (`-bottom-40`): recortarla al borde
-        del hero deja un corte duro justo donde arranca la bifurcacion, y una
-        luz desenfocada con borde recto se ve como un error de render. El
-        `overflow-x-clip` del contenedor raiz es el que contiene el desborde
-        lateral del `scale()` — y es `clip` y no `hidden` porque `hidden`
-        rompe el `sticky` de la cabecera.
+        Aurora: dos capas desfasadas, decorativa al 100%, que ademas siguen al
+        raton con paralaje (ver `aurora-viva.tsx`; el `overflow-x-clip` del
+        contenedor raiz es el que contiene su desborde lateral, y es `clip` y
+        no `hidden` porque `hidden` rompe el `sticky` de la cabecera).
 
         `isolate` en la seccion mantiene el `-z-10` por encima del fondo de la
         pagina y por debajo del contenido; lo que viene despues en el DOM
         (bifurcacion, puertas) pinta encima, asi que el amarillo solo se
         derrama como luz de fondo.
       */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 -top-32 -bottom-40 -z-10"
-      >
-        <div className="hero-aurora animate-aurora absolute inset-0" />
-        <div className="hero-aurora-core animate-aurora-slow absolute inset-0" />
-      </div>
+      <AuroraViva />
 
       <motion.div
         initial="oculto"
@@ -206,8 +198,14 @@ function Hero(): ReactElement {
  *  dibujar, y una bifurcacion vertical de 40px seria ruido.
  *
  *  `preserveAspectRatio="none"` es a proposito: importa que las ramas terminen
- *  EXACTO en el centro de cada puerta (25% y 75% del contenedor) mas que la
- *  fidelidad de la curva. `vector-effect` mantiene el trazo fino al estirarse.
+ *  EXACTO en el centro de cada puerta mas que la fidelidad de la curva.
+ *  `vector-effect` mantiene el trazo fino al estirarse.
+ *
+ *  De donde salen 294 y 906, y no 300/900: la rejilla es de dos columnas con
+ *  `gap-6` (24px) dentro de un contenido de 1104px (max-w-6xl menos el padding),
+ *  asi que cada puerta mide 540px y sus centros caen en 24.5% y 75.5% — no en
+ *  25/75. Sobre el viewBox de 1200 eso es 294 y 906. Son 6px, pero son los 6px
+ *  que hacen que la rama caiga al centro de la tarjeta o justo al lado.
  * ========================================================================== */
 
 function Bifurcacion(): ReactElement {
@@ -231,7 +229,7 @@ function Bifurcacion(): ReactElement {
         {/* Rama del cliente: amarilla y mas gruesa — es el carril por donde
             entra todo el mundo. */}
         <motion.path
-          d="M600 36 C 600 92, 300 68, 300 128"
+          d="M600 36 C 600 90, 294 80, 294 132"
           fill="none"
           strokeWidth={2.5}
           strokeLinecap="round"
@@ -243,7 +241,7 @@ function Bifurcacion(): ReactElement {
         />
         {/* Rama del comercial: tinta y fina, como su propia consola. */}
         <motion.path
-          d="M600 36 C 600 92, 900 68, 900 128"
+          d="M600 36 C 600 90, 906 80, 906 132"
           fill="none"
           strokeWidth={1.5}
           strokeLinecap="round"
@@ -276,7 +274,10 @@ function Vinetas({
   tono: 'cliente' | 'closer';
 }): ReactElement {
   return (
-    <ul className="mt-6 flex flex-col gap-2.5">
+    /* `flex-1`: la lista es lo que se estira cuando una puerta tiene mas texto
+       que la otra, de modo que los dos CTA quedan a la misma altura sin fijar
+       una altura de tarjeta a mano. */
+    <ul className="mt-6 flex flex-1 flex-col gap-2.5">
       {items.map((texto) => (
         <li
           key={texto}
@@ -322,10 +323,13 @@ function PuertaCliente(): ReactElement {
 
         {/* Fragmento del hilo real: dos burbujas y el indicador de escritura. */}
         <div className="mt-7 rounded-bubble border border-border bg-surface-3 p-3.5">
-          <p className="ml-auto w-fit max-w-[88%] rounded-bubble rounded-br-sm bg-brand-500 px-3.5 py-2 text-xs leading-snug font-medium text-[#0d0d0d] shadow-bubble">
+          {/* Los anchos maximos son distintos y bajos a proposito: una burbuja
+              que ocupa toda la linea se lee como pildora, no como mensaje.
+              El hilo tiene que parecer una conversacion de un vistazo. */}
+          <p className="ml-auto w-fit max-w-[64%] rounded-bubble rounded-br-sm bg-brand-500 px-3.5 py-2 text-xs leading-snug font-medium text-[#0d0d0d] shadow-bubble">
             Gano 2.400.000 y tengo 6 millones ahorrados
           </p>
-          <p className="mt-2 w-fit max-w-[92%] rounded-bubble rounded-bl-sm bg-surface px-3.5 py-2 text-xs leading-snug text-text-muted shadow-bubble">
+          <p className="mt-2 w-fit max-w-[78%] rounded-bubble rounded-bl-sm bg-surface px-3.5 py-2 text-xs leading-snug text-text-muted shadow-bubble">
             Con eso tu capacidad estimada alcanza para VIS. Te muestro tres proyectos.
           </p>
           <span
@@ -384,7 +388,7 @@ function PuertaCloser(): ReactElement {
         </h2>
         <p className="mt-3 text-sm leading-relaxed text-console-body sm:text-base">
           Entras a la consola con la cola ya ordenada. No es un CRM: es la lista de a quién llamar
-          ahora y qué decirle.
+          ahora y qué decirle. Pide usuario y contraseña.
         </p>
 
         {/* Fragmento de la cola: dos filas, la segunda atenuada. */}
@@ -438,9 +442,6 @@ function PuertaCloser(): ReactElement {
             →
           </span>
         </Link>
-        <p className="mt-3 text-center font-mono text-[10px] tracking-[0.14em] text-console-mute uppercase">
-          Pide usuario y contraseña
-        </p>
       </div>
     </motion.article>
   );
@@ -452,9 +453,18 @@ function Puertas(): ReactElement {
       id="roles"
       aria-label="Elige un rol"
       initial="oculto"
-      whileInView="visible"
-      viewport={{ once: true, amount: 0.15 }}
-      variants={{ visible: { transition: { staggerChildren: 0.12 } } }}
+      /*
+        `animate` y NO `whileInView`. Las dos puertas son el unico trabajo de
+        esta pagina: si el IntersectionObserver no dispara (headless, un
+        navegador raro, la pestana abierta en segundo plano), con `whileInView`
+        se quedan en `opacity: 0` y la portada queda literalmente sin puertas —
+        pasó en la primera captura de movil de esta misma sesion.
+
+        Ademas estan a un scroll corto del hero, asi que casi siempre entran ya
+        visibles: el reveal por scroll no estaba comprando nada.
+      */
+      animate="visible"
+      variants={{ visible: { transition: { staggerChildren: 0.12, delayChildren: 0.9 } } }}
       className="mx-auto grid max-w-6xl scroll-mt-24 gap-6 px-5 pb-24 sm:px-6 md:grid-cols-2"
     >
       <PuertaCliente />
@@ -573,6 +583,13 @@ export function LandingPage(): ReactElement {
         <ComoFunciona />
       </main>
       <Pie />
+      {/*
+        Fuera del hero y no dentro: el canvas va `fixed` y con z-100 para poder
+        pintar por encima de la cabecera `sticky` (z-50). Dentro de la seccion
+        del hero, su `isolate` lo encerraria por debajo de ella. No captura
+        eventos, asi que ningun enlace pierde el clic.
+      */}
+      <OndaDeClic />
     </div>
   );
 }

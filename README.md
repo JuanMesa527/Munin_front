@@ -30,7 +30,8 @@ así que en dev todo es mismo origen y la cookie de sesión del closer viaja bie
 
 | Ruta | Qué | Auth | Estado |
 |---|---|---|---|
-| `/` | F1 chat → F2.1 / F2.2 según carril | **Sin login** | ⬜ portada provisional |
+| `/` | Portada: elige carril y entra | **Sin login** | ✅ |
+| `/cliente` | F1 chat → F2.1 / F2.2 según carril | **Sin login** | ✅ |
 | `/closer/login` | Login del comercial | — | ✅ |
 | `/closer` | **F3** · cola de leads viables | **Closer** | ✅ |
 | `/closer/leads/:leadId` | **F4** · ficha de la llamada | **Closer** | ✅ |
@@ -82,8 +83,11 @@ teléfono, cronómetro de llamada y checklist del guion. Se pueden mostrar al ju
 formatters, http client, guard del closer, routing por rol, providers y app shell.
 
 **⬜ Pendiente:** F1 `lead-intake`, F2.1 `lead-enrichment`, F2.2 `lead-education`, y la ruta
-`/politica-de-datos` (va con F1, porque es el destino del `ConsentNotice`). La ruta `/` es hoy
-una portada provisional que explica eso y deja entrar a la consola.
+`/politica-de-datos` (va con F1, porque es el destino del `ConsentNotice`).
+
+La ruta `/` es la **portada**: dos puertas, cada una pintada en el registro visual de su destino
+(blanco/amarillo el carril del cliente, papel crema/tinta el de la consola). El flujo del cliente
+vive ahora en `/cliente`.
 
 **Cada dev implementa su feature.** Empieza por el `index.ts` y la pantalla de entrada, y usa
 F3/F4 como referencia de estructura (`ui/` presentacional, `model/` estado, `api/` I/O).
