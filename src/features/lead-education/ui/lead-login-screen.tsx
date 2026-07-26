@@ -6,11 +6,14 @@
  * código de 6 dígitos y lo confirma. Dos pasos, un solo campo por paso —
  * nada de contraseña que recordar.
  *
- * SEGURIDAD (OWASP A07): el error de un código incorrecto y el de un contacto
+ * SEGURIDAD (OWASP A07): al VERIFICAR, un código incorrecto y un contacto
  * inexistente son el MISMO mensaje genérico — distinguirlos permitiría
- * enumerar qué teléfonos/correos están registrados. Igual que en
- * `closer-login.page.tsx`, acá no se guarda ningún token: el backend emite
- * una cookie httpOnly que este código no puede leer.
+ * enumerar qué teléfonos/correos están registrados. Al PEDIR el código, la
+ * pantalla muestra lo que responda el backend, que es quien decide cuánto
+ * revela: en producción responde a ciegas y en dev dice la causa
+ * (ver `lead-auth.controller.ts`). Igual que en `closer-login.page.tsx`, acá
+ * no se guarda ningún token: el backend emite una cookie httpOnly que este
+ * código no puede leer.
  */
 
 import { useState, type ReactElement } from 'react';
@@ -47,7 +50,12 @@ export function LeadLoginScreen({ onSuccess, onCancel }: LeadLoginScreenProps): 
     setEnviando(false);
 
     if (!respuesta.ok) {
-      setError(ERROR_GENERICO_ENVIO);
+      // El mensaje del backend cuando lo trae: fuera de producción distingue
+      // "no existe una cuenta con ese contacto" de "falló el envío". Sin esto,
+      // pedir el código para un correo que nunca hizo el chat era
+      // indistinguible de un correo caído — y la pantalla avanzaba igual al
+      // paso del código, a esperar un correo que no existía.
+      setError(respuesta.error.message.length > 0 ? respuesta.error.message : ERROR_GENERICO_ENVIO);
       return;
     }
     // Fuera de producción el backend devuelve el código para poder probar el
