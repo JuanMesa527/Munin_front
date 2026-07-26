@@ -21,6 +21,8 @@ import { useViableLeads } from './use-viable-leads';
 export interface LeadQueueState {
   readonly visibles: readonly ViableLeadListItem[];
   readonly stats: QueueStats;
+  /** Denominador real de "N viables de M entradas". Lo cuenta el backend. */
+  readonly totalIngresados: number;
   readonly chip: QueueChip;
   readonly query: string;
   readonly sort: LeadListSort;
@@ -37,7 +39,7 @@ export function useLeadQueue(sortInicial: LeadListSort = 'score_desc'): LeadQueu
   const [query, setQuery] = useState('');
   const [sort, setSort] = useState<LeadListSort>(sortInicial);
 
-  const { leads, isLoading, isDemo } = useViableLeads(sort);
+  const { leads, totalIngresados, isLoading, isDemo } = useViableLeads(sort);
 
   const visibles = useMemo(
     () =>
@@ -53,6 +55,7 @@ export function useLeadQueue(sortInicial: LeadListSort = 'score_desc'): LeadQueu
   return {
     visibles,
     stats,
+    totalIngresados,
     chip,
     query,
     sort,

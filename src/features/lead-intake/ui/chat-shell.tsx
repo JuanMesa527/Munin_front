@@ -40,15 +40,42 @@ export interface ChatShellProps {
   className?: string | undefined;
 }
 
+/**
+ * Retrato de Munin, el agente que conversa en F1. Vive en `public/` y no como
+ * SVG inline porque es una ilustracion de marca, no un icono: pesa mas de lo
+ * que conviene incrustar en el bundle y lo cambia diseño, no desarrollo.
+ */
+const AVATAR_MUNIN = '/munin-avatar.png';
+
 function BotAvatar({ size = 'md' }: { size?: 'md' | 'lg' }): ReactElement {
+  // Si el archivo falta, el navegador pinta su icono de imagen rota dentro del
+  // circulo — justo en el primer mensaje que ve el usuario. El fallback deja el
+  // avatar anterior en su lugar, que se degrada sin que nadie lo note.
+  const [falloLaImagen, setFalloLaImagen] = useState(false);
+  const grande = size === 'lg';
+
   return (
     <span
       className={cn(
-        'flex items-center justify-center rounded-full bg-brand text-text shadow-bubble',
-        size === 'lg' ? 'size-11' : 'size-9',
+        'flex items-center justify-center overflow-hidden rounded-full bg-brand text-text shadow-bubble',
+        grande ? 'size-11' : 'size-9',
       )}
     >
-      <House aria-hidden="true" className={size === 'lg' ? 'size-5' : 'size-4'} strokeWidth={2.5} />
+      {falloLaImagen ? (
+        <House aria-hidden="true" className={grande ? 'size-5' : 'size-4'} strokeWidth={2.5} />
+      ) : (
+        <img
+          src={AVATAR_MUNIN}
+          /* `alt` vacio: `ChatBubble` ya envuelve el avatar en un contenedor
+             `aria-hidden`, y quien usa lector de pantalla no gana nada con que
+             le describan el retrato en cada mensaje del bot. */
+          alt=""
+          className="size-full scale-110 object-contain"
+          onError={() => {
+            setFalloLaImagen(true);
+          }}
+        />
+      )}
     </span>
   );
 }
