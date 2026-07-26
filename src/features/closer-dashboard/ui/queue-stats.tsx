@@ -15,7 +15,12 @@ type TileTone = 'ink' | 'plain' | 'signal';
 interface TileProps {
   label: string;
   value: string;
-  hint: string;
+  /**
+   * Opcional: una cifra sin nota al pie es mejor que una nota que afirme algo
+   * que no podemos sostener. Cuando falta no se pinta el nodo, en vez de dejar
+   * un `<div>` vacio que descuadra la tarjeta contra sus hermanas.
+   */
+  hint?: string | undefined;
   tone: TileTone;
 }
 
@@ -53,7 +58,7 @@ function StatTile({ label, value, hint, tone }: TileProps): ReactElement {
       <div className="text-[40px] leading-none font-bold tracking-[-0.03em] tabular-nums">
         {value}
       </div>
-      <div className={cn('mt-2 text-[13px]', t.hint)}>{hint}</div>
+      {hint !== undefined && <div className={cn('mt-2 text-[13px]', t.hint)}>{hint}</div>}
     </div>
   );
 }
@@ -71,12 +76,18 @@ export function QueueStatsPanel({ stats }: QueueStatsPanelProps): ReactElement {
         value={String(stats.total)}
         hint="listos para contactar"
       />
-      <StatTile
-        tone="plain"
-        label="Score promedio"
-        value={String(stats.avgScore)}
-        hint="calibrado con 4.142 compras reales"
-      />
+      {/*
+        SIN nota al pie a proposito. Decia "calibrado con 4.142 compras reales",
+        pero `data/weights.json` se declara `metrica: "manual-no-calibrado"` con
+        `n: 0`: el pipeline de `analysis/` nunca corrio y los pesos estan puestos
+        por criterio de negocio. La cifra de arriba SI es real (promedia los
+        scores de la cola); lo que era falso era la afirmacion sobre el metodo,
+        que es la mas cara de sostener frente a un jurado.
+
+        Vuelve a poner una nota cuando `weights.json` traiga una calibracion de
+        verdad — y entonces leela de ahi, no la escribas a mano.
+      */}
+      <StatTile tone="plain" label="Score promedio" value={String(stats.avgScore)} />
       <StatTile
         tone="plain"
         label="Afiliados"
