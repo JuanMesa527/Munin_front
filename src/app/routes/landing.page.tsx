@@ -118,13 +118,6 @@ function Cabecera(): ReactElement {
             </a>
           ))}
         </nav>
-
-        <Link
-          to={RUTA_CLOSER}
-          className="focus-ring ml-auto rounded-pill border border-border-strong px-4 py-2 font-mono text-2xs font-bold tracking-[0.12em] text-text uppercase transition-colors hover:bg-surface-3 lg:ml-0"
-        >
-          Consola closer
-        </Link>
       </div>
     </header>
   );

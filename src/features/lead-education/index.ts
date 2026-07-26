@@ -20,3 +20,5 @@ export { VistaTransition, type VistaTransitionProps } from './ui/vista-transitio
 export { useEducationJourney } from './model/use-education-journey';
 export { useLeadLogout } from './model/use-lead-logout';
 export { useLeadSession, type LeadSessionState } from './model/use-lead-session';
+/** Lo consume el shell de `app/` para la burbuja de usuario: cerrar sesion es del cascaron, no de una pantalla de F2.2. */
+export { logoutLead } from './api/lead-auth';

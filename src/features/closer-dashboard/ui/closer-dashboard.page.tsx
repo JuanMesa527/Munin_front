@@ -8,11 +8,15 @@
  * en pantalla, no un claim del pitch.
  */
 
-import type { ReactElement } from 'react';
+import { useState, type ReactElement } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { useNavigate } from 'react-router';
 import type { LeadListSort } from '@contracts';
 import { ConsoleHeader, Skeleton } from '@shared/ui';
 import { SEED_LEADS_CRUDOS } from '@shared/demo';
+import { queryKeys } from '@shared/api/query-keys';
 import { useCloserSession } from '@shared/auth/use-closer-session';
+import { logoutCloser } from '../api/closer-dashboard.api';
 import { useLeadQueue } from '../model/use-lead-queue';
 import { LeadRow } from './lead-row';
 import { QueueFilters } from './queue-filters';
@@ -51,15 +55,59 @@ function ColaCargando(): ReactElement {
   );
 }
 
+/**
+ * Quien decide si la sesion murio es el backend: la cookie es httpOnly y este
+ * codigo no puede borrarla. Si el POST falla, el comercial SIGUE dentro, y
+ * mandarlo al login seria mentirle (el guard lo devolveria aqui en un rebote
+ * que parece un bug). Se queda donde esta, con el estado dicho en voz alta.
+ */
+const ERROR_LOGOUT = 'No pudimos cerrar tu sesión. Sigues conectado; intenta de nuevo.';
+
 export function CloserDashboardPage({
   ordenInicial = 'score_desc',
 }: CloserDashboardPageProps): ReactElement {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { session } = useCloserSession();
   const cola = useLeadQueue(ordenInicial);
 
+  const [errorSesion, setErrorSesion] = useState<string | null>(null);
+
+  async function cerrarSesion(): Promise<void> {
+    setErrorSesion(null);
+    const respuesta = await logoutCloser();
+
+    if (!respuesta.ok) {
+      setErrorSesion(ERROR_LOGOUT);
+      return;
+    }
+
+    // La cola y la sesion cacheadas sobreviven a la navegacion: sin esto, el
+    // siguiente comercial que entre en esta pestana veria los leads del
+    // anterior durante el primer render (Ley 1581, minimizacion).
+    queryClient.removeQueries({ queryKey: queryKeys.closer.all });
+    void navigate('/closer/login', { replace: true });
+  }
+
   return (
     <div className="min-h-screen bg-console-paper font-display text-console-ink antialiased">
-      <ConsoleHeader closerName={session?.nombre ?? 'Closer'} />
+      <ConsoleHeader
+        closerName={session?.nombre ?? 'Closer'}
+        onCerrarSesion={() => {
+          void cerrarSesion();
+        }}
+      />
+
+      {errorSesion !== null && (
+        <div className="mx-auto max-w-[1280px] px-4 pt-5 sm:px-8">
+          <p
+            role="alert"
+            className="rounded-[14px] border border-console-red bg-console-red-soft px-4 py-3 text-[14px] font-bold text-console-red-deep"
+          >
+            {errorSesion}
+          </p>
+        </div>
+      )}
 
       <main className="mx-auto max-w-[1280px] px-4 pt-9 pb-20 sm:px-8">
         <p className="mb-2.5 font-mono text-[12px] font-bold tracking-[0.16em] text-console-signal-text uppercase">

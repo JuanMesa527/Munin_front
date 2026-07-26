@@ -5,7 +5,7 @@
  */
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ConversationTurn } from '@contracts';
 import type { ApiRequestError } from '@shared/api/http-client';
 import type { UseIntakeConversationResult } from '../model';
@@ -83,6 +83,21 @@ async function renderScreen(overrides: Partial<UseIntakeConversationResult> = {}
 }
 
 describe('LeadIntakeScreen', () => {
+  /*
+   * El `import()` de `renderScreen` es dinamico a proposito (tiene que correr
+   * DESPUES de que `vi.mock('../model')` este en pie), pero la primera vez
+   * transforma todo el grafo de modulos de la pantalla: ~3,6 s medidos, contra
+   * un `testTimeout` de 5 s. Con la suite corriendo sus 19 archivos en
+   * paralelo eso se pasaba de largo y el primer test moria por timeout —
+   * y de rebote el segundo, porque el `render()` del test abortado aterrizaba
+   * en el DOM ya limpio del siguiente ("found multiple elements with the role
+   * checkbox"). Calentar el modulo aca lo saca del presupuesto de los tests:
+   * el `import()` de `renderScreen` ya sale de cache.
+   */
+  beforeAll(async () => {
+    await import('./lead-intake-screen');
+  }, 60_000);
+
   beforeEach(() => {
     startMock.mockReset();
     acceptConsentMock.mockReset();

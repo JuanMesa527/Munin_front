@@ -8,13 +8,15 @@ import type { ReactElement } from 'react';
 import { cn } from '@shared/lib/cn';
 import type { ClientVista } from './client-vista';
 import { NAV_ITEMS } from './nav-items';
+import { UserMenu } from './user-menu';
 
 export interface SideNavProps {
   vista: ClientVista;
   onCambiarVista: (vista: ClientVista) => void;
+  nombreUsuario?: string | undefined;
 }
 
-export function SideNav({ vista, onCambiarVista }: SideNavProps): ReactElement {
+export function SideNav({ vista, onCambiarVista, nombreUsuario }: SideNavProps): ReactElement {
   const reducir = useReducedMotion() ?? false;
 
   return (
@@ -73,19 +75,23 @@ export function SideNav({ vista, onCambiarVista }: SideNavProps): ReactElement {
         })}
       </nav>
 
-      <motion.div
-        className="mt-auto rounded-card bg-brand p-3 shadow-sm"
-        initial={reducir ? false : { opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3, delay: 0.28 }}
-      >
-        <div className="flex items-center gap-2">
-          <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-ink/10 text-ink">
-            <Home aria-hidden="true" className="size-5" />
-          </span>
-          <p className="text-xs leading-snug font-bold text-ink">Tu hogar te espera</p>
-        </div>
-      </motion.div>
+      <div className="mt-auto flex flex-col gap-2">
+        <motion.div
+          className="rounded-card bg-brand p-3 shadow-sm"
+          initial={reducir ? false : { opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.28 }}
+        >
+          <div className="flex items-center gap-2">
+            <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-ink/10 text-ink">
+              <Home aria-hidden="true" className="size-5" />
+            </span>
+            <p className="text-xs leading-snug font-bold text-ink">Tu hogar te espera</p>
+          </div>
+        </motion.div>
+
+        <UserMenu nombre={nombreUsuario} variant="sidebar" />
+      </div>
     </aside>
   );
 }
