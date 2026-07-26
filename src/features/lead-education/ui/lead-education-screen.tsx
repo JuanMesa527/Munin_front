@@ -288,7 +288,7 @@ export function LeadEducationScreen({ leadId, onIrAProgreso }: LeadEducationScre
           />
         ) : (
           <Alert tone="success" title="¡Completaste esta etapa!" className="lg:col-span-1">
-            Elegí otra etapa en tu recorrido para seguir avanzando.
+            Elige otra etapa en tu recorrido para seguir avanzando.
           </Alert>
         )}
 

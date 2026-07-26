@@ -62,7 +62,7 @@ export function FaqWidget({ contenidos }: FaqWidgetProps): ReactElement {
 
         {sinResultado && (
           <p className="text-xs text-text-subtle">
-            Todavía no tengo contenido curado para eso. Probá con una de las sugerencias.
+            Todavía no tengo contenido curado para eso. Prueba con una de las sugerencias.
           </p>
         )}
 

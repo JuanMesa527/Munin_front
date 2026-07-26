@@ -213,7 +213,7 @@ export function ProgresoScreen({ leadId }: ProgresoScreenProps): ReactElement {
               <p className="mt-2 rounded-card bg-accent-50 px-3 py-2 text-xs font-medium text-accent-800">
                 {journey.progreso >= 0.5
                   ? '¡Vas mejorando! Tu constancia está dando resultados.'
-                  : 'Cada paso cuenta — seguí completando etapas para ver tu curva subir.'}
+                  : 'Cada paso cuenta — sigue completando etapas para ver tu curva subir.'}
               </p>
             </>
           ) : (
@@ -300,7 +300,7 @@ export function ProgresoScreen({ leadId }: ProgresoScreenProps): ReactElement {
               </ul>
             </div>
           ) : (
-            <p className="text-sm text-text-muted">Completá pasos para ver en qué invertiste tu tiempo.</p>
+            <p className="text-sm text-text-muted">Completa pasos para ver en qué invertiste tu tiempo.</p>
           )}
         </Card>
       </Reveal>

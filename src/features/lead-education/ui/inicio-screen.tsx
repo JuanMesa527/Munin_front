@@ -172,7 +172,7 @@ export function InicioScreen({ leadId, onIrACamino, onIrAProgreso }: InicioScree
             </Card>
           ) : (
             <Alert tone="success" title="¡Completaste esta etapa!">
-              Andá a "Mi camino" para elegir la siguiente.
+              Ve a "Mi camino" para elegir la siguiente.
             </Alert>
           )}
 
@@ -213,7 +213,7 @@ export function InicioScreen({ leadId, onIrACamino, onIrAProgreso }: InicioScree
                 ))
               ) : (
                 <p className="text-sm text-text-muted sm:col-span-2">
-                  Todavía no completaste ningún paso — ¡empezá por el de arriba!
+                  Todavía no completaste ningún paso — ¡empieza por el de arriba!
                 </p>
               )}
             </div>

@@ -139,7 +139,7 @@ function EntradaCaminoButton({ onClick }: EntradaCaminoButtonProps): ReactElemen
     <button
       type="button"
       onClick={onClick}
-      aria-label="Nutrición Colsubsidio: volvé a tu camino"
+      aria-label="Nutrición Colsubsidio: vuelve a tu camino"
       className="focus-ring fixed top-3 right-3 z-50 inline-flex h-12 max-w-[calc(100vw-1.5rem)] items-center gap-2 rounded-pill border-2 border-brand-500 bg-surface pr-3.5 pl-1.5 shadow-card transition-colors hover:border-brand-600 hover:bg-surface-3 sm:gap-3 sm:pr-5 sm:pl-2"
     >
       <span
@@ -164,7 +164,7 @@ function EntradaCaminoButton({ onClick }: EntradaCaminoButtonProps): ReactElemen
         </span>
         <span className="truncate text-sm font-bold text-text">
           <span className="sm:hidden">Mi camino</span>
-          <span className="hidden sm:inline">Volvé a tu camino</span>
+          <span className="hidden sm:inline">Vuelve a tu camino</span>
         </span>
       </span>
     </button>

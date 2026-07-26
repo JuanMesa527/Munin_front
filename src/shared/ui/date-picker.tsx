@@ -169,7 +169,7 @@ export function DatePicker({
         >
           <IconoCalendario aria-hidden="true" className="size-4 shrink-0 text-text-muted" />
           <span className={cn(seleccionada === null && 'text-text-subtle')}>
-            {seleccionada !== null ? formatoLegible.format(seleccionada) : 'Elegí una fecha'}
+            {seleccionada !== null ? formatoLegible.format(seleccionada) : 'Elige una fecha'}
           </span>
         </button>
 

@@ -34,7 +34,7 @@ export function LessonChecklist({ items }: LessonChecklistProps): ReactElement |
   return (
     <Card className="shadow-card">
       <div className="flex items-center justify-between gap-2">
-        <p className="text-sm font-bold text-text">Repasá la lista</p>
+        <p className="text-sm font-bold text-text">Repasa la lista</p>
         <p className="text-xs text-text-subtle">
           {marcados.size} de {items.length}
         </p>

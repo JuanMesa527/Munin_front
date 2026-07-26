@@ -68,10 +68,10 @@ export function LessonCalculator({
 
   return (
     <Card className="shadow-card">
-      <p className="text-sm font-bold text-text">Calculá tu cuota inicial</p>
+      <p className="text-sm font-bold text-text">Calcula tu cuota inicial</p>
       <p className="mt-1 text-xs text-text-muted">
-        El precio ya viene precargado con el de tu plan (podés cambiarlo para simular otro
-        escenario). El ingreso no lo sabemos con exactitud, así que metelo vos. Nada de esto se
+        El precio ya viene precargado con el de tu plan (puedes cambiarlo para simular otro
+        escenario). El ingreso no lo sabemos con exactitud, así que ingrésalo tú. Nada de esto se
         guarda ni se envía a ningún lado: es un ejercicio libre que no cambia "Tu plan estimado".
       </p>
 

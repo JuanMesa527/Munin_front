@@ -36,7 +36,7 @@ function ContenidoPlan({ plan }: { plan: NurturePlan }): ReactElement {
   return (
     <p>
       El precio de tu vivienda objetivo es <strong>{formatCOP(plan.precioObjetivo)}</strong>. No
-      necesitás ahorrarlo completo: tu meta real es la cuota inicial, estimada en{' '}
+      necesitas ahorrarlo completo: tu meta real es la cuota inicial, estimada en{' '}
       <strong>{formatCOP(plan.cuotaInicialObjetivo)}</strong>. Tu subsidio estimado es{' '}
       <strong>{formatCOP(plan.subsidioEstimado)}</strong>, y lo que te falta cubrir de esa cuota
       inicial (estimado) es <strong>{formatCOP(plan.gap)}</strong>.

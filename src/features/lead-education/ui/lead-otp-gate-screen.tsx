@@ -100,12 +100,12 @@ export function LeadOtpGateScreen({ leadId, onVerificado }: LeadOtpGateScreenPro
   return (
     <div className="flex min-h-screen items-center justify-center bg-surface-2 px-4">
       <div className="w-full max-w-[420px]">
-        <h1 className="mb-2 font-display text-2xl font-bold text-text">Confirmá que sos vos</h1>
+        <h1 className="mb-2 font-display text-2xl font-bold text-text">Confirma que eres tú</h1>
         <p className="mb-6 text-sm text-text-muted">
           {destino !== null ? (
             <>
               Te enviamos un código de 6 dígitos a <strong className="text-text">{destino}</strong>.
-              Escribilo acá para entrar a tu camino.
+              Escríbelo acá para entrar a tu camino.
             </>
           ) : (
             'Te enviamos un código de 6 dígitos al correo que nos diste en el chat.'
@@ -162,7 +162,7 @@ export function LeadOtpGateScreen({ leadId, onVerificado }: LeadOtpGateScreenPro
         </Card>
 
         <p className="mt-4 text-center text-xs text-text-muted">
-          ¿No te llegó? Revisá la carpeta de spam antes de pedir otro.
+          ¿No te llegó? Revisa la carpeta de spam antes de pedir otro.
         </p>
       </div>
     </div>
