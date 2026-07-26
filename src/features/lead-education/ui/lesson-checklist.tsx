@@ -2,8 +2,10 @@
  * Checklist marcable dentro de una lección (capa ui, F2.2).
  *
  * Estado SOLO de esta sesión de lectura (no se persiste ni manda al backend):
- * el objetivo es que la persona repase la lista marcando lo que ya tiene, no
- * llevar un registro — para eso ya existe `meta-doc`/`MetaCard`.
+ * es un repaso libre, no un registro. La meta real (p. ej. `meta-doc`,
+ * "Reuní tus documentos") se completa con el botón del propio lector de
+ * lecciones (`LessonReaderModal`) al terminar el último paso — un solo lugar,
+ * no dos.
  */
 
 import { useId, useState, type ReactElement } from 'react';

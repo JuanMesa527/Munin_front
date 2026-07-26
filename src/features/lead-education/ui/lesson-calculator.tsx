@@ -85,6 +85,14 @@ export function LessonCalculator({
           onChange={(evento) => {
             setPrecioTexto(evento.currentTarget.value);
           }}
+          // El campo arranca precargado con el precio real (no vacío): sin
+          // esto, cambiarlo exige borrar dígito por dígito antes de poder
+          // escribir el nuevo valor, y un click a mitad del número lo mezcla
+          // con lo que ya había — se ve "roto" aunque el cálculo de abajo esté
+          // recalculando bien.
+          onFocus={(evento) => {
+            evento.currentTarget.select();
+          }}
         />
         <Field
           label="Ingreso mensual del hogar"

@@ -48,6 +48,18 @@ function eventoCompletarPara(meta: Meta): ProgressEvent['tipo'] {
   return meta.tipo === 'afiliacion' ? 'afiliacion_iniciada' : 'contenido_visto';
 }
 
+/**
+ * `true` para las metas cuya "prueba de completado" es leer su lección hasta
+ * el final — 'educacion' Y 'documentacion' (p. ej. "Reuní tus documentos": el
+ * contenido curado ES el checklist de qué reunir, y confirmar el último paso
+ * del lector completa la meta ahí mismo). 'afiliacion' y 'ahorro' quedan afuera
+ * a propósito: son acciones externas reales (afiliarte, ahorrar) con su propia
+ * MetaCard dedicada, no algo que se resuelva leyendo una lección.
+ */
+function esMetaDeLeccion(meta: Meta): boolean {
+  return meta.tipo === 'educacion' || meta.tipo === 'documentacion';
+}
+
 export function LeadEducationScreen({ leadId, onIrAProgreso }: LeadEducationScreenProps): ReactElement {
   const { data, isLoading, isError, errorMessage, refetch } = useEducationJourney(leadId);
   const { registrar, isPending } = useProgressEvent(leadId);
@@ -125,7 +137,7 @@ export function LeadEducationScreen({ leadId, onIrAProgreso }: LeadEducationScre
   // para no duplicarla si la etapa actual es justo "capacidad".
   const metaAhorro = journey.metas.find((meta) => meta.tipo === 'ahorro');
   const metasAccionablesDeLaEtapa = metasDeLaEtapa.filter(
-    (meta) => meta.tipo !== 'educacion' && meta.id !== metaAhorro?.id,
+    (meta) => !esMetaDeLeccion(meta) && meta.id !== metaAhorro?.id,
   );
   const siguienteMeta = metasDeLaEtapa.find((meta) => !meta.completada);
   const contenidoDestacado =
@@ -136,7 +148,7 @@ export function LeadEducationScreen({ leadId, onIrAProgreso }: LeadEducationScre
 
   const metaEducativaAbierta =
     etapaAbierta !== undefined
-      ? journey.metas.find((meta) => meta.etapa === etapaAbierta && meta.tipo === 'educacion')
+      ? journey.metas.find((meta) => meta.etapa === etapaAbierta && esMetaDeLeccion(meta))
       : undefined;
   const etapaCopyAbierta: EtapaCopy =
     etapaAbierta !== undefined ? ETAPA_COPY[etapaAbierta] : ETAPA_COPY.descubrir;
@@ -319,7 +331,7 @@ export function LeadEducationScreen({ leadId, onIrAProgreso }: LeadEducationScre
             <EtapaCurriculo
               etapaCopy={copyEtapaEfectiva}
               contenidos={contenidosDeLaEtapa}
-              metaEducativa={metasDeLaEtapa.find((meta) => meta.tipo === 'educacion')}
+              metaEducativa={metasDeLaEtapa.find(esMetaDeLeccion)}
               onAbrirLector={(contenidoId) => {
                 if (etapaEfectiva !== undefined) abrir(etapaEfectiva, contenidoId);
               }}
