@@ -1,10 +1,10 @@
 /**
  * Pantalla anfitriona de F1 (capa ui) — tasks.md 3.11.
  *
- * Anfitrion de la maquina de estados de 8 pantallas de design.md, todas
- * derivadas de `ConversationTurn` por `model/`: este componente no calcula
- * `carril`/score/capacidad, solo elige QUE sub-vista mostrar segun `phase`.
- * El consentimiento es el primer paso real: todo lo demas queda detras de
+ * Anfitrion de la maquina de estados de 8 pantallas de, todas derivadas de
+ * `ConversationTurn` por `model/`: este componente no calcula
+ * `carril`/score/capacidad, solo elige QUE sub-vista mostrar segun `phase`. El
+ * consentimiento es el primer paso real: todo lo demas queda detras de
  * `ConsentNotice` hasta que se otorga.
  */
 
@@ -26,7 +26,7 @@ import { ChatShell } from './chat-shell';
 import { IntakeOutcome } from './intake-outcome';
 
 /**
- * PROPUESTA AL EQUIPO: `ConsentNotice` no exporta su lista de finalidades por
+ * `ConsentNotice` no exporta su lista de finalidades por
  * defecto (solo `POLITICA_VERSION_DEFECTO`/`RUTA_POLITICA`), asi que F1 la
  * repite aqui para poder mandarla en `submitConsent`. Exportar
  * `FINALIDADES_POR_DEFECTO` desde `shared/ui/consent-notice.tsx` evitaria
@@ -110,8 +110,8 @@ export function LeadIntakeScreen({
   } = useIntakeConversation();
   const [consentimientoMarcado, setConsentimientoMarcado] = useState(false);
 
-  // Autogestionado (EQUIPO.md regla de UX): el jurado no debe hacer nada para
-  // que arranque la conversacion.
+  // Autogestionado (regla de UX): el jurado no debe hacer nada para que
+  // arranque la conversacion.
   useEffect(() => {
     start();
     // eslint-disable-next-line react-hooks/exhaustive-deps -- solo al montar

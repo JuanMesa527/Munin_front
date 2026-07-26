@@ -3,9 +3,9 @@
  *
  * Se cubren las cosas que pueden romperse EN SILENCIO y que ademas duelen:
  *  - que un precio estimado se muestre sin rotular (riesgo legal, seccion 8);
- *  - que la razon del match desaparezca de la tarjeta (glass-box, regla 21);
+ *  - que la razon del match desaparezca de la tarjeta (glass-box)
  *  - que el gesto sea la unica via de decidir (accesibilidad);
- *  - que los estados de carga y error queden sin pintar (regla 11).
+ *  - que los estados de carga y error queden sin pintar.
  *
  * La API se dobla en el borde (`../api/enrichment.api`), no en `fetch`: es la
  * frontera real de la feature.

@@ -2,11 +2,11 @@
  * Logica de la cola de leads (F3) — funciones puras, sin React.
  *
  * Estan aparte del hook para poder testearlas: son deterministas y son lo que
- * el jurado ve primero, asi que un fallo silencioso aqui se nota (regla 10).
+ * el jurado ve primero, asi que un fallo silencioso aqui se nota.
  *
  * OJO: esto NO decide viabilidad ni recalcula el score. Eso ya lo hizo el
- * backend (glass-box, regla 20). Aqui solo se ORDENA y se FILTRA lo que ya
- * llego clasificado.
+ * backend (glass-box). Aqui solo se ORDENA y se FILTRA lo que ya llego
+ * clasificado.
  */
 
 import type { LeadListSort, ViableLeadListItem } from '@contracts';
@@ -54,14 +54,14 @@ export function matchesChip(lead: ViableLeadListItem, chip: QueueChip): boolean 
 }
 
 /**
- * Busca sobre nombre, zona, ocupacion y MEJOR match: son los ganchos con los que
- * un comercial recuerda a alguien despues de una llamada.
+ * Busca sobre nombre, zona, ocupacion y MEJOR match: son los ganchos con los
+ * que un comercial recuerda a alguien despues de una llamada.
  *
  * Solo el mejor match, no todos los proyectos afines: la fila lleva unicamente
- * `proyectoTop` (adenda A8 del contrato, para no resolver N proyectos por fila),
- * y buscar por algo que no esta en pantalla desconcierta mas de lo que ayuda.
- * Si hace falta buscar en todos, va en servidor y por POST (ver la nota de
- * privacidad en `closer-dashboard.api.ts`).
+ * `proyectoTop` (del contrato, para no resolver N proyectos por fila), y buscar
+ * por algo que no esta en pantalla desconcierta mas de lo que ayuda. Si hace
+ * falta buscar en todos, va en servidor y por POST (ver la nota de privacidad
+ * en `closer-dashboard.api.ts`).
  */
 export function matchesQuery(lead: ViableLeadListItem, query: string): boolean {
   const termino = query.trim().toLowerCase();

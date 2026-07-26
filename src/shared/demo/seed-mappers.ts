@@ -3,13 +3,13 @@
  *
  * Existe para que F3 y F4 consuman EXACTAMENTE los mismos tipos que van a
  * llegar del backend (`ViableLeadListItem`, `BriefingSheet`). Cuando los
- * endpoints existan, se borra el fallback y no se toca ni una linea de UI:
- * ese es el punto de tener un contrato.
+ * endpoints existan, se borra el fallback y no se toca ni una linea de UI: ese
+ * es el punto de tener un contrato.
  *
  * Lo que arma `buildTalkingPoints` es un espejo de `GetTalkingPointsUseCase`
  * del backend. Es DETERMINISTA a proposito: la seleccion y el orden de los
- * puntos son logica, no generacion de un modelo (regla 12, glass-box). Un LLM
- * podria despues reescribir el texto, nunca decidir cuales aparecen.
+ * puntos son logica, no generacion de un modelo (glass-box). Un LLM podria
+ * despues reescribir el texto, nunca decidir cuales aparecen.
  */
 
 import {
@@ -150,7 +150,7 @@ export function toEnrichedLead(seed: SeedLead): EnrichedLead {
     createdAt: seed.createdAt,
     updatedAt: seed.updatedAt,
 
-    // El numero real NO va aqui: solo el enmascarado y un token opaco (adenda A2).
+    // El numero real NO va aqui: solo el enmascarado y un token opaco.
     identidad: {
       nombre: seed.nombre,
       telefonoEnmascarado: seed.telefonoEnmascarado,
@@ -203,7 +203,7 @@ export function toListItem(seed: SeedLead): ViableLeadListItem {
   };
 }
 
-/** Espejo de `GetTalkingPointsUseCase`. Determinista (regla 12). */
+/** Espejo de `GetTalkingPointsUseCase`. Determinista. */
 export function buildTalkingPoints(seed: SeedLead): TalkingPoint[] {
   const interesPrincipal = seed.intereses[0]?.toLowerCase() ?? 'vivienda propia';
   const municipio = seed.ciudad.split(' · ')[0] ?? seed.ciudad;

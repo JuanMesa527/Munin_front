@@ -1,12 +1,12 @@
 /**
  * Llamadas HTTP de F1 (capa api). Unica capa que conoce `API_ROUTES.intake.*`;
- * `ui/` y `model/` nunca llaman `fetch` directo (EQUIPO.md regla 3).
+ * `ui/` y `model/` nunca llaman `fetch` directo.
  *
  * Los shapes de `input` calzan 1:1 con los casos de uso del backend
  * (`SubmitConsentUseCase.execute` / `ProcessConversationTurnUseCase.execute`,
- * ver `Munin_back/openspec/changes/lead-intake/design.md`): `/consent` nunca
- * recibe `leadId` — el backend lo acuña server-side (D6) — y `/turn` lo
- * recibe porque ya existe.
+ * ver `Munin_back/openspec/changes/lead-intake/`): `/consent` nunca recibe
+ * `leadId` — el backend lo acuña server-side (D6) — y `/turn` lo recibe porque
+ * ya existe.
  */
 
 import { apiPost, unwrap } from '@shared/api/http-client';

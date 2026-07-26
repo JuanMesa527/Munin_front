@@ -1,11 +1,11 @@
 /**
- * Dictado del closer por push-to-talk. Capa: model. Adenda A12.
+ * Dictado del closer por push-to-talk. Capa: model..
  *
  * REEMPLAZA a la Web Speech API, que NO es un motor local sino un mando a
  * distancia al servicio en la nube de cada fabricante: Chrome habla con el de
- * Google y funciona, Edge enruta al suyo y en macOS devuelve `network`
- * siempre, Firefox no la implementa. Aqui la unica API del navegador que se
- * usa es la captura de audio, que si es universal; transcribe nuestro backend.
+ * Google y funciona, Edge enruta al suyo y en macOS devuelve `network` siempre,
+ * Firefox no la implementa. Aqui la unica API del navegador que se usa es la
+ * captura de audio, que si es universal; transcribe nuestro backend.
  *
  * POR QUE WEB AUDIO Y NO `MediaRecorder`: `MediaRecorder` produce un
  * CONTENEDOR, y no el mismo en todas partes — WebM/Opus en Chrome, Edge y

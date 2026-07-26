@@ -2,8 +2,7 @@
  * API publica de F3 · closer-dashboard.
  *
  * Unica superficie por la que el resto de la app puede tocar esta feature.
- * ESLint bloquea que alguien importe `ui/`, `model/` o `api/` por dentro
- * (regla 4 de EQUIPO.md).
+ * ESLint bloquea que alguien importe `ui/`, `model/` o `api/` por dentro (de).
  */
 
 export {

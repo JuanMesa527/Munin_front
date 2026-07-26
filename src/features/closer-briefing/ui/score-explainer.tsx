@@ -2,10 +2,10 @@
  * "Por qué este score" (F4) — la prueba visual del principio glass-box.
  *
  * Es el bloque mas importante de la ficha y el argumento central del proyecto:
- * el score NO es una caja negra. Cada factor muestra su intensidad, su peso en el
- * modelo y su aporte con signo, y el rotulo dice contra que se calibro. Si algun
- * dia llega un `ScoreResult` sin `factores`, esta tarjeta tiene que verse rota:
- * eso es intencional, porque un score sin explicacion no se muestra (regla 21).
+ * el score NO es una caja negra. Cada factor muestra su intensidad, su peso en
+ * el modelo y su aporte con signo, y el rotulo dice contra que se calibro. Si
+ * algun dia llega un `ScoreResult` sin `factores`, esta tarjeta tiene que verse
+ * rota: eso es intencional, porque un score sin explicacion no se muestra.
  */
 
 import type { CSSProperties, ReactElement } from 'react';

@@ -13,8 +13,6 @@ import { cn } from '../lib/cn';
 /**
  * Clases del control, exportadas para que un `<select>` o un `<textarea>` de
  * una feature se vea identico sin duplicar el estilo.
- * PROPUESTA AL EQUIPO: no esta en el manifiesto; se agrega porque F3 necesita
- * selects en la barra de filtros.
  */
 export const FIELD_CONTROL_CLASS =
   'focus-ring w-full rounded-field border border-border bg-surface px-3 py-2 text-sm text-text ' +

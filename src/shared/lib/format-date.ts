@@ -67,8 +67,7 @@ export function formatRelative(iso: IsoDateTime, ahora: Date = new Date()): stri
 
 /**
  * `"10:42 a. m."`. La usan las burbujas del chat.
- * PROPUESTA AL EQUIPO: no esta en el manifiesto pero el mock de WhatsApp la
- * necesita en cada mensaje; se deja aqui para no duplicarla en cada feature.
+ * Vive aqui para no duplicarla en cada feature.
  */
 export function formatTimeOfDay(iso: IsoDateTime): string {
   const fecha = parse(iso);

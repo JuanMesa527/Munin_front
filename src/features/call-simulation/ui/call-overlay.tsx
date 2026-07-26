@@ -1,20 +1,20 @@
 /**
  * Sobrecapa de la llamada simulada en vivo (F5).
  *
- * Envolvente inmersiva a proposito: durante el entrenamiento el closer no ve
- * el resto de la consola. El badge de simulación queda visible todo el
- * tiempo, en cualquier estado (spec call-simulation-overlay, "Simulation Is
- * Clearly Labeled as Non-Real") — nada de esto marca un telefono real.
+ * Envolvente inmersiva a proposito: durante el entrenamiento el closer no ve el
+ * resto de la consola. El badge de simulación queda visible todo el tiempo, en
+ * cualquier estado ("Simulation Is Clearly Labeled as Non-Real") — nada de esto
+ * marca un telefono real.
  *
- * El micrófono NUNCA es la unica via: el input de texto esta siempre visible
- * y usable mientras la llamada esta activa (spec, "Microphone Failure Never
- * Blocks the Call"). Cuando el micro falla, el motivo se muestra — un boton
- * que no hace nada visible se lee como app rota.
+ * El micrófono NUNCA es la unica via: el input de texto esta siempre visible y
+ * usable mientras la llamada esta activa (spec, "Microphone Failure Never
+ * Blocks the Call"). Cuando el micro falla, el motivo se muestra — un boton que
+ * no hace nada visible se lee como app rota.
  *
- * DICTADO EN DOS TIEMPOS (adenda A12): "Hablar" graba, "Listo" cierra el tramo
- * y lo manda a transcribir a NUESTRO backend. El texto cae en el input, donde
- * el closer lo corrige antes de enviarlo. No se usa la Web Speech API porque
- * solo Chrome presta el servicio detras de ella.
+ * DICTADO EN DOS TIEMPOS: "Hablar" graba, "Listo" cierra el tramo y lo manda a
+ * transcribir a NUESTRO backend. El texto cae en el input, donde el closer lo
+ * corrige antes de enviarlo. No se usa la Web Speech API porque solo Chrome
+ * presta el servicio detras de ella.
  *
  * A la derecha vive el `CallContextPanel`: la ficha del prospecto. El closer
  * entrena la llamada con la misma informacion que tendria al marcar de verdad,

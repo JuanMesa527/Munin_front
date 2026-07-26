@@ -3,7 +3,7 @@
  *
  * `AppProviders` deja el `ErrorBoundary` por FUERA de todo: si algo revienta
  * dentro del `QueryClientProvider` o del router, el mensaje amable igual se
- * muestra (EQUIPO.md regla 17).
+ * muestra.
  */
 
 import type { ReactElement } from 'react';

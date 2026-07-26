@@ -2,13 +2,14 @@
  * Estado de la baraja de proyectos. Capa: model.
  *
  * Aqui NO se decide nada de negocio: el orden, la similitud, la razon y el
- * `intentScore` los calcula el backend (glass-box, regla 5). Este hook lleva la
- * cuenta de en que tarjeta va el usuario, despacha las decisiones y MIDE la
- * atencion (adenda A10): cuanto miro cada tarjeta, si abrio el detalle y un
- * resumen agregado de la sesion que se envia al cerrar o al abandonar.
+ * `intentScore` los calcula el backend (glass-box). Este hook lleva la cuenta
+ * de en que tarjeta va el usuario, despacha las decisiones y MIDE la atencion:
+ * cuanto miro cada tarjeta, si abrio el detalle y un resumen agregado de la
+ * sesion que se envia al cerrar o al abandonar.
  *
  * La telemetria es SENAL GRUESA y sin PII (Ley 1581): tiempos y conteos, mas un
- * identificadores tecnicos del lead y proyecto. Nunca el user-agent crudo ni la IP.
+ * identificadores tecnicos del lead y proyecto. Nunca el user-agent crudo ni la
+ * IP.
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';

@@ -1,9 +1,9 @@
 /**
- * Login por OTP del lead (F2.2, adenda A14) — capa api.
+ * Login por OTP del lead (F2.2) — capa api.
  *
- * `ui/` no llama `fetch` directo: pasa siempre por aca, igual que `education.ts`.
- * La sesion viaja en cookie httpOnly (`apiPost`/`apiGet` ya mandan
- * `credentials: 'include'`); este archivo nunca toca `localStorage`.
+ * `ui/` no llama `fetch` directo: pasa siempre por aca, igual que
+ * `education.ts`. La sesion viaja en cookie httpOnly (`apiPost`/`apiGet` ya
+ * mandan `credentials: 'include'`); este archivo nunca toca `localStorage`.
  */
 
 import { API_ROUTES } from '@contracts';

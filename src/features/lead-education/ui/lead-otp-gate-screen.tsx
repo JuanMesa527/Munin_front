@@ -1,20 +1,20 @@
 /**
- * Gate de entrada al módulo educativo (F2.2, adenda A14).
+ * Gate de entrada al módulo educativo (F2.2).
  *
  * Se interpone entre F1 y "Mi camino" cuando el lead sale del chat como
  * `no_viable`: apenas monta, pide un código al correo que el propio lead ya
- * declaró en la conversación — no se le vuelve a preguntar nada. Sin ese
- * código no hay cookie de sesión, y sin cookie el backend responde 401 en
- * `/journey` y `/progress` (`require-lead.ts`), así que la pantalla no es un
- * adorno: es la única puerta.
+ * declaró en la conversación — no se le vuelve a preguntar nada. Sin ese código
+ * no hay cookie de sesión, y sin cookie el backend responde 401 en `/journey` y
+ * `/progress` (`require-lead.ts`), así que la pantalla no es un adorno: es la
+ * única puerta.
  *
  * Se diferencia de `LeadLoginScreen` en el punto de partida: acá ya sabemos
  * QUIÉN es (tenemos su `leadId`) y solo falta probar que el correo es suyo;
  * allá no sabemos quién es y hay que identificarlo primero.
  *
  * SEGURIDAD: el correo se muestra ENMASCARADO tal como lo devuelve el backend
- * (`pe*****@correo.com`) — suficiente para saber qué bandeja abrir, sin
- * exponer el correo completo a quien solo tenga el `leadId`.
+ * (`pe*****@correo.com`) — suficiente para saber qué bandeja abrir, sin exponer
+ * el correo completo a quien solo tenga el `leadId`.
  */
 
 import { useCallback, useEffect, useRef, useState, type ReactElement } from 'react';

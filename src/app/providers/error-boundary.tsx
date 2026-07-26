@@ -1,10 +1,10 @@
 /**
  * ErrorBoundary de la app (capa app).
  *
- * Unico lugar del frontend donde un error de render se atrapa antes de
- * volverse una pagina en blanco. Los detalles van a la consola, nunca a la
- * pantalla (EQUIPO.md regla 17, OWASP A09): un stack trace expuesto puede
- * filtrar rutas internas o datos que no le corresponden ver al usuario.
+ * Unico lugar del frontend donde un error de render se atrapa antes de volverse
+ * una pagina en blanco. Los detalles van a la consola, nunca a la pantalla
+ * (OWASP A09): un stack trace expuesto puede filtrar rutas internas o datos que
+ * no le corresponden ver al usuario.
  *
  * Tiene que ser un componente de clase: React todavia no ofrece un hook para
  * atrapar errores de render de sus hijos.
@@ -29,8 +29,8 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   }
 
   override componentDidCatch(error: Error, info: ErrorInfo): void {
-    // Solo consola: nunca se manda a un tercero (EQUIPO.md regla 15/19, sin
-    // analytics externos) ni se pinta en pantalla.
+    // Solo consola: nunca se manda a un tercero (sin analytics externos) ni se
+    // pinta en pantalla.
     console.error('ErrorBoundary atrapó un error de render', error, info.componentStack);
   }
 

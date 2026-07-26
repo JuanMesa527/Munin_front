@@ -1,9 +1,9 @@
 /**
  * Maquina de estados de la llamada simulada (F5). Capa: model.
  *
- * `idle -> marcando -> sonando -> en_llamada -> colgada -> veredicto`.
- * Sin transiciones directas `idle -> en_llamada` ni `en_llamada -> marcando`
- * (spec call-simulation-overlay, "Call State Machine Has No Illegal Transitions").
+ * `idle -> marcando -> sonando -> en_llamada -> colgada -> veredicto`. Sin
+ * transiciones directas `idle -> en_llamada` ni `en_llamada -> marcando` ("Call
+ * State Machine Has No Illegal Transitions").
  *
  * Colgar durante `marcando`/`sonando` (antes de que resuelva la apertura) va
  * directo a `colgada`, sin turnos de por medio (spec, "Hanging up before

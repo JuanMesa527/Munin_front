@@ -1,13 +1,13 @@
 /**
- * Pantalla de F2.1: la baraja de proyectos afines al lead viable.
- * Es la unica superficie publica de la feature.
+ * Pantalla de F2.1: la baraja de proyectos afines al lead viable. Es la unica
+ * superficie publica de la feature.
  *
  * ESCRITORIO PRIMERO. En un portatil hay tres columnas -- contexto, mazo y
  * detalle -- y el detalle esta SIEMPRE a la vista: en una pantalla grande, un
  * modal que tapa todo para leer un dato es un paso de mas. Debajo de `lg` se
  * colapsa a una columna y el detalle vuelve a ser una hoja.
  *
- * ESTADOS: carga, error, mazo y cierre, los cuatro cubiertos (regla 11).
+ * ESTADOS: carga, error, mazo y cierre, los cuatro cubiertos.
  *
  * AUTOGESTIONADO: el titulo dice que hacer, los botones dicen que significan y
  * los atajos estan a la vista. Nadie deberia tener que explicar esta pantalla.

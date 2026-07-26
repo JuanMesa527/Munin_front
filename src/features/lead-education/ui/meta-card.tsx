@@ -29,7 +29,7 @@ export interface MetaCardProps {
   onCompletar: () => void;
   /** Solo se llama para metas `tipo: 'ahorro'`; el resto no configura fecha. */
   onConfigurarFechaObjetivo?: ((fechaObjetivoIso: string) => void) | undefined;
-  /** Ritmo derivado de `meta.aportes`/`meta.fechaObjetivo` (adenda A10). */
+  /** Ritmo derivado de `meta.aportes`/`meta.fechaObjetivo`. */
   ritmoAhorro?: RitmoAhorro | undefined;
   isPending: boolean;
 }
