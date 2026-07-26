@@ -78,11 +78,26 @@ describe('LeadOtpGateScreen', () => {
     expect(verifyMock).toHaveBeenCalledWith({ leadId: 'lead-1', codigo: '123456' });
   });
 
-  it('si el envío falla lo dice, en vez de dejar al lead esperando un correo que no llega', async () => {
+  it('si el envío falla muestra la causa del backend, no un genérico', async () => {
+    // Fuera de producción el backend distingue "no existe esa cuenta" de "falló
+    // el envío"; tragarse ese mensaje era lo que hacía parecer que el problema
+    // era el SMTP cuando en realidad no se encontraba el lead.
     requestMock.mockReturnValue(
       Promise.resolve({
         ok: false as const,
-        error: { code: 'NOT_FOUND', message: 'nope', fields: null },
+        error: { code: 'NOT_FOUND', message: 'No existe un lead con ese contacto', fields: null },
+      }),
+    );
+    render(<LeadOtpGateScreen leadId="lead-1" onVerificado={vi.fn()} />);
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(/No existe un lead con ese contacto/u);
+  });
+
+  it('cae al mensaje genérico si el error no trae texto', async () => {
+    requestMock.mockReturnValue(
+      Promise.resolve({
+        ok: false as const,
+        error: { code: 'INTERNAL_ERROR', message: '', fields: null },
       }),
     );
     render(<LeadOtpGateScreen leadId="lead-1" onVerificado={vi.fn()} />);

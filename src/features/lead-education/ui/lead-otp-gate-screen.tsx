@@ -48,7 +48,10 @@ export function LeadOtpGateScreen({ leadId, onVerificado }: LeadOtpGateScreenPro
     setEnviandoCodigo(false);
 
     if (!respuesta.ok) {
-      setError(ERROR_ENVIO);
+      // El mensaje del backend cuando lo hay: fuera de producción distingue
+      // "no existe esa cuenta" de "falló el envío", que es justo lo que el
+      // texto genérico ocultaba mientras se creía que el SMTP estaba caído.
+      setError(respuesta.error.message.length > 0 ? respuesta.error.message : ERROR_ENVIO);
       return;
     }
     setDestino(respuesta.data.destino ?? null);
