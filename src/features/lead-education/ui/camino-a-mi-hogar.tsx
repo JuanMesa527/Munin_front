@@ -6,15 +6,13 @@
  * lenguaje visual que el resto del design system. Sin emoji, sin imágenes
  * sueltas: la consistencia importa más que la decoración.
  *
- * IMPORTANTE: los 3 estados son puramente narrativos (dónde vas en el
- * recorrido), NUNCA control de acceso. Todas las etapas son siempre
- * clickeables y su contenido siempre visible — nada de esto bloquea nada.
- * Parte de la brecha financiera puede cubrirse con subsidios o caminos que el
- * usuario no controla en el tiempo; no tiene sentido esconderle las
- * lecciones de una etapa posterior (p. ej. financiar) solo porque una meta
- * financiera de una etapa anterior (p. ej. ahorro) sigue incompleta. La única
- * puerta real es la graduación fuera de F2.2, que exige el recorrido
- * COMPLETO (ver `checkReadmission` en el backend) — eso no es esta pantalla.
+ * Todos los nodos son clickeables (para poder REVISAR una etapa ya
+ * completada), pero una etapa `pendiente` (todavía no alcanzada) redirige a
+ * la etapa `activa` en vez de abrir su contenido: sin esto, el lead podía
+ * saltar directo a la última etapa y completarla sin pasar por las
+ * anteriores. La graduación fuera de F2.2 sigue exigiendo el recorrido
+ * COMPLETO (ver `checkReadmission` en el backend) — esto es una guía de
+ * orden, no reemplaza esa puerta.
  */
 
 import { Check, Footprints, Home } from 'lucide-react';
@@ -104,6 +102,27 @@ function requisitoDe(conEstado: readonly EtapaConEstado[], indice: number): stri
   return `Antes tenés que completar "${titulos.join('" y "')}" de la etapa "${tituloEtapaAnterior}".`;
 }
 
+/**
+ * Clickear una etapa `pendiente` no abre su contenido: redirige a la etapa
+ * `activa` (si no hay ninguna — recorrido completo — deja pasar el click tal
+ * cual, no hay nada que redirigir).
+ */
+function manejarClickEtapa(
+  item: EtapaConEstado,
+  conEstado: readonly EtapaConEstado[],
+  onSeleccionarEtapa: ((etapaId: string) => void) | undefined,
+): void {
+  if (onSeleccionarEtapa === undefined) return;
+
+  if (item.estado === 'pendiente') {
+    const activa = conEstado.find((otra) => otra.estado === 'activa');
+    onSeleccionarEtapa(activa?.etapa.id ?? item.etapa.id);
+    return;
+  }
+
+  onSeleccionarEtapa(item.etapa.id);
+}
+
 export function CaminoAMiHogar({
   etapas,
   metas,
@@ -190,7 +209,7 @@ function CaminoHorizontal({
                     seleccionada={seleccionada}
                     requisito={requisitoDe(conEstado, indice)}
                     onClick={() => {
-                      onSeleccionarEtapa?.(item.etapa.id);
+                      manejarClickEtapa(item, conEstado, onSeleccionarEtapa);
                     }}
                     compacto={total > 4 && item.estado !== 'activa'}
                   />
@@ -385,7 +404,7 @@ function CaminoVertical({
               <button
                 type="button"
                 onClick={() => {
-                  onSeleccionarEtapa?.(item.etapa.id);
+                  manejarClickEtapa(item, conEstado, onSeleccionarEtapa);
                 }}
                 aria-current={item.estado === 'activa' ? 'step' : undefined}
                 aria-pressed={seleccionada}
