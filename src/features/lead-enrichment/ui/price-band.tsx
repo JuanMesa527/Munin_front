@@ -1,15 +1,15 @@
 /**
  * Banda de precio de un proyecto. Capa: ui.
  *
- * REGLA LEGAL, NO ESTETICA (EQUIPO.md seccion 8): 15 de los 16 brochures no
- * publican precio, asi que la banda se deriva del tope VIS. Cuando
- * `precio.esEstimado` es `true` este componente ESTA OBLIGADO a rotularlo y a
- * dejar el metodo a un click de distancia. Colsubsidio es una entidad Vigilada
- * Supersubsidio: un numero que se lea como oferta comercial y no lo sea es un
- * problema legal, no un detalle de copy.
+ * REGLA LEGAL, NO ESTETICA: 15 de los 16 brochures no publican precio, asi que
+ * la banda se deriva del tope VIS. Cuando `precio.esEstimado` es `true` este
+ * componente ESTA OBLIGADO a rotularlo y a dejar el metodo a un click de
+ * distancia. Colsubsidio es una entidad Vigilada Supersubsidio: un numero que
+ * se lea como oferta comercial y no lo sea es un problema legal, no un detalle
+ * de copy.
  *
- * Por eso el rotulo no es una prop opcional: sale de `esEstimado` y no se
- * puede apagar desde afuera.
+ * Por eso el rotulo no es una prop opcional: sale de `esEstimado` y no se puede
+ * apagar desde afuera.
  */
 
 import type { ReactElement } from 'react';

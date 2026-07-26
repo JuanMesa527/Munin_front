@@ -1,11 +1,11 @@
 /**
- * Sesion del lead resuelta por OTP (F2.2, adenda A14) — capa model.
+ * Sesion del lead resuelta por OTP (F2.2) — capa model.
  *
  * Mismo criterio que `use-closer-session.ts`: el token vive en cookie httpOnly
- * que este codigo no puede leer, asi que la unica forma de saber si hay
- * sesion es preguntarle al servidor. Un 401 no es un error de la app, es
- * "no hay sesion" (o ya no perdio el `leadId` — sigue en el flujo normal de
- * F1/F2.2 en la misma pestana).
+ * que este codigo no puede leer, asi que la unica forma de saber si hay sesion
+ * es preguntarle al servidor. Un 401 no es un error de la app, es "no hay
+ * sesion" (o ya no perdio el `leadId` — sigue en el flujo normal de F1/F2.2 en
+ * la misma pestana).
  */
 
 import { useQuery } from '@tanstack/react-query';

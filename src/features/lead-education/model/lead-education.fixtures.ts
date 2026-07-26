@@ -14,8 +14,8 @@ export const JOURNEY_FIXTURE: EducationJourney = {
   plan: {
     precioObjetivo: 146_115_000,
     subsidioEstimado: 32_470_000,
-    // 20% de precioObjetivo (adenda A11): la meta real es la cuota inicial,
-    // no el precio completo. El subsidio ya la cubre, por eso gap = 0.
+    // 20% de precioObjetivo: la meta real es la cuota inicial, no el precio
+    // completo. El subsidio ya la cubre, por eso gap = 0.
     cuotaInicialObjetivo: 29_223_000,
     gap: 0,
     mesesParaCalificar: 0,

@@ -3,7 +3,7 @@
  *
  * Tres niveles: cambian el tono del lead simulado Y el umbral que exige
  * `verdict.ts` para dar la llamada por cerrada — nunca solo lo primero
- * (contrato con el backend, ver adenda A11 de `contracts.ts`).
+ * (contrato con el backend, ver de `contracts.ts`).
  */
 
 import type { ReactElement } from 'react';

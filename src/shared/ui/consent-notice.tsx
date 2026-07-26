@@ -27,7 +27,7 @@ import { Button } from './button';
  * `env.privacyPolicyVersion` y rechaza el consentimiento si no matchean
  * (confirmado en vivo: con el valor viejo, ningun usuario real pasaba de
  * esta pantalla — CONSENT_REQUIRED en el 100% de los intentos).
- * PROPUESTA AL EQUIPO: cuando el backend exponga la version vigente de la
+ * Cuando el backend exponga la version vigente de la
  * politica en la respuesta de `/start`, pasarla por prop y borrar este
  * default hardcodeado — dos strings duplicados en dos repos es fragil.
  */

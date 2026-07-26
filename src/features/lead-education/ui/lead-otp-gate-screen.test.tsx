@@ -1,9 +1,9 @@
 /**
- * Cubre el gate de entrada al módulo educativo (F2.2, adenda A14): el código
- * se pide SOLO con el `leadId` (el correo ya lo dio en el chat), el destino se
- * muestra enmascarado, y `onVerificado` no se llama hasta que el backend
- * acepta el código — que es justo lo que hace que la pantalla sea una puerta
- * y no un aviso.
+ * Cubre el gate de entrada al módulo educativo (F2.2): el código se pide SOLO
+ * con el `leadId` (el correo ya lo dio en el chat), el destino se muestra
+ * enmascarado, y `onVerificado` no se llama hasta que el backend acepta el
+ * código — que es justo lo que hace que la pantalla sea una puerta y no un
+ * aviso.
  */
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';

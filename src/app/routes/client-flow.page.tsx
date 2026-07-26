@@ -1,8 +1,8 @@
 /**
  * Orquestador del flujo del cliente (`/`).
  *
- * Aqui vive el SWITCH DE CARRIL y en ningun otro lado (regla 4 de aislamiento):
- * F1 (intake) perfila al lead; cuando cierra, el control pasa a la feature que
+ * Aqui vive el SWITCH DE CARRIL y en ningun otro lado (de aislamiento): F1
+ * (intake) perfila al lead; cuando cierra, el control pasa a la feature que
  * corresponda con el mismo `leadId`. Las features del cliente no se conocen
  * entre si — este componente de `app/` es el unico que las une.
  *
@@ -127,8 +127,8 @@ export function ClientFlowPage(): ReactElement {
   // backend manda al correo que el propio lead declaró en la conversación —
   // sin esa verificación no hay cookie, y sin cookie `/journey` responde 401.
   const [leadPorVerificarId, setLeadPorVerificarId] = useState<string | null>(null);
-  // Login por OTP (adenda A14): pantalla para recuperar el leadId cuando se
-  // cerró la pestaña y no quedó nada en memoria — no hay F1 que repetir.
+  // Login por OTP: pantalla para recuperar el leadId cuando se cerró la pestaña
+  // y no quedó nada en memoria — no hay F1 que repetir.
   const [mostrarLogin, setMostrarLogin] = useState(false);
   const { session, isLoading: cargandoSesion } = useLeadSession();
 

@@ -1,19 +1,19 @@
 /**
- * Login por OTP del lead (F2.2, adenda A14).
+ * Login por OTP del lead (F2.2).
  *
- * Pantalla para volver a "Mi camino" sin repetir la conversación de F1: el
- * lead escribe su teléfono o correo (el mismo que dio en el chat), pide un
- * código de 6 dígitos y lo confirma. Dos pasos, un solo campo por paso —
- * nada de contraseña que recordar.
+ * Pantalla para volver a "Mi camino" sin repetir la conversación de F1: el lead
+ * escribe su teléfono o correo (el mismo que dio en el chat), pide un código de
+ * 6 dígitos y lo confirma. Dos pasos, un solo campo por paso — nada de
+ * contraseña que recordar.
  *
  * SEGURIDAD (OWASP A07): al VERIFICAR, un código incorrecto y un contacto
- * inexistente son el MISMO mensaje genérico — distinguirlos permitiría
- * enumerar qué teléfonos/correos están registrados. Al PEDIR el código, la
- * pantalla muestra lo que responda el backend, que es quien decide cuánto
- * revela: en producción responde a ciegas y en dev dice la causa
- * (ver `lead-auth.controller.ts`). Igual que en `closer-login.page.tsx`, acá
- * no se guarda ningún token: el backend emite una cookie httpOnly que este
- * código no puede leer.
+ * inexistente son el MISMO mensaje genérico — distinguirlos permitiría enumerar
+ * qué teléfonos/correos están registrados. Al PEDIR el código, la pantalla
+ * muestra lo que responda el backend, que es quien decide cuánto revela: en
+ * producción responde a ciegas y en dev dice la causa (ver
+ * `lead-auth.controller.ts`). Igual que en `closer-login.page.tsx`, acá no se
+ * guarda ningún token: el backend emite una cookie httpOnly que este código no
+ * puede leer.
  */
 
 import { useState, type ReactElement } from 'react';

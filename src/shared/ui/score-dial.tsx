@@ -1,14 +1,14 @@
 /**
  * Anillo de score de la consola del closer (capa shared).
  *
- * Dos variantes: `light` en las filas del dashboard (F3) y `dark` en la cabecera
- * de la ficha de llamada (F4). Vive en `shared/ui` porque las dos features lo
- * necesitan y F4 no puede importar internals de F3 (regla 4).
+ * Dos variantes: `light` en las filas del dashboard (F3) y `dark` en la
+ * cabecera de la ficha de llamada (F4). Vive en `shared/ui` porque las dos
+ * features lo necesitan y F4 no puede importar internals de F3.
  *
  * NOTA sobre el `style` inline: el barrido del anillo es un `conic-gradient`
  * cuyo angulo depende del dato, y Tailwind no puede generar una clase para un
  * valor que solo existe en runtime. Los COLORES siguen saliendo de tokens
- * (`var(--color-console-*)`), asi que no hay ni un hex suelto.
+ * (`var(color-console-*)`), asi que no hay ni un hex suelto.
  *
  * No es el `ScoreGauge` del flujo del cliente: ese usa los tokens semanticos
  * (verde de marca, reactivos al tema) y este el registro fijo de la consola.

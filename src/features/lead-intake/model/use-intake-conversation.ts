@@ -59,8 +59,8 @@ const INITIAL_STATE: IntakeState = {
 };
 
 /**
- * Deriva la fase de pantalla a partir del turno — tabla de estados de
- * design.md, sin logica de negocio: solo lee lo que el backend ya decidio.
+ * Deriva la fase de pantalla a partir del turno — tabla de estados de, sin
+ * logica de negocio: solo lee lo que el backend ya decidio.
  */
 function derivePhase(input: {
   turn: ConversationTurn | null;

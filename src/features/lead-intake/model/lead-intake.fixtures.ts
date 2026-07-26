@@ -1,14 +1,14 @@
 /**
  * Datos de demo de F1 (capa model) — tasks.md 3.5.
  *
- * REGLA DURA (D9 del design.md, ya endurecida): estos turnos SOLO se usan
- * como respaldo cuando la llamada a la API falla con `NETWORK_ERROR` o
- * `TIMEOUT_ERROR` (backend inalcanzable). Nunca sustituyen una respuesta real
- * del backend, ni siquiera un `routing: null` real (`DATA_UNAVAILABLE`): ese
- * caso muestra el mensaje honesto del backend y se detiene ahi. No hay switch
- * manual "ver ejemplo" en ningun lugar de la UI — `model/use-intake-conversation`
- * es el UNICO lugar que decide cuando ofrecer este arreglo, y solo lo hace
- * tras un error de conectividad.
+ * REGLA DURA (D9 del, ya endurecida): estos turnos SOLO se usan como respaldo
+ * cuando la llamada a la API falla con `NETWORK_ERROR` o `TIMEOUT_ERROR`
+ * (backend inalcanzable). Nunca sustituyen una respuesta real del backend, ni
+ * siquiera un `routing: null` real (`DATA_UNAVAILABLE`): ese caso muestra el
+ * mensaje honesto del backend y se detiene ahi. No hay switch manual "ver
+ * ejemplo" en ningun lugar de la UI — `model/use-intake-conversation` es el
+ * UNICO lugar que decide cuando ofrecer este arreglo, y solo lo hace tras un
+ * error de conectividad.
  *
  * Guion offline (fallback de red): identidad de contacto (nombre/email/
  * telefono/edad/estadoCivil) + perfilamiento financiero (afiliacion, rango

@@ -13,7 +13,7 @@ import { apiGet, apiPost } from '@shared/api/http-client';
 
 /**
  * `leadId` va en el path y no como query: es un identificador opaco, no un dato
- * personal, asi que no arrastra PII a los logs de proxies (regla 18).
+ * personal, asi que no arrastra PII a los logs de proxies.
  */
 export function fetchBriefing(leadId: string): Promise<ApiResponse<BriefingSheet>> {
   return apiGet<BriefingSheet>(`${API_ROUTES.closer.briefing}/${encodeURIComponent(leadId)}`);

@@ -1,6 +1,6 @@
 /**
- * RED (tasks.md 4.1): un error de render dentro del boundary muestra un
- * mensaje amable, nunca una pagina en blanco ni el stack (EQUIPO.md regla 17).
+ * RED (tasks.md 4.1): un error de render dentro del boundary muestra un mensaje
+ * amable, nunca una pagina en blanco ni el stack.
  */
 import { render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';

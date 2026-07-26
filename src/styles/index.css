@@ -44,7 +44,7 @@
  *  Fuentes de la consola del closer — AUTOHOSPEDADAS
  * --------------------------------------------------------------------------
  *  El diseno aprobado pide Space Grotesk + JetBrains Mono. El diseno original
- *  las cargaba desde fonts.googleapis.com, pero EQUIPO.md §8 prohibe CDN de
+ *  las cargaba desde fonts.googleapis.com, pero prohibe CDN de
  *  terceros: cada request a Google expone la IP del titular a un tercero que
  *  no esta en las finalidades consentidas (Ley 1581). Se descargaron los
  *  woff2 a public/fonts (82 KB en total) y se sirven desde nuestro dominio:
@@ -245,7 +245,7 @@
  * --------------------------------------------------------------------------
  *  Registro visual DELIBERADAMENTE distinto al del flujo del cliente: papel
  *  crema, tinta casi negra, amarillo de senal y mono en versalitas. Es una
- *  herramienta de trabajo interna, no una experiencia de consumo, y EQUIPO.md
+ *  herramienta de trabajo interna, no una experiencia de consumo, y
  *  §3 ya lo pedia explicitamente ("cambio de registro total").
  *
  *  POR QUE ESTOS TOKENS SON ABSOLUTOS Y NO REACTIVOS AL TEMA: el diseno se

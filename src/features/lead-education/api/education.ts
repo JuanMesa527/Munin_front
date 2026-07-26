@@ -20,8 +20,8 @@ export interface RecordProgressInput {
   leadId: string;
   event: Omit<ProgressEvent, 'ocurridoEn'>;
   /**
-   * Fecha límite de la meta de ahorro (adenda A10). Ortogonal al evento: el
-   * backend la configura ADEMÁS de aplicar `event`, sin tocar `alcanzado`.
+   * Fecha límite de la meta de ahorro. Ortogonal al evento: el backend la
+   * configura ADEMÁS de aplicar `event`, sin tocar `alcanzado`.
    */
   fechaObjetivo?: string;
 }

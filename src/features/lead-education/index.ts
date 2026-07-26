@@ -1,7 +1,7 @@
 /**
- * API publica de F2.2 · lead-education (capa: superficie de la feature).
- * Unica via de acceso desde fuera: ESLint bloquea importar `ui/`, `model/` o
- * `api/` directamente (EQUIPO.md §4).
+ * API publica de F2.2 · lead-education (capa: superficie de la feature). Unica
+ * via de acceso desde fuera: ESLint bloquea importar `ui/`, `model/` o `api/`
+ * directamente.
  */
 
 export { GraduationModal, type GraduationModalProps } from './ui/graduation-modal';

@@ -40,12 +40,12 @@ export function endCall(callId: string): Promise<CallScorecard> {
 }
 
 /**
- * Voz del closer -> texto (adenda A12). Va contra NUESTRO backend y no contra
- * la Web Speech API para que el dictado funcione en cualquier navegador.
+ * Voz del closer -> texto. Va contra NUESTRO backend y no contra la Web Speech
+ * API para que el dictado funcione en cualquier navegador.
  *
- * El `callId` NO avanza la llamada: sirve para que el backend guarde este
- * tramo de voz y pueda archivar la grabacion al colgar (adenda A14). El closer
- * sigue revisando y corrigiendo el texto antes de enviar el turno.
+ * El `callId` NO avanza la llamada: sirve para que el backend guarde este tramo
+ * de voz y pueda archivar la grabacion al colgar. El closer sigue revisando y
+ * corrigiendo el texto antes de enviar el turno.
  */
 export function transcribeUtterance(
   audio: UtteranceAudio,

@@ -2,8 +2,8 @@
  * Barra superior de la consola del closer (capa shared).
  *
  * La comparten F3 (dashboard) y F4 (ficha de llamada). Vive en `shared/ui` y no
- * en una feature porque la regla 4 prohibe que F4 importe internals de F3, y
- * duplicarla garantizaria que se desincronicen.
+ * en una feature porque la prohibe que F4 importe internals de F3, y duplicarla
+ * garantizaria que se desincronicen.
  */
 
 import type { ReactElement } from 'react';

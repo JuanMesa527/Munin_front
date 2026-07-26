@@ -1,10 +1,10 @@
 /**
  * "Proyectos afines" (F4).
  *
- * Cada match viene con su razon en lenguaje natural para que el comercial la lea
- * TAL CUAL en la llamada. Esa razon sale del matching contra el buyer persona
- * real del proyecto: el LLM puede redactarla, pero el orden y la seleccion los
- * decide el motor (regla 20).
+ * Cada match viene con su razon en lenguaje natural para que el comercial la
+ * lea TAL CUAL en la llamada. Esa razon sale del matching contra el buyer
+ * persona real del proyecto: el LLM puede redactarla, pero el orden y la
+ * seleccion los decide el motor.
  */
 
 import type { ReactElement } from 'react';

@@ -1,15 +1,15 @@
 /**
  * Tres estados terminales de F1 (capa ui) — tasks.md 3.7.
  *
- * Presentacional puro: recibe el `ConversationTurn` terminal y pinta lo que
- * ya vino decidido por el backend. No calcula score, capacidad ni carril
- * (regla dura de `ui/`); `routing === null` (`DATA_UNAVAILABLE`, D3) es el
- * unico caso que NO tiene `FactorBars` ni switch de fixtures — ni siquiera
- * cuando el turno viene de un backend real (D9).
+ * Presentacional puro: recibe el `ConversationTurn` terminal y pinta lo que ya
+ * vino decidido por el backend. No calcula score, capacidad ni carril (regla
+ * dura de `ui/`); `routing === null` (`DATA_UNAVAILABLE`, D3) es el unico caso
+ * que NO tiene `FactorBars` ni switch de fixtures — ni siquiera cuando el turno
+ * viene de un backend real (D9).
  *
  * La tarjeta viable sigue el boceto `Docs/Design.pdf`: bloque oscuro con la
  * cifra estimada en amarillo de marca. SIEMPRE dice "estimado", nunca
- * "aprobado" (EQUIPO.md §8): no prometemos un cupo que no otorgamos.
+ * "aprobado": no prometemos un cupo que no otorgamos.
  */
 
 import { FactorBars, ScoreGauge } from '@shared/ui';
@@ -83,9 +83,9 @@ function HeroEstimado({ turn }: { turn: ConversationTurn }): ReactElement | null
 export function IntakeOutcome({ turn, className }: IntakeOutcomeProps): ReactElement {
   const { profile, routing } = turn;
 
-  // completado-sin-clasificar (D3/D9): sin routing no hay carril que explicar.
-  // Nunca se ofrece un fixture aqui, ni siquiera etiquetado: ese fallback
-  // vive solo en `model/` y solo ante NETWORK_ERROR/TIMEOUT_ERROR.
+  // Completado-sin-clasificar: sin routing no hay carril que explicar. Nunca se
+  // ofrece un fixture aqui, ni siquiera etiquetado: ese fallback vive solo en
+  // `model/` y solo ante NETWORK_ERROR/TIMEOUT_ERROR.
   if (routing === null) {
     return (
       <section

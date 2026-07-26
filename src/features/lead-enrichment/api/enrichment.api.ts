@@ -16,7 +16,7 @@ import type {
 import { API_ROUTES } from '@contracts';
 import { apiGet, apiPost, sendBeacon, unwrap } from '@shared/api/http-client';
 
-/** Telemetria de la tarjeta que viaja junto al swipe (adenda A10). */
+/** Telemetria de la tarjeta que viaja junto al swipe. */
 export interface SwipeTelemetry {
   dwellMs?: number | undefined;
   abrioDetalle?: boolean | undefined;

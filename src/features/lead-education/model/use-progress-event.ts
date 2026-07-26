@@ -16,7 +16,7 @@ export interface RegistrarProgresoInput {
   metaId: string;
   tipo: ProgressEvent['tipo'];
   valor: number;
-  /** Fecha límite de la meta de ahorro (adenda A10). Ortogonal a `tipo`/`valor`. */
+  /** Fecha límite de la meta de ahorro. Ortogonal a `tipo`/`valor`. */
   fechaObjetivo?: string;
 }
 

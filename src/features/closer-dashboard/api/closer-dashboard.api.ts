@@ -27,10 +27,10 @@ export interface FetchViableLeadsInput {
  *
  * El texto que escribe el closer puede ser el nombre de un lead, y un nombre en
  * la query string queda en logs de proxies, en el historial del navegador y en
- * el header `Referer` (regla 18, minimizacion de datos). El filtrado por texto
- * se aplica en el cliente sobre la pagina que ya tiene. Cuando la cola crezca
- * mas que una pagina y haya que buscar en servidor, tiene que ser un POST con
- * el termino en el body, nunca un GET con el nombre en la URL.
+ * el header `Referer` (minimizacion de datos). El filtrado por texto se aplica
+ * en el cliente sobre la pagina que ya tiene. Cuando la cola crezca mas que una
+ * pagina y haya que buscar en servidor, tiene que ser un POST con el termino en
+ * el body, nunca un GET con el nombre en la URL.
  */
 export function fetchViableLeads(
   input: FetchViableLeadsInput,

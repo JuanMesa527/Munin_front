@@ -28,7 +28,7 @@ function metasDe(etapaId: EtapaId, metas: readonly Meta[]): Meta[] {
 }
 
 // Mirror exacto de `metasQueCuentan` en Munin_back (domain/journey.ts): las
-// metas opcionales (adenda A12) no cuentan para el progreso del lead.
+// metas opcionales no cuentan para el progreso del lead.
 function metasQueCuentan(metas: readonly Meta[]): Meta[] {
   return metas.filter((meta) => meta.opcional !== true);
 }

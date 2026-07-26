@@ -24,8 +24,8 @@ export interface CloserSessionState {
 }
 
 /**
- * Sesion ficticia para poder recorrer la consola cuando el backend todavia no
- * existe (dia de hackathon: el front va por delante del motor).
+ * Sesion ficticia para poder recorrer la consola cuando el backend todavia
+ * no existe.
  *
  * POR QUE ESTO NO ES UN HUECO DE SEGURIDAD:
  *  1. Solo existe si `VITE_DEMO_MODE=true`, que es una bandera de BUILD. El

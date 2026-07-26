@@ -1,16 +1,16 @@
 /**
  * Datos semilla de la demo — leads viables de la consola del closer.
  *
- * POR QUE VIVE EN `shared/demo/` Y NO EN UNA FEATURE:
- * F3 (dashboard) y F4 (ficha de llamada) necesitan EXACTAMENTE los mismos
- * leads, y la regla 4 de EQUIPO.md prohibe que una feature importe internals
- * de otra. Duplicar la semilla en las dos garantizaria que se desincronicen.
+ * POR QUE VIVE EN `shared/demo/` Y NO EN UNA FEATURE: F3 (dashboard) y F4
+ * (ficha de llamada) necesitan EXACTAMENTE los mismos leads, y la de prohibe
+ * que una feature importe internals de otra. Duplicar la semilla en las dos
+ * garantizaria que se desincronicen.
  *
  * TODO ES FICTICIO. Nombres, telefonos, proyectos y montos son inventados: no
  * hay ni una cedula, ni un dato de una persona real (Ley 1581 de 2012).
  *
- * SOBRE `telefonoReal`: en produccion el numero real JAMAS llega al navegador
- * — vive detras de `ContactVaultPort` y revelarlo es un round-trip al servidor
+ * SOBRE `telefonoReal`: en produccion el numero real JAMAS llega al navegador —
+ * vive detras de `ContactVaultPort` y revelarlo es un round-trip al servidor
  * que queda auditado. Aqui esta en el bundle solo porque es un numero inventado
  * y la demo tiene que funcionar sin backend. Cuando F3/F4 se conecten de
  * verdad, este campo desaparece y lo reemplaza `POST /reveal-contact`.

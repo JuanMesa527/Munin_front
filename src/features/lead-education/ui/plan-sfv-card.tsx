@@ -2,7 +2,7 @@
  * Tarjeta del plan de nutricion basado en el SFV (capa ui, F2.2).
  *
  * LEGAL: todo el vocabulario es "estimado". Nunca "aprobado" — no prometemos
- * subsidio ni credito (EQUIPO.md §8/§9). El SFV lo otorga la caja, no nosotros.
+ * subsidio ni credito (/§9). El SFV lo otorga la caja, no nosotros.
  */
 
 import type { ReactElement } from 'react';
