@@ -15,11 +15,15 @@
  *    cliente no limita a nadie.
  */
 
+import { ArrowLeft } from 'lucide-react';
 import { useState, type ReactElement } from 'react';
 import { Navigate, useNavigate } from 'react-router';
 import { useCloserSession } from '@shared/auth/use-closer-session';
 import { cn } from '@shared/lib/cn';
 import { loginCloser } from '../api/closer-dashboard.api';
+
+/** Landing publica (`app/routes/index.tsx`). */
+const RUTA_LANDING = '/';
 
 /**
  * Credenciales de la DEMO, no de un entorno real.
@@ -82,6 +86,17 @@ export function CloserLoginPage(): ReactElement {
   return (
     <div className="flex min-h-screen items-center justify-center bg-console-paper px-4 font-display text-console-ink antialiased">
       <div className="w-full max-w-[420px]">
+        <button
+          type="button"
+          onClick={() => {
+            void navigate(RUTA_LANDING);
+          }}
+          className="focus-ring mb-6 inline-flex items-center gap-1.5 rounded-pill border border-console-edge bg-console-surface px-3 py-1.5 text-[12px] font-semibold text-console-body transition-colors hover:border-console-ink hover:text-console-ink"
+        >
+          <ArrowLeft aria-hidden="true" className="size-3.5" />
+          Volver a la página principal
+        </button>
+
         <div className="mb-8 flex items-center gap-[14px]">
           <img
             src="https://www.colsubsidio.com/campusvirtual/login-custom/img/colsubsidio1.png"
