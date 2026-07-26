@@ -36,7 +36,6 @@ import { TopStats } from './top-stats';
 
 export interface ProgresoScreenProps {
   leadId: string;
-  onLogout: () => void;
 }
 
 const COLORES_DONUT = ['#1E5AA8', '#2E9E4F', '#F2CE1B', '#D64545', '#8A867A'];
@@ -47,7 +46,7 @@ function nivelDe(progreso: number): string {
   return 'Principiante';
 }
 
-export function ProgresoScreen({ leadId, onLogout }: ProgresoScreenProps): ReactElement {
+export function ProgresoScreen({ leadId }: ProgresoScreenProps): ReactElement {
   const { data, isLoading, isError, errorMessage, refetch } = useEducationJourney(leadId);
   const journey = data?.journey;
   const lead = data?.lead;
@@ -111,11 +110,7 @@ export function ProgresoScreen({ leadId, onLogout }: ProgresoScreenProps): React
           </h1>
           <p className="mt-2 text-base text-text-muted">Así va tu aprendizaje y evolución día a día.</p>
         </div>
-        <TopStats
-          puntosTotales={journey.puntosTotales}
-          etiqueta={etiquetaLead(lead)}
-          onLogout={onLogout}
-        />
+        <TopStats puntosTotales={journey.puntosTotales} etiqueta={etiquetaLead(lead)} />
       </Reveal>
 
       <Reveal className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

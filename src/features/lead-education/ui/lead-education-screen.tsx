@@ -33,7 +33,6 @@ import { TopStats } from './top-stats';
 export interface LeadEducationScreenProps {
   leadId: string;
   onIrAProgreso?: () => void;
-  onLogout: () => void;
 }
 
 function primeraEtapaIncompleta(journey: EducationJourney): EtapaId | undefined {
@@ -61,11 +60,7 @@ function esMetaDeLeccion(meta: Meta): boolean {
   return meta.tipo === 'educacion' || meta.tipo === 'documentacion';
 }
 
-export function LeadEducationScreen({
-  leadId,
-  onIrAProgreso,
-  onLogout,
-}: LeadEducationScreenProps): ReactElement {
+export function LeadEducationScreen({ leadId, onIrAProgreso }: LeadEducationScreenProps): ReactElement {
   const { data, isLoading, isError, errorMessage, refetch } = useEducationJourney(leadId);
   const { registrar, isPending } = useProgressEvent(leadId);
   const { etapaAbierta, pasoInicial, abrir, cerrar } = useLessonReader(data?.contenidos ?? []);
@@ -179,11 +174,7 @@ export function LeadEducationScreen({
       className="mx-auto flex min-w-0 max-w-[1280px] flex-col gap-8 p-4 pb-16 sm:p-6 lg:p-8 xl:px-10"
     >
       <Reveal>
-        <TopStats
-          puntosTotales={journey.puntosTotales}
-          etiqueta={etiquetaLead(lead)}
-          onLogout={onLogout}
-        />
+        <TopStats puntosTotales={journey.puntosTotales} etiqueta={etiquetaLead(lead)} />
       </Reveal>
 
       {journey.reclasificadoAViable && (

@@ -20,12 +20,11 @@ import { TopStats } from './top-stats';
 
 export interface LogrosScreenProps {
   leadId: string;
-  onLogout: () => void;
 }
 
 type Orden = 'recientes' | 'xp' | 'nombre';
 
-export function LogrosScreen({ leadId, onLogout }: LogrosScreenProps): ReactElement {
+export function LogrosScreen({ leadId }: LogrosScreenProps): ReactElement {
   const [filtro, setFiltro] = useState<LogroCategoria | 'todos'>('todos');
   const [orden, setOrden] = useState<Orden>('recientes');
 
@@ -101,7 +100,7 @@ export function LogrosScreen({ leadId, onLogout }: LogrosScreenProps): ReactElem
             Cada logro te acerca más a tu hogar ideal.
           </p>
         </div>
-        <TopStats puntosTotales={puntosTotales} etiqueta={etiquetaLead(lead)} onLogout={onLogout} />
+        <TopStats puntosTotales={puntosTotales} etiqueta={etiquetaLead(lead)} />
       </Reveal>
 
       <Reveal className="grid gap-4 lg:grid-cols-[1.4fr_1fr]">
