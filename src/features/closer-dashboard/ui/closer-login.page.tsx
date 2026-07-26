@@ -21,6 +21,23 @@ import { useCloserSession } from '@shared/auth/use-closer-session';
 import { cn } from '@shared/lib/cn';
 import { loginCloser } from '../api/closer-dashboard.api';
 
+/**
+ * Credenciales de la DEMO, no de un entorno real.
+ *
+ * Quedan incrustadas en el bundle publico: cualquiera que abra "ver codigo
+ * fuente" las lee, asi que solo pueden vivir aqui mientras el despliegue sea
+ * una demo sin datos reales de titulares.
+ *
+ * Ademas solo abren la consola si coinciden exactamente con CLOSER_USERNAME /
+ * CLOSER_PASSWORD del backend desplegado; si alli se rotan, este boton deja de
+ * funcionar sin aviso y el error que vera el comercial sera el generico.
+ *
+ * BORRAR estas constantes y el boton "Usar credenciales de demo" cuando el
+ * producto salga de demo.
+ */
+const DEMO_USUARIO = 'closer';
+const DEMO_CONTRASENA = 'closer12345678';
+
 const ERROR_GENERICO = 'Usuario o contraseña incorrectos.';
 
 const CONTROL =
@@ -147,6 +164,23 @@ export function CloserLoginPage(): ReactElement {
             )}
           >
             {enviando ? 'Entrando…' : 'Entrar'}
+          </button>
+
+          {/* Rellena y se detiene: el comercial ve que valores va a enviar antes de "Entrar". */}
+          <button
+            type="button"
+            onClick={() => {
+              setUsuario(DEMO_USUARIO);
+              setContrasena(DEMO_CONTRASENA);
+              setError(null);
+            }}
+            className={cn(
+              'focus-ring mt-3 w-full cursor-pointer rounded-full border border-console-edge',
+              'bg-console-surface px-6 py-[11px] font-mono text-[11px] font-bold tracking-[0.12em]',
+              'text-console-body uppercase transition-colors hover:border-console-ink hover:text-console-ink',
+            )}
+          >
+            Usar credenciales de demo
           </button>
         </form>
       </div>

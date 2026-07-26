@@ -17,6 +17,7 @@
  */
 
 import { useState, type ReactElement } from 'react';
+import { Sprout } from 'lucide-react';
 import { LeadIntakeScreen } from '@features/lead-intake';
 import { LeadEnrichmentScreen } from '@features/lead-enrichment';
 import {
@@ -117,6 +118,59 @@ function CaminoNutricion({ leadId, onGraduar }: CaminoNutricionProps): ReactElem
   );
 }
 
+interface EntradaCaminoButtonProps {
+  onClick: () => void;
+}
+
+/**
+ * Puerta de vuelta a F2.2 montada encima del chat de F1.
+ *
+ * Va firmada con la marca del programa (logo + brote) y no solo con "tu
+ * camino": quien vuelve dias despues no recuerda el nombre de la pantalla que
+ * dejo a medias, recuerda "lo de Nutrición Colsubsidio". Sin esa firma el
+ * unico camino de vuelta es repetir el chat entero.
+ *
+ * Compite por el borde superior con la cabecera del chat, asi que en movil se
+ * queda con el minimo reconocible (brote + etiqueta corta) y el nombre
+ * completo solo vive en el `aria-label`.
+ */
+function EntradaCaminoButton({ onClick }: EntradaCaminoButtonProps): ReactElement {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label="Nutrición Colsubsidio: volvé a tu camino"
+      className="focus-ring fixed top-3 right-3 z-50 inline-flex h-12 max-w-[calc(100vw-1.5rem)] items-center gap-2 rounded-pill border-2 border-brand-500 bg-surface pr-3.5 pl-1.5 shadow-card transition-colors hover:border-brand-600 hover:bg-surface-3 sm:gap-3 sm:pr-5 sm:pl-2"
+    >
+      <span
+        aria-hidden="true"
+        className="grid size-9 shrink-0 place-items-center rounded-full bg-brand-500 text-[#0d0d0d]"
+      >
+        <Sprout className="size-5" />
+      </span>
+      {/*
+        Logo oficial de Colsubsidio. No lo cambies sin confirmar con producto.
+      */}
+      <img
+        src="/colsubsidio-logo.png"
+        alt="Colsubsidio"
+        className="hidden h-5 w-auto shrink-0 sm:block"
+        width={104}
+        height={20}
+      />
+      <span className="flex min-w-0 flex-col items-start leading-tight">
+        <span className="hidden font-mono text-[0.625rem] font-semibold tracking-wide text-text-subtle uppercase sm:inline">
+          Nutrición Colsubsidio
+        </span>
+        <span className="truncate text-sm font-bold text-text">
+          <span className="sm:hidden">Mi camino</span>
+          <span className="hidden sm:inline">Volvé a tu camino</span>
+        </span>
+      </span>
+    </button>
+  );
+}
+
 export function ClientFlowPage(): ReactElement {
   // `null` mientras F1 perfila; el leadId del lead correspondiente cuando F1
   // cierra el carril (viable o no_viable).
@@ -172,15 +226,11 @@ export function ClientFlowPage(): ReactElement {
   return (
     <div className="relative">
       <LeadIntakeScreen onViable={setLeadViableId} onNoViable={setLeadPorVerificarId} />
-      <button
-        type="button"
+      <EntradaCaminoButton
         onClick={() => {
           setMostrarLogin(true);
         }}
-        className="focus-ring fixed top-3 right-3 z-50 rounded-pill bg-surface/90 px-3 py-1.5 text-xs font-bold text-text-muted shadow-sm hover:text-text"
-      >
-        ¿Ya empezaste? Volvé a tu camino
-      </button>
+      />
     </div>
   );
 }

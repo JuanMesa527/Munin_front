@@ -10,9 +10,13 @@
  * lectura: primero quien es, despues por que, al final que decir.
  */
 
-import type { ReactElement } from 'react';
-import { useParams } from 'react-router';
+import { useState, type ReactElement } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { useNavigate, useParams } from 'react-router';
+import { API_ROUTES, type ApiResponse } from '@contracts';
 import { ConsoleHeader, Skeleton } from '@shared/ui';
+import { apiPost } from '@shared/api/http-client';
+import { queryKeys } from '@shared/api/query-keys';
 import { useCloserSession } from '@shared/auth/use-closer-session';
 import { useBriefing } from '../model/use-briefing';
 import { useTalkingPoints } from '../model/use-talking-points';
@@ -43,19 +47,79 @@ function FichaCargando(): ReactElement {
   );
 }
 
+/**
+ * Quien decide si la sesion murio es el backend: la cookie es httpOnly y este
+ * codigo no puede borrarla. Si el POST falla, el comercial SIGUE dentro, y
+ * mandarlo al login seria mentirle (el guard lo devolveria aqui en un rebote
+ * que parece un bug). Se queda donde esta, con el estado dicho en voz alta.
+ */
+const ERROR_LOGOUT = 'No pudimos cerrar tu sesión. Sigues conectado; intenta de nuevo.';
+
+/**
+ * F4 no llama `logoutCloser()` de F3 aunque sea exactamente este POST: la regla
+ * 4 prohibe importar internals de otra feature y el `index.ts` publico de F3
+ * solo expone pantallas. La URL sigue saliendo de `API_ROUTES`, que es la
+ * fuente de verdad compartida, asi que las dos features no pueden divergir.
+ */
+function cerrarSesionEnServidor(): Promise<ApiResponse<null>> {
+  return apiPost<null>(API_ROUTES.closer.logout);
+}
+
 export function CloserBriefingPage(): ReactElement {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { leadId = '' } = useParams<{ leadId: string }>();
   const { session } = useCloserSession();
   const { briefing, isLoading, error } = useBriefing(leadId);
 
   const guion = useTalkingPoints(briefing?.talkingPoints.length ?? 0);
 
+  const [errorSesion, setErrorSesion] = useState<string | null>(null);
+
   const closerName = session?.nombre ?? 'Closer';
+
+  async function cerrarSesion(): Promise<void> {
+    setErrorSesion(null);
+    const respuesta = await cerrarSesionEnServidor();
+
+    if (!respuesta.ok) {
+      setErrorSesion(ERROR_LOGOUT);
+      return;
+    }
+
+    // La ficha cacheada trae datos de contacto del titular: sacarla del cache
+    // evita que el siguiente comercial que entre en esta pestana los vea en el
+    // primer render (Ley 1581, minimizacion).
+    queryClient.removeQueries({ queryKey: queryKeys.closer.all });
+    void navigate('/closer/login', { replace: true });
+  }
+
+  const cabecera = (
+    <>
+      <ConsoleHeader
+        closerName={closerName}
+        onCerrarSesion={() => {
+          void cerrarSesion();
+        }}
+      />
+
+      {errorSesion !== null && (
+        <div className="mx-auto max-w-[1280px] px-4 pt-5 sm:px-8">
+          <p
+            role="alert"
+            className="rounded-[14px] border border-console-red bg-console-red-soft px-4 py-3 text-[14px] font-bold text-console-red-deep"
+          >
+            {errorSesion}
+          </p>
+        </div>
+      )}
+    </>
+  );
 
   if (isLoading) {
     return (
       <div className="min-h-screen bg-console-paper font-display text-console-ink antialiased">
-        <ConsoleHeader closerName={closerName} />
+        {cabecera}
         <FichaCargando />
       </div>
     );
@@ -64,7 +128,7 @@ export function CloserBriefingPage(): ReactElement {
   if (briefing === null) {
     return (
       <div className="min-h-screen bg-console-paper font-display text-console-ink antialiased">
-        <ConsoleHeader closerName={closerName} />
+        {cabecera}
         <div className="mx-auto max-w-[640px] px-4 py-20 text-center">
           <h1 className="mb-3 text-[28px] font-bold tracking-[-0.03em]">Ficha no disponible</h1>
           <p className="text-[15px] text-console-mute">
@@ -79,7 +143,7 @@ export function CloserBriefingPage(): ReactElement {
 
   return (
     <div className="min-h-screen bg-console-paper font-display text-console-ink antialiased">
-      <ConsoleHeader closerName={closerName} />
+      {cabecera}
       <BriefingHeader briefing={briefing} />
 
       <main

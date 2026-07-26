@@ -31,11 +31,21 @@ describe('LandingPage', () => {
 
   it('lleva a la consola del closer', () => {
     renderizar();
-    // Dos entradas al mismo sitio: la pildora de la cabecera y la puerta.
+    expect(screen.getByRole('link', { name: /Abrir la consola/u })).toHaveAttribute(
+      'href',
+      '/closer',
+    );
+  });
+
+  it('deja la puerta como unica entrada a la consola', () => {
+    renderizar();
+    // La pildora "Consola closer" de la cabecera se quito a proposito: la
+    // eleccion de rol pasa por las dos puertas y solo por ahi. Si vuelve a
+    // aparecer un segundo atajo a /closer, que sea una decision explicita.
     const aConsola = screen
       .getAllByRole('link')
       .filter((enlace) => enlace.getAttribute('href') === '/closer');
-    expect(aConsola).toHaveLength(2);
+    expect(aConsola).toHaveLength(1);
   });
 
   it('enlaza la política de tratamiento de datos', () => {
