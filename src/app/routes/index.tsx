@@ -8,7 +8,8 @@
 /**
  * Arbol de rutas, organizado POR ROL.
  *
- *   /                      usuario final, SIN login (F1 → F2.1 / F2.2)
+ *   /                      portada: elige rol y entra (sin login)
+ *   /cliente               usuario final, SIN login (F1 → F2.1 / F2.2)
  *   /politica-de-datos     aviso de tratamiento de datos (Ley 1581)
  *   /closer/login          puerta del comercial
  *   /closer                F3 · cola de leads viables      ┐ detras de CloserGuard
@@ -26,6 +27,7 @@ import { Suspense, lazy, type ReactElement, type ReactNode } from 'react';
 import { createBrowserRouter } from 'react-router';
 import { CloserGuard } from '@shared/auth/closer-guard';
 import { Spinner } from '@shared/ui';
+import { LandingPage } from './landing.page';
 import { ClientFlowPage } from './client-flow.page';
 import { PrivacyPolicyPage } from './privacy-policy.page';
 import { NotFoundPage } from './not-found.page';
@@ -60,7 +62,12 @@ function conSuspense(nodo: ReactNode): ReactElement {
 }
 
 export const router = createBrowserRouter([
-  { path: '/', element: <ClientFlowPage /> },
+  { path: '/', element: <LandingPage /> },
+  // El flujo del cliente baja de `/` a `/cliente` porque `/` pasa a ser la
+  // portada de roles. La portada NO va con `lazy`: es lo primero que ve
+  // cualquiera que abre el link, y un spinner en el primer frame de la demo
+  // es exactamente la impresion que no queremos dar.
+  { path: '/cliente', element: <ClientFlowPage /> },
   { path: '/politica-de-datos', element: <PrivacyPolicyPage /> },
   { path: '/closer/login', element: conSuspense(<CloserLoginPage />) },
   {

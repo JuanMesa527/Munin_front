@@ -49,7 +49,10 @@ describe('LeadOtpGateScreen', () => {
     const user = userEvent.setup();
     const onVerificado = vi.fn();
     verifyMock.mockReturnValue(
-      Promise.resolve({ ok: false as const, error: { code: 'UNAUTHORIZED', message: 'nope' } }),
+      Promise.resolve({
+        ok: false as const,
+        error: { code: 'UNAUTHORIZED', message: 'nope', fields: null },
+      }),
     );
     render(<LeadOtpGateScreen leadId="lead-1" onVerificado={onVerificado} />);
 
@@ -77,7 +80,10 @@ describe('LeadOtpGateScreen', () => {
 
   it('si el envío falla lo dice, en vez de dejar al lead esperando un correo que no llega', async () => {
     requestMock.mockReturnValue(
-      Promise.resolve({ ok: false as const, error: { code: 'NOT_FOUND', message: 'nope' } }),
+      Promise.resolve({
+        ok: false as const,
+        error: { code: 'NOT_FOUND', message: 'nope', fields: null },
+      }),
     );
     render(<LeadOtpGateScreen leadId="lead-1" onVerificado={vi.fn()} />);
 

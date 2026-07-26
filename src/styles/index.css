@@ -231,6 +231,13 @@
   --animate-pop: pop 320ms var(--ease-pop) both;
   --animate-fade-in: fade-in 180ms var(--ease-out-soft) both;
   --animate-rise: rise 220ms var(--ease-out-soft) both;
+
+  /* Deriva lenta de la aurora de la portada. Dos duraciones distintas y
+   * `alternate-reverse` en la segunda para que las dos capas nunca queden en
+   * fase: en fase se leen como UNA forma que late, que es justo el efecto
+   * barato que queremos evitar. */
+  --animate-aurora: aurora-drift 22s ease-in-out infinite alternate;
+  --animate-aurora-slow: aurora-drift 31s ease-in-out infinite alternate-reverse;
 }
 
 /* ==========================================================================
@@ -438,6 +445,18 @@
   }
 }
 
+/* Aurora de la portada. Solo `transform`: animar `background-position` o
+ * `filter` repinta la capa desenfocada en cada frame y tira los FPS en la
+ * maquina del jurado. */
+@keyframes aurora-drift {
+  from {
+    transform: translate3d(-2%, -1%, 0) scale(1.02);
+  }
+  to {
+    transform: translate3d(3%, 2%, 0) scale(1.09);
+  }
+}
+
 @keyframes rise {
   from {
     opacity: 0;
@@ -558,6 +577,44 @@
     transparent 1px
   );
   background-size: 22px 22px;
+}
+
+/* --------------------------------------------------------------------------
+ *  Aurora de la portada (`/`)
+ * --------------------------------------------------------------------------
+ *  La mancha amarilla difusa que pasa por detras del titular. Se construye con
+ *  `radial-gradient(closest-side, ...)` — la misma tecnica que el fondo del
+ *  hero en `Design System Colsubsidio.html` — y no con una imagen: pesa cero,
+ *  escala a cualquier viewport y sigue al token de marca si el amarillo cambia.
+ *
+ *  Van dos capas separadas y no una sola con dos gradientes porque cada una
+ *  necesita su propia animacion (ver `--animate-aurora*`).
+ *
+ *  El desenfoque es lo que la convierte en LUZ en vez de en una forma: sin el,
+ *  se ve el borde del gradiente y parece un sticker.
+ * ------------------------------------------------------------------------ */
+@utility hero-aurora {
+  background-image:
+    radial-gradient(closest-side, var(--color-brand-100), transparent 74%),
+    radial-gradient(closest-side, var(--color-brand-300), transparent 70%);
+  background-repeat: no-repeat;
+  background-position:
+    16% 12%,
+    74% 58%;
+  background-size:
+    72% 74%,
+    66% 88%;
+  filter: blur(30px);
+}
+
+/* Nucleo dorado, mas pequeno y mas saturado: es lo que evita que la mancha se
+ * lea como un degradado plano. Va en su propia capa para desfasarlo. */
+@utility hero-aurora-core {
+  background-image: radial-gradient(closest-side, var(--color-brand-500), transparent 66%);
+  background-repeat: no-repeat;
+  background-position: 79% 78%;
+  background-size: 44% 52%;
+  filter: blur(36px);
 }
 
 /* Scrollbar discreta para paneles densos (dashboard y ficha del closer). */

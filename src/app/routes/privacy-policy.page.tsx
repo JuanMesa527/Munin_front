@@ -80,7 +80,7 @@ export function PrivacyPolicyPage(): ReactElement {
             </p>
           </div>
           <a
-            href="/"
+            href="/cliente"
             className="focus-ring inline-flex items-center gap-1.5 rounded-pill border border-border bg-surface px-3 py-1.5 text-xs font-semibold text-text-muted hover:bg-surface-3 hover:text-text"
           >
             <ArrowLeft aria-hidden="true" className="size-3.5" />

@@ -1,8 +1,9 @@
 /**
- * La tabla de rutas monta el flujo del cliente en `/` (F1 → F2.1/F2.2, via
- * `ClientFlowPage`), `/politica-de-datos`, y las rutas del closer bajo
- * `/closer/*` detras de `CloserGuard`. Post-integracion F1+F2.1: el arbol ya
- * NO es minimo — incluye la consola comercial (F3/F4).
+ * La tabla de rutas monta la portada de roles en `/`, el flujo del cliente en
+ * `/cliente` (F1 → F2.1/F2.2, via `ClientFlowPage`), `/politica-de-datos`, y
+ * las rutas del closer bajo `/closer/*` detras de `CloserGuard`.
+ * Post-integracion F1+F2.1: el arbol ya NO es minimo — incluye la consola
+ * comercial (F3/F4).
  */
 import { describe, expect, it } from 'vitest';
 import type { RouteObject } from 'react-router';
@@ -19,8 +20,9 @@ function pathsDe(rutas: readonly RouteObject[]): string[] {
 describe('app routes', () => {
   const paths = pathsDe(router.routes);
 
-  it('monta el flujo del cliente y la política de datos', () => {
+  it('monta la portada, el flujo del cliente y la política de datos', () => {
     expect(paths).toContain('/');
+    expect(paths).toContain('/cliente');
     expect(paths).toContain('/politica-de-datos');
   });
 
