@@ -35,7 +35,10 @@ export interface TooltipProps {
   /** Un unico elemento enfocable (boton, enlace, control). */
   children: ReactElement<TriggerProps>;
   side?: TooltipSide;
+  /** Clases de la burbuja del tooltip (no del wrapper). */
   className?: string | undefined;
+  /** Clases del `<span>` que envuelve al disparador — p. ej. `flex-1` cuando el trigger debe estirarse dentro de un layout flex del padre. */
+  wrapperClassName?: string | undefined;
 }
 
 export function Tooltip({
@@ -43,6 +46,7 @@ export function Tooltip({
   children,
   side = 'top',
   className,
+  wrapperClassName,
 }: TooltipProps): ReactElement {
   const [visible, setVisible] = useState(false);
   const tooltipId = useId();
@@ -57,7 +61,7 @@ export function Tooltip({
 
   return (
     <span
-      className="relative inline-flex"
+      className={cn('relative inline-flex', wrapperClassName)}
       onMouseEnter={() => {
         setVisible(true);
       }}

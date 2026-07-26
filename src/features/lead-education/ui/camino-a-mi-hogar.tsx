@@ -21,7 +21,7 @@ import { Check, Footprints, Home } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
 import type { ReactElement } from 'react';
 import type { EtapaCamino, EtapaId, Meta } from '@contracts';
-import { Card } from '@shared/ui';
+import { Card, Tooltip } from '@shared/ui';
 import { cn } from '@shared/lib/cn';
 import { ETAPA_COPY, type EtapaCopy } from '../model/etapa-copy';
 
@@ -39,6 +39,7 @@ interface EtapaConEstado {
   estado: EstadoEtapa;
   completadas: number;
   total: number;
+  metas: Meta[];
 }
 
 function metasDe(etapaId: string, metas: readonly Meta[]): Meta[] {
@@ -69,12 +70,38 @@ function calcularEstados(
       estado,
       completadas: propias.filter((meta) => meta.completada).length,
       total: Math.max(propias.length, 1),
+      metas: propias,
     };
   });
 }
 
 function copyDe(etapaId: EtapaId): EtapaCopy {
   return ETAPA_COPY[etapaId];
+}
+
+/**
+ * Texto del tooltip de cada nodo: qué hay que resolver en la etapa ANTERIOR
+ * para llegar hasta acá. Puramente informativo — igual que el resto del
+ * componente, no es una puerta real (ver nota de arriba).
+ */
+function requisitoDe(conEstado: readonly EtapaConEstado[], indice: number): string {
+  if (indice === 0) {
+    return 'Es el punto de partida de tu camino — no necesita nada antes.';
+  }
+
+  const anterior = conEstado[indice - 1];
+  if (anterior === undefined) return '';
+
+  // Las metas opcionales no son requisito real de nadie (ver `InicioScreen`,
+  // mismo criterio): si tras filtrarlas no queda ninguna, se cae a todas.
+  const clave = anterior.metas.filter((meta) => meta.opcional !== true);
+  const titulos = (clave.length > 0 ? clave : anterior.metas).map((meta) => meta.titulo);
+  const tituloEtapaAnterior = copyDe(anterior.etapa.id).titulo;
+
+  if (titulos.length === 0) {
+    return `Antes tenés que completar la etapa "${tituloEtapaAnterior}".`;
+  }
+  return `Antes tenés que completar "${titulos.join('" y "')}" de la etapa "${tituloEtapaAnterior}".`;
 }
 
 export function CaminoAMiHogar({
@@ -161,6 +188,7 @@ function CaminoHorizontal({
                   <NodoEtapa
                     item={item}
                     seleccionada={seleccionada}
+                    requisito={requisitoDe(conEstado, indice)}
                     onClick={() => {
                       onSeleccionarEtapa?.(item.etapa.id);
                     }}
@@ -235,11 +263,13 @@ function CirculoEtapa({ item, grande }: { item: EtapaConEstado; grande: boolean 
 function NodoEtapa({
   item,
   seleccionada,
+  requisito,
   onClick,
   compacto = false,
 }: {
   item: EtapaConEstado;
   seleccionada: boolean;
+  requisito: string;
   onClick: () => void;
   compacto?: boolean;
 }): ReactElement {
@@ -248,44 +278,46 @@ function NodoEtapa({
   const copy = copyDe(etapa.id);
 
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-current={esActiva ? 'step' : undefined}
-      aria-pressed={seleccionada}
-      aria-label={copy.titulo}
-      className="focus-ring rounded-card"
-    >
-      {esActiva ? (
-        <Card
-          padding="sm"
-          className={cn(
-            'flex w-[11.5rem] flex-col items-center gap-2 text-center shadow-pop',
-            seleccionada && 'ring-2 ring-accent-500',
-          )}
-        >
-          <CirculoEtapa item={item} grande />
-          <p className="text-[0.8125rem] leading-snug font-bold text-text">{copy.titulo}</p>
-          <p className="text-[0.6875rem] leading-snug text-text-muted">{copy.descripcion}</p>
-          <EstadoPill item={item} />
-          <p className="text-[0.6875rem] font-medium text-text-subtle">
-            {completadas} de {total} lecciones
-          </p>
-        </Card>
-      ) : (
-        <div
-          className={cn(
-            'flex flex-col items-center gap-1.5 rounded-card p-1',
-            compacto ? 'w-[6.5rem]' : 'w-32',
-            seleccionada && 'bg-accent-50',
-          )}
-        >
-          <CirculoEtapa item={item} grande={false} />
-          <p className="text-[0.6875rem] leading-tight font-semibold text-text">{copy.titulo}</p>
-          <EstadoPill item={item} />
-        </div>
-      )}
-    </button>
+    <Tooltip content={requisito}>
+      <button
+        type="button"
+        onClick={onClick}
+        aria-current={esActiva ? 'step' : undefined}
+        aria-pressed={seleccionada}
+        aria-label={copy.titulo}
+        className="focus-ring rounded-card"
+      >
+        {esActiva ? (
+          <Card
+            padding="sm"
+            className={cn(
+              'flex w-[11.5rem] flex-col items-center gap-2 text-center shadow-pop',
+              seleccionada && 'ring-2 ring-accent-500',
+            )}
+          >
+            <CirculoEtapa item={item} grande />
+            <p className="text-[0.8125rem] leading-snug font-bold text-text">{copy.titulo}</p>
+            <p className="text-[0.6875rem] leading-snug text-text-muted">{copy.descripcion}</p>
+            <EstadoPill item={item} />
+            <p className="text-[0.6875rem] font-medium text-text-subtle">
+              {completadas} de {total} lecciones
+            </p>
+          </Card>
+        ) : (
+          <div
+            className={cn(
+              'flex flex-col items-center gap-1.5 rounded-card p-1',
+              compacto ? 'w-[6.5rem]' : 'w-32',
+              seleccionada && 'bg-accent-50',
+            )}
+          >
+            <CirculoEtapa item={item} grande={false} />
+            <p className="text-[0.6875rem] leading-tight font-semibold text-text">{copy.titulo}</p>
+            <EstadoPill item={item} />
+          </div>
+        )}
+      </button>
+    </Tooltip>
   );
 }
 
@@ -345,31 +377,37 @@ function CaminoVertical({
 
             <CirculoEtapa item={item} grande={false} />
 
-            <button
-              type="button"
-              onClick={() => {
-                onSeleccionarEtapa?.(item.etapa.id);
-              }}
-              aria-current={item.estado === 'activa' ? 'step' : undefined}
-              aria-pressed={seleccionada}
-              className={cn(
-                'focus-ring flex-1 rounded-card border border-border bg-surface px-3 py-3 text-left shadow-card transition-colors',
-                seleccionada && 'ring-2 ring-accent-500',
-              )}
+            <Tooltip
+              content={requisitoDe(conEstado, indice)}
+              wrapperClassName="min-w-0 flex-1"
+              side="bottom"
             >
-              <p className="font-bold text-text">{copy.titulo}</p>
-              {item.estado === 'activa' && (
-                <p className="mt-1 text-xs text-text-muted">{copy.descripcion}</p>
-              )}
-              <div className="mt-2">
-                <EstadoPill item={item} />
-              </div>
-              {item.estado === 'activa' && (
-                <p className="mt-1.5 text-[0.6875rem] text-text-subtle">
-                  {item.completadas} de {item.total} lecciones
-                </p>
-              )}
-            </button>
+              <button
+                type="button"
+                onClick={() => {
+                  onSeleccionarEtapa?.(item.etapa.id);
+                }}
+                aria-current={item.estado === 'activa' ? 'step' : undefined}
+                aria-pressed={seleccionada}
+                className={cn(
+                  'focus-ring w-full rounded-card border border-border bg-surface px-3 py-3 text-left shadow-card transition-colors',
+                  seleccionada && 'ring-2 ring-accent-500',
+                )}
+              >
+                <p className="font-bold text-text">{copy.titulo}</p>
+                {item.estado === 'activa' && (
+                  <p className="mt-1 text-xs text-text-muted">{copy.descripcion}</p>
+                )}
+                <div className="mt-2">
+                  <EstadoPill item={item} />
+                </div>
+                {item.estado === 'activa' && (
+                  <p className="mt-1.5 text-[0.6875rem] text-text-subtle">
+                    {item.completadas} de {item.total} lecciones
+                  </p>
+                )}
+              </button>
+            </Tooltip>
           </motion.li>
         );
       })}

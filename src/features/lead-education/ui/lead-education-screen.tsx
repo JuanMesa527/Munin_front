@@ -207,6 +207,14 @@ export function LeadEducationScreen({ leadId, onIrAProgreso }: LeadEducationScre
             etapaSeleccionada={etapaEfectiva}
             onSeleccionarEtapa={(etapaId) => {
               setEtapaSeleccionada(etapaId as EtapaId);
+              // Un tick despues del cambio de etapa: "Pasos de esta etapa" recien
+              // termina de re-renderizar con el contenido nuevo, y su posicion en
+              // la pagina puede correrse segun cuantos pasos tenga esa etapa.
+              requestAnimationFrame(() => {
+                document
+                  .getElementById('pasos-titulo')
+                  ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              });
             }}
           />
         </section>
