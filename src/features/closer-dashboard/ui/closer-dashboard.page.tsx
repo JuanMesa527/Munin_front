@@ -2,10 +2,15 @@
  * F3 · closer-dashboard — la cola de leads viables del comercial.
  *
  * Es donde se demuestra el 20% de la rubrica (reduccion de ruido): el comercial
- * NO ve los 214 leads crudos que entraron por pauta, ve los que quedaron
- * despues de perfilar, ordenados por probabilidad de cierre. El contador
- * "214 crudos → N viables" existe para que esa reduccion sea literal y visible
- * en pantalla, no un claim del pitch.
+ * NO ve todos los leads que entraron, ve los que quedaron despues de perfilar,
+ * ordenados por probabilidad de cierre. El contador "N viables de M entradas"
+ * existe para que esa reduccion sea literal y visible en pantalla.
+ *
+ * Los dos numeros salen del MISMO `LeadListPage` que devuelve el backend. Antes
+ * el denominador era `SEED_LEADS_CRUDOS = 214`, una constante de la semilla de
+ * demo pintada al lado de un total real: dos cifras con el mismo formato, una
+ * medida y otra inventada, indistinguibles para quien mira la pantalla — y
+ * justo la que sostiene el argumento frente al jurado.
  */
 
 import { useState, type ReactElement } from 'react';
@@ -13,7 +18,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router';
 import type { LeadListSort } from '@contracts';
 import { ConsoleHeader, Skeleton } from '@shared/ui';
-import { SEED_LEADS_CRUDOS } from '@shared/demo';
 import { queryKeys } from '@shared/api/query-keys';
 import { useCloserSession } from '@shared/auth/use-closer-session';
 import { logoutCloser } from '../api/closer-dashboard.api';
@@ -131,7 +135,7 @@ export function CloserDashboardPage({
               className="size-2 animate-console-pulse rounded-full bg-console-green"
             />
             <span className="font-mono text-[12px] font-bold text-console-green-deep">
-              {cola.stats.total} viables de {SEED_LEADS_CRUDOS} entradas
+              {cola.stats.total} viables de {cola.totalIngresados} entradas
             </span>
           </div>
         </div>
