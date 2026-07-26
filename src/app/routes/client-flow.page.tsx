@@ -7,8 +7,10 @@
  * entre si — este componente de `app/` es el unico que las une.
  *
  *   carril viable     -> LeadEnrichmentScreen (F2.1)
- *   carril no_viable   -> AppShell + F2.2 (Inicio, Camino a Mi Hogar, Logros,
- *                         Progreso, Mi perfil): camino de nutricion gamificado.
+ *   carril no_viable   -> LeadOtpGateScreen (código al correo que dio en el
+ *                         chat) y, una vez verificado, AppShell + F2.2
+ *                         (Inicio, Camino a Mi Hogar, Logros, Progreso, Mi
+ *                         perfil): camino de nutrición gamificado.
  *
  * Vive en `app/` y no dentro de una feature a proposito: es lo que permite que
  * las features del cliente se desarrollen en paralelo sin conocerse.
@@ -22,6 +24,7 @@ import {
   InicioScreen,
   LeadEducationScreen,
   LeadLoginScreen,
+  LeadOtpGateScreen,
   LogrosScreen,
   OnboardingWelcomeModal,
   PerfilScreen,
@@ -119,6 +122,11 @@ export function ClientFlowPage(): ReactElement {
   // cierra el carril (viable o no_viable).
   const [leadViableId, setLeadViableId] = useState<string | null>(null);
   const [leadNoViableId, setLeadNoViableId] = useState<string | null>(null);
+  // Paso intermedio F1 -> F2.2: salir del chat como `no_viable` NO abre el
+  // módulo educativo. Antes de entrar hay que confirmar el código que el
+  // backend manda al correo que el propio lead declaró en la conversación —
+  // sin esa verificación no hay cookie, y sin cookie `/journey` responde 401.
+  const [leadPorVerificarId, setLeadPorVerificarId] = useState<string | null>(null);
   // Login por OTP (adenda A14): pantalla para recuperar el leadId cuando se
   // cerró la pestaña y no quedó nada en memoria — no hay F1 que repetir.
   const [mostrarLogin, setMostrarLogin] = useState(false);
@@ -130,6 +138,18 @@ export function ClientFlowPage(): ReactElement {
 
   if (leadNoViableId !== null) {
     return <CaminoNutricion leadId={leadNoViableId} onGraduar={setLeadViableId} />;
+  }
+
+  if (leadPorVerificarId !== null) {
+    return (
+      <LeadOtpGateScreen
+        leadId={leadPorVerificarId}
+        onVerificado={(leadId) => {
+          setLeadPorVerificarId(null);
+          setLeadNoViableId(leadId);
+        }}
+      />
+    );
   }
 
   // Cookie de sesión viva (`lead_session`, TTL largo): retoma directo, sin
@@ -151,7 +171,7 @@ export function ClientFlowPage(): ReactElement {
 
   return (
     <div className="relative">
-      <LeadIntakeScreen onViable={setLeadViableId} onNoViable={setLeadNoViableId} />
+      <LeadIntakeScreen onViable={setLeadViableId} onNoViable={setLeadPorVerificarId} />
       <button
         type="button"
         onClick={() => {

@@ -10,13 +10,22 @@ import { API_ROUTES } from '@contracts';
 import type { LeadSession } from '@contracts';
 import { apiGet, apiPost } from '@shared/api/http-client';
 
+/**
+ * Exactamente UN canal por intento. `leadId` es el del GATE (el lead viene de
+ * terminar F1 y el correo ya lo dio en el chat); `telefono`/`email` son los de
+ * RECUPERACION (cerro la pestana y hay que volver a identificarlo).
+ */
 export interface RequestOtpInput {
-  telefono: string | null;
-  email: string | null;
+  telefono?: string | null;
+  email?: string | null;
+  leadId?: string | null;
 }
 
 export interface RequestOtpResult {
   enviado: boolean;
+  /** Correo enmascarado (`pe*****@correo.com`). Solo lo devuelve el canal `leadId`. */
+  destino?: string | null;
+  canal?: 'email' | 'telefono';
   /** Solo fuera de produccion (demo sin SMS/correo real). */
   codigo?: string;
 }
@@ -30,6 +39,9 @@ export function requestLeadOtp(
 export interface VerifyOtpInput extends RequestOtpInput {
   codigo: string;
 }
+
+/** El backend distingue "codigo malo" (401) de "ese lead no existe" (404). */
+export const CODIGO_LEAD_INEXISTENTE = 'NOT_FOUND';
 
 export function verifyLeadOtp(
   input: VerifyOtpInput,

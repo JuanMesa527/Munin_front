@@ -8,6 +8,7 @@ export { GraduationModal, type GraduationModalProps } from './ui/graduation-moda
 export { InicioScreen, type InicioScreenProps } from './ui/inicio-screen';
 export { LeadEducationScreen, type LeadEducationScreenProps } from './ui/lead-education-screen';
 export { LeadLoginScreen, type LeadLoginScreenProps } from './ui/lead-login-screen';
+export { LeadOtpGateScreen, type LeadOtpGateScreenProps } from './ui/lead-otp-gate-screen';
 export { LogrosScreen, type LogrosScreenProps } from './ui/logros-screen';
 export {
   OnboardingWelcomeModal,
