@@ -97,9 +97,9 @@ function requisitoDe(conEstado: readonly EtapaConEstado[], indice: number): stri
   const tituloEtapaAnterior = copyDe(anterior.etapa.id).titulo;
 
   if (titulos.length === 0) {
-    return `Antes tenés que completar la etapa "${tituloEtapaAnterior}".`;
+    return `Antes tienes que completar la etapa "${tituloEtapaAnterior}".`;
   }
-  return `Antes tenés que completar "${titulos.join('" y "')}" de la etapa "${tituloEtapaAnterior}".`;
+  return `Antes tienes que completar "${titulos.join('" y "')}" de la etapa "${tituloEtapaAnterior}".`;
 }
 
 /**

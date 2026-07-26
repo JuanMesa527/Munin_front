@@ -44,7 +44,7 @@ export function PlanSfvCard({ plan }: PlanSfvCardProps): ReactElement {
         </dl>
 
         <p className="mt-4 text-xs text-text-subtle">
-          No necesitás ahorrar el precio completo: el crédito hipotecario cubre el resto. Tu meta
+          No necesitas ahorrar el precio completo: el crédito hipotecario cubre el resto. Tu meta
           real es la cuota inicial ({String(porcentajeCuotaInicial)}% del precio).
           {plan.aplicaSubsidio && (
             <>

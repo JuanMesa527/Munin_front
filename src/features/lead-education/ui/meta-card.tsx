@@ -163,7 +163,7 @@ export function MetaCard({
                 <Badge tone={ritmoAhorro.enRitmoParaFecha === true ? 'success' : 'warning'}>
                   {ritmoAhorro.enRitmoParaFecha === true
                     ? 'Vas a tiempo'
-                    : 'Necesitás acelerar el ritmo'}
+                    : 'Necesitas acelerar el ritmo'}
                 </Badge>
               </div>
             )}

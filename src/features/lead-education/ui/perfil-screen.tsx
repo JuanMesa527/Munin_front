@@ -272,7 +272,7 @@ export function PerfilScreen({
             </ul>
           ) : (
             <p className="text-sm text-text-muted">
-              Todavía no desbloqueaste logros. ¡Seguí avanzando en tu camino!
+              Todavía no desbloqueaste logros. ¡Sigue avanzando en tu camino!
             </p>
           )}
         </Card>

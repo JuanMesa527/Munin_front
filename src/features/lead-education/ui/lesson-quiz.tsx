@@ -43,7 +43,7 @@ export function LessonQuiz({ preguntas }: LessonQuizProps): ReactElement | null 
   return (
     <Card className="shadow-card">
       <div className="flex items-center justify-between gap-2">
-        <p className="text-sm font-bold text-text">Comprobá lo que aprendiste</p>
+        <p className="text-sm font-bold text-text">Comprueba lo que aprendiste</p>
         <p className="text-xs text-text-subtle">
           Pregunta {indice + 1} de {preguntas.length}
         </p>

@@ -58,7 +58,7 @@ export function EtapaCurriculo({
           </div>
         </div>
         <Badge tone={completada ? 'success' : esOpcional ? 'neutral' : 'accent'} size="sm">
-          {completada ? 'Completada' : esOpcional ? 'No hace falta para vos' : 'En progreso'}
+          {completada ? 'Completada' : esOpcional ? 'No hace falta para ti' : 'En progreso'}
         </Badge>
       </CardHeader>
 

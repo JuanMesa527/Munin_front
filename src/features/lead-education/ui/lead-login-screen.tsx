@@ -20,8 +20,8 @@ import { useState, type ReactElement } from 'react';
 import { Alert, Button, Card, Field } from '@shared/ui';
 import { requestLeadOtp, verifyLeadOtp } from '../api/lead-auth';
 
-const ERROR_GENERICO_CODIGO = 'Código inválido o vencido. Pedí uno nuevo.';
-const ERROR_GENERICO_ENVIO = 'No pudimos procesar la solicitud. Intentá de nuevo.';
+const ERROR_GENERICO_CODIGO = 'Código inválido o vencido. Pide uno nuevo.';
+const ERROR_GENERICO_ENVIO = 'No pudimos procesar la solicitud. Intenta de nuevo.';
 
 export interface LeadLoginScreenProps {
   onSuccess: (leadId: string) => void;
@@ -81,9 +81,9 @@ export function LeadLoginScreen({ onSuccess, onCancel }: LeadLoginScreenProps): 
   return (
     <div className="flex min-h-screen items-center justify-center bg-surface-2 px-4">
       <div className="w-full max-w-[420px]">
-        <h1 className="mb-2 font-display text-2xl font-bold text-text">Volvé a tu camino</h1>
+        <h1 className="mb-2 font-display text-2xl font-bold text-text">Vuelve a tu camino</h1>
         <p className="mb-6 text-sm text-text-muted">
-          Metele el teléfono o el correo que diste antes y te mandamos un código para retomar donde
+          Escribe el teléfono o el correo que diste antes y te mandamos un código para retomar donde
           quedaste.
         </p>
 
