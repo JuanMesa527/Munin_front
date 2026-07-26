@@ -23,6 +23,7 @@ export interface InicioScreenProps {
   leadId: string;
   onIrACamino: () => void;
   onIrAProgreso: () => void;
+  onLogout: () => void;
 }
 
 function primeraEtapaIncompleta(journey: EducationJourney): EtapaId | undefined {
@@ -43,7 +44,12 @@ function eventoCompletarPara(meta: Meta): 'afiliacion_iniciada' | 'contenido_vis
   return meta.tipo === 'afiliacion' ? 'afiliacion_iniciada' : 'contenido_visto';
 }
 
-export function InicioScreen({ leadId, onIrACamino, onIrAProgreso }: InicioScreenProps): ReactElement {
+export function InicioScreen({
+  leadId,
+  onIrACamino,
+  onIrAProgreso,
+  onLogout,
+}: InicioScreenProps): ReactElement {
   const { data, isLoading, isError, errorMessage, refetch } = useEducationJourney(leadId);
   const { registrar, isPending } = useProgressEvent(leadId);
   const { etapaAbierta, pasoInicial, abrir, cerrar } = useLessonReader(data?.contenidos ?? []);
@@ -125,7 +131,11 @@ export function InicioScreen({ leadId, onIrACamino, onIrAProgreso }: InicioScree
               : 'Cada día es un paso más cerca de tu nuevo hogar.'}
           </p>
         </div>
-        <TopStats puntosTotales={journey.puntosTotales} etiqueta={etiquetaLead(lead)} />
+        <TopStats
+          puntosTotales={journey.puntosTotales}
+          etiqueta={etiquetaLead(lead)}
+          onLogout={onLogout}
+        />
       </Reveal>
 
       {journey.reclasificadoAViable && (

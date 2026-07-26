@@ -18,4 +18,5 @@ export { PerfilScreen, type PerfilScreenProps } from './ui/perfil-screen';
 export { ProgresoScreen, type ProgresoScreenProps } from './ui/progreso-screen';
 export { VistaTransition, type VistaTransitionProps } from './ui/vista-transition';
 export { useEducationJourney } from './model/use-education-journey';
+export { useLeadLogout } from './model/use-lead-logout';
 export { useLeadSession, type LeadSessionState } from './model/use-lead-session';

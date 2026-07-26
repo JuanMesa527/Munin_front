@@ -19,6 +19,7 @@ export interface PerfilScreenProps {
   leadId: string;
   onVerCamino?: () => void;
   onVerLogros?: () => void;
+  onLogout: () => void;
 }
 
 type Nivel = 'Principiante' | 'Intermedio' | 'Avanzado';
@@ -35,6 +36,7 @@ export function PerfilScreen({
   leadId,
   onVerCamino,
   onVerLogros,
+  onLogout,
 }: PerfilScreenProps): ReactElement {
   const { data, isLoading, isError, errorMessage, refetch } = useEducationJourney(leadId);
   const journey = data?.journey;
@@ -95,7 +97,11 @@ export function PerfilScreen({
             Lo que armamos con tu conversación inicial y tu camino.
           </p>
         </div>
-        <TopStats puntosTotales={journey.puntosTotales} etiqueta={etiquetaLead(lead)} />
+        <TopStats
+          puntosTotales={journey.puntosTotales}
+          etiqueta={etiquetaLead(lead)}
+          onLogout={onLogout}
+        />
       </Reveal>
 
       <Reveal className="grid gap-4 lg:grid-cols-[1.15fr_1fr]">

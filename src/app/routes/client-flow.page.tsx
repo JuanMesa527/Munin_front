@@ -30,6 +30,7 @@ import {
   PerfilScreen,
   ProgresoScreen,
   useEducationJourney,
+  useLeadLogout,
   useLeadSession,
   VistaTransition,
 } from '@features/lead-education';
@@ -47,9 +48,10 @@ interface CaminoNutricionProps {
    * cascada fueron los que agotaban el rate limit ("demasiadas solicitudes").
    */
   onGraduar: (leadId: string) => void;
+  onLogout: () => void;
 }
 
-function CaminoNutricion({ leadId, onGraduar }: CaminoNutricionProps): ReactElement {
+function CaminoNutricion({ leadId, onGraduar, onLogout }: CaminoNutricionProps): ReactElement {
   const [vista, setVista] = useState<ClientVista>('inicio');
   // Una sola vez al entrar al carril de nutrición (no al cambiar de pestaña).
   const [mostrarOnboarding, setMostrarOnboarding] = useState(true);
@@ -74,11 +76,12 @@ function CaminoNutricion({ leadId, onGraduar }: CaminoNutricionProps): ReactElem
         onIrAProgreso={() => {
           setVista('progreso');
         }}
+        onLogout={onLogout}
       />
     ) : vista === 'logros' ? (
-      <LogrosScreen leadId={leadId} />
+      <LogrosScreen leadId={leadId} onLogout={onLogout} />
     ) : vista === 'progreso' ? (
-      <ProgresoScreen leadId={leadId} />
+      <ProgresoScreen leadId={leadId} onLogout={onLogout} />
     ) : vista === 'perfil' ? (
       <PerfilScreen
         leadId={leadId}
@@ -88,6 +91,7 @@ function CaminoNutricion({ leadId, onGraduar }: CaminoNutricionProps): ReactElem
         onVerLogros={() => {
           setVista('logros');
         }}
+        onLogout={onLogout}
       />
     ) : (
       <LeadEducationScreen
@@ -95,6 +99,7 @@ function CaminoNutricion({ leadId, onGraduar }: CaminoNutricionProps): ReactElem
         onIrAProgreso={() => {
           setVista('progreso');
         }}
+        onLogout={onLogout}
       />
     );
 
@@ -131,13 +136,24 @@ export function ClientFlowPage(): ReactElement {
   // y no quedó nada en memoria — no hay F1 que repetir.
   const [mostrarLogin, setMostrarLogin] = useState(false);
   const { session, isLoading: cargandoSesion } = useLeadSession();
+  const { logout } = useLeadLogout();
+
+  // Cierra la cookie de sesion en el backend y limpia el cache de `education`;
+  // volver a `leadNoViableId: null` es lo que hace que `ClientFlowPage` caiga
+  // de nuevo al chat de F1 en vez de reintentar contra un lead sin sesion.
+  function handleLogout(): void {
+    logout();
+    setLeadNoViableId(null);
+  }
 
   if (leadViableId !== null) {
     return <LeadEnrichmentScreen leadId={leadViableId} />;
   }
 
   if (leadNoViableId !== null) {
-    return <CaminoNutricion leadId={leadNoViableId} onGraduar={setLeadViableId} />;
+    return (
+      <CaminoNutricion leadId={leadNoViableId} onGraduar={setLeadViableId} onLogout={handleLogout} />
+    );
   }
 
   if (leadPorVerificarId !== null) {
@@ -155,7 +171,13 @@ export function ClientFlowPage(): ReactElement {
   // Cookie de sesión viva (`lead_session`, TTL largo): retoma directo, sin
   // pasar por F1 ni por la pantalla de login.
   if (!cargandoSesion && session !== null) {
-    return <CaminoNutricion leadId={session.leadId} onGraduar={setLeadViableId} />;
+    return (
+      <CaminoNutricion
+        leadId={session.leadId}
+        onGraduar={setLeadViableId}
+        onLogout={handleLogout}
+      />
+    );
   }
 
   if (mostrarLogin) {
